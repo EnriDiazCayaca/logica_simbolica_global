@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Lógica Simbólica Global - Proyecto de Aula 2026
 
-## Getting Started
+Bienvenidos al repositorio central del proyecto **Lógica Simbólica Global**.
+El **Objetivo Único (Norte)** de este proyecto es construir, de manera colaborativa, una plataforma web completa e interactiva para que cualquier persona en el mundo aprenda y aplique Lógica Simbólica.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 La Métrica de Éxito
+Lograr que el 100% de los temas del sílabo estén implementados funcionalmente antes de nuestra **Fecha Inamovible: 21 de Agosto de 2026**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 👥 Organización de los Equipos
+Cada estudiante es un desarrollador dentro de uno de los 6 Equipos de Dominio. Cada equipo tiene un **Sublíder** responsable de subir los avances al líder del proyecto (Enri).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Fundamentos del Lenguaje** (Ruta: `/src/app/fundamentos`)
+2. **Conectivos y Tablas de Verdad** (Ruta: `/src/app/tablas`)
+3. **Transformaciones Condicionales** (Ruta: `/src/app/condicionales`)
+4. **Inferencias Lógicas Básicas** (Ruta: `/src/app/inferencias`)
+5. **Validaciones y Derivaciones** (Ruta: `/src/app/derivaciones`)
+6. **Teoría de Conjuntos** (Ruta: `/src/app/conjuntos`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ⚠️ Reglas de Oro (Permisos)
 
-To learn more about Next.js, take a look at the following resources:
+1. **Prohibido tocar la rama `main` directamente.** Solo el líder de proyecto (Enri) puede aprobar código a la rama principal.
+2. Cada equipo solo puede modificar el código dentro de **su propia carpeta** en `src/app/`. (Ejemplo: Si eres del Equipo 2, solo trabajas en `src/app/tablas`).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Cómo Programar con IA (Flujo Cero-Junior)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Si nunca has programado en Next.js o React, **no te preocupes**. Utilizaremos Inteligencia Artificial (Cursor / Antigravity / Google AI) para que nos asista. 
 
-## Deploy on Vercel
+### Pasos a seguir:
+1. **Clona** este repositorio en tu computadora.
+2. Crea una rama para tu equipo: `git checkout -b equipo-X-tu-tema`.
+3. Abre el proyecto en tu editor (VS Code o Cursor).
+4. Pídele a la IA: *"Soy principiante. Ayúdame a crear una tarjeta interactiva sobre Modus Ponens usando Tailwind CSS dentro de mi archivo `src/app/inferencias/page.tsx`."*
+5. Una vez que funcione, guarda tus cambios y tu sublíder hará el *Pull Request*.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Prompts de Ejemplo para la IA
+Puedes copiar y pegar esto en tu chat de IA:
+- *"Analiza el archivo `src/app/tu-carpeta/page.tsx`. Quiero agregar un formulario con un botón de shadcn/ui que evalúe si una proposición es verdadera o falsa. Dame el código."*
+- *"Cómo uso Tailwind CSS para que el texto de este `div` se vea como un título azul y centrado?"*
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+> *"Al finalizar este proyecto, no solo sabrás Lógica Simbólica al 100%, sino que tendrás experiencia laboral real trabajando con Git, GitHub, Next.js y Tailwind CSS."*
