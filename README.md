@@ -44,4 +44,4 @@ Cada equipo es responsable de construir la funcionalidad de su tema asignado.
 1. **Miembros:** Diseñan y programan localmente con IA, apuntan en su backlog personal. Entregan versión "refinada" al Sublíder.
 2. **Sublíder:** Junta todo y hace un *Pull Request* (PR) hacia `main`.
 3. **Enri:** Revisa y aprueba PRs los **viernes de 4 a 6 PM**.
-4. ¡Sus nombres aparecerán en la sección final de "Colaboradores" de la app!
+4. ¡Sus nombres aparecerán en la sección final de "Colaboradores" del repositorio para su curriculum!
