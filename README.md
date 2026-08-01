@@ -41,6 +41,10 @@ El trabajo se evalúa directamente sobre tu aporte a la plataforma. La rúbrica 
 - **🎨 Estética y UI (30%):** Tu componente se ve profesional. Has usado bien Tailwind CSS para que el usuario entienda qué hacer.
 - **🤝 Trabajo en Equipo y Git (30%):** Has seguido los lineamientos de tu sublíder, participado en los backlogs y aportado ideas limpias.
 
+> [!WARNING]
+> **REGLA DE EVALUACIÓN OFICIAL:** 
+> En este repositorio **SOLO** se evalúa el producto que entregan (el código, la lógica y la interfaz). Si el profesor del curso realiza preguntas teóricas para validar sus conocimientos sobre el tema, esa es una evaluación completamente independiente que depende enteramente de su estudio personal.
+
 ---
 
 ## 👩‍💻👨‍💻 Flujo de Trabajo (¡Si eres miembro, lee esto!)

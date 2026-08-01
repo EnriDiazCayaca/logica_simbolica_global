@@ -4,7 +4,7 @@ Bienvenidos a la primera tarea oficial del proyecto Lógica Simbólica Global.
 Cada equipo tiene asignado un tema del sílabo. Su misión en esta tarea NO es programar todavía, sino **diseñar** qué herramienta interactiva van a construir para aportar a la plataforma web.
 
 ## 📌 Asignación de Temas por Equipo
-- **Equipo 1 (Sublíder: Aarón):** Fundamentos del Lenguaje (Ruta: `/src/pages/fundamentos`)
+- **Equipo 1 (Sublíder: Arom):** Fundamentos del Lenguaje (Ruta: `/src/pages/fundamentos`)
 - **Equipo 2 (Sublíder: Por definir):** Conectivos y Tablas de Verdad (Ruta: `/src/pages/tablas`)
 - **Equipo 3 (Sublíder: Por definir):** Transformaciones Condicionales (Ruta: `/src/pages/condicionales`)
 - **Equipo 4 (Sublíder: Por definir):** Inferencias Lógicas Básicas (Ruta: `/src/pages/inferencias`)
