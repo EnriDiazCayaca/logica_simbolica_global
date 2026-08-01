@@ -1,36 +1,22 @@
-# 📅 Cronograma de Trabajo de 4 Semanas
+# 📅 Cronograma (4 Sprints)
 
-Para asegurar que todos lleguemos con éxito a la Fecha Inamovible (21 de Agosto de 2026), el desarrollo del proyecto se divide en 4 Semanas (Sprints). Cada semana tiene un objetivo claro y un entregable.
+El desarrollo del proyecto se divide en 4 entregables semanales hasta el **21 de Agosto**.
 
-## 📌 Semana 1: Propuesta y Diseño (Fase Actual)
-- **Objetivo:** Definir qué problema van a resolver y cómo se verá visualmente.
-- **Actividades:**
-  - Lluvia de ideas en equipo sobre el tema asignado.
-  - Diseño de la interfaz gráfica usando dibujos a mano o herramientas como Figma.
-- **Entregable:** Archivo `propuesta.md` subido a GitHub mediante un Pull Request.
-- **Fecha Límite de Revisión:** Viernes de 4:00 PM a 6:00 PM.
+## 📌 Sem 1: Propuesta y Diseño (Actual)
+- **Objetivo:** Definir la idea y dibujar la interfaz.
+- **Entregable:** Archivo `propuesta.md` con el problema a resolver y un wireframe (boceto).
 
-## 📌 Semana 2: Motor Lógico (Matemática Pura)
-- **Objetivo:** Escribir el código que resuelve la lógica matemática.
-- **Actividades:**
-  - Usar la IA (Antigravity/Cursor) para generar funciones en TypeScript que procesen los datos lógicos (Ej. una función que reciba dos proposiciones y devuelva si es Tautología).
-  - No preocuparse por que se vea "bonito" todavía, solo que funcione internamente.
-- **Entregable:** Archivo TypeScript (ej. `logica.ts`) subido a su carpeta mediante Pull Request.
-- **Fecha Límite de Revisión:** Viernes de 4:00 PM a 6:00 PM.
+## 📌 Sem 2: Motor Lógico Matemática
+- **Objetivo:** Programar el algoritmo en TypeScript que procesa los datos (sin interfaz).
+- **Referencia Open Source:** Se recomienda fuertemente estudiar y basar su código en el motor lógico de **Keith Schwarz** para asegurar la rigurosidad matemática.
+- **Entregable:** Código TS (`.ts`) que reciba inputs y devuelva outputs lógicos.
 
-## 📌 Semana 3: Interfaz de Usuario (UI con Vue 3)
-- **Objetivo:** Conectar el motor lógico de la semana anterior con la interfaz visual.
-- **Actividades:**
-  - Crear los componentes interactivos en Vue 3 (`.vue`).
-  - Dar estilos profesionales usando Tailwind CSS v4 para que se vea como el boceto diseñado en la Semana 1.
-- **Entregable:** Código completo de la Interfaz subido mediante Pull Request.
-- **Fecha Límite de Revisión:** Viernes de 4:00 PM a 6:00 PM.
+## 📌 Sem 3: Interfaz Visual (Vue 3)
+- **Objetivo:** Crear la web y conectarla al motor de la Semana 2.
+- **Entregable:** Componentes `.vue` estilizados con Tailwind CSS.
 
-## 📌 Semana 4: Pruebas y Despliegue Final
-- **Objetivo:** Pulir detalles, encontrar errores y prepararse para la entrega final.
-- **Actividades:**
-  - Integrar las partes de todos los equipos.
-  - Buscar bugs ("¿Qué pasa si el usuario pone un símbolo inválido?").
-  - Mejoras finales de diseño (colores, alertas, animaciones).
-- **Entregable:** Código maestro final, estable y fusionado en `main`.
-- **Fecha Límite Inamovible:** 21 de Agosto.
+## 📌 Sem 4: Pruebas y Despliegue
+- **Objetivo:** Eliminar bugs y preparar la presentación.
+- **Entregable:** Código maestro integrado en `main`.
+
+> ⏱️ **NOTA:** Todos los entregables se revisan vía Pull Request los **Viernes de 4:00 PM a 6:00 PM**.
