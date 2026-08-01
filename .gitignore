@@ -13,12 +13,11 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-
-# production
+# vite / production build
+/dist
 /build
+/out/
+/.next/
 
 # misc
 .DS_Store
