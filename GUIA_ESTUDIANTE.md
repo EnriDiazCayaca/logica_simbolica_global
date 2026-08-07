@@ -51,31 +51,46 @@ Tu archivo debe estar en formato `.md`. Es texto simple con símbolos especiales
 | `- Item` | Viñeta |
 | `**negrita**` | **negrita** |
 
+> 💡 **Tip para pasar de Figma a Markdown (¡Para los de Diseño!):** 
+> No tienen que programar la interfaz en HTML. Simplemente tomen una captura de pantalla a su diseño en Figma, guárdenla como `.png` o `.jpg` en una carpeta llamada `assets/` al lado de su propuesta, y añádanla al Markdown usando este código: 
+> `![Mi diseño](assets/nombre-imagen.png)`
+
 - 📖 Referencia completa: [Guía de Markdown de GitHub](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
 
 ---
 
 ### Paso 3: Sube tu tarea a GitHub (Solo el Sublíder)
 
-El **Sublíder** es el responsable de ejecutar estos comandos en su terminal:
+El **Sublíder** es el responsable de ejecutar estos comandos en su terminal para entregar la tarea oficial. Sigan este flujo exacto:
 
 ```bash
-# 1. Clona el repositorio (solo la primera vez)
+# 1. Clona el repositorio a tu PC (haz esto solo la primera vez que trabajes)
 git clone https://github.com/EnriDiazCayaca/logica_simbolica_global.git
 cd logica_simbolica_global
 
-# 2. Crea una rama para tu equipo (NUNCA trabajes en main)
-git checkout -b equipo-1-inferencias
+# 2. Crea una rama para tu equipo (NUNCA trabajes en la rama "main")
+git checkout -b equipo-2-sinergia
 
-# 3. Coloca el archivo propuesta.md en tu carpeta
+# 3. Mueve o crea tu archivo propuesta.md y tus imágenes dentro de tu carpeta en TAREAS/01_Propuesta/
 
-# 4. Envía los cambios
+# 4. Dile a Git que prepare todos los archivos nuevos
 git add .
-git commit -m "Entregable 1: Propuesta Equipo 1 - Inferencias"
-git push origin equipo-1-inferencias
+
+# 5. Guarda una "foto" de tus cambios con un mensaje
+git commit -m "Entregable 1: Propuesta del Equipo Sinergia"
+
+# 6. Sube los cambios al servidor de GitHub
+git push origin equipo-2-sinergia
 ```
 
-5. Ve a GitHub → Haz clic en **"Compare & pull request"** → Envíalo.
+7. Una vez que corran esos comandos, abran la página web del repositorio de GitHub. 
+8. Verán un gran botón verde que dice **"Compare & pull request"**. Háganle clic.
+9. Rellenen el título y denle al botón final verde de **"Create pull request"**. ¡Tarea entregada!
+
+> 🌟 **¿Dudas de cómo debe quedar?** Revisen el código y la entrega del Equipo 1 (Los hijos de Linus) en la carpeta `/TAREAS/01_Propuesta/los-hijos-de-linus/`. Ellos lo hicieron perfecto y pueden usarlo de modelo.
+
+**¿Hay un error rojo en la consola?** Copia el mensaje y díselo a Antigravity:
+> *"Estoy intentando hacer un push a GitHub y me sale este error: [pega el error]. ¿Cómo lo soluciono paso a paso?"*
 
 ---
 
