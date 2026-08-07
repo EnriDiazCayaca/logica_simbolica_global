@@ -124,15 +124,21 @@ En la semana 2 usarán Antigravity para programar la lógica matemática base de
 
 ## 🛡️ ¿Qué sigue? Cómo no ser engañado por la IA (Semana 2 y 3)
 
-Como dice Arom: *"Ya sabemos usar Antigravity, pero ¿cómo hacemos para que los miembros no boten cualquier cosa que les diga la IA?"*.
-
 Para las próximas semanas (programar la lógica y diseñar la interfaz), la clave es que **ustedes tienen el criterio**. La IA es su teclado rápido, pero ustedes son los ingenieros.
 
 ### 1. Entendiendo su espacio de trabajo (Arquitectura aislada)
 A partir de la Semana 2, cada equipo será dueño absoluto de una subcarpeta en `src/pages/`.
 Por ejemplo, el Equipo de Sinergia trabajará en `/src/pages/tablas/`. **Nadie de su equipo debe tocar archivos fuera de su carpeta.** Esto asegura que si se equivocan, no rompan el proyecto entero.
+Cada equipo construirá su propia lógica matemática y visual de forma independiente con la ayuda de Antigravity.
 
-### 2. Vue 3 para Dummies (Lo único que deben saber)
+### 2. Lo básico de NPM (Para probar y corregir a la IA)
+Para probar su código localmente, deben entender estos comandos clave:
+- `npm run dev`: El comando diario para encender el servidor local y ver la web en el navegador.
+- `npm install` (sin argumentos): Para descargar todas las dependencias cuando clonan el repositorio o bajan cambios nuevos de sus compañeros.
+- `npm install <paquete>`: Saber cómo añadir una librería nueva si la IA les indica que la necesitan (ej. `npm install sweetalert2`).
+- El archivo `package.json`: Es el "índice" de su proyecto. Aquí están los comandos (en "scripts") y las librerías instaladas (en "dependencies").
+
+### 3. Vue 3 para Dummies (Lo único que deben saber)
 Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" (un archivo `.vue`). Un archivo `.vue` es como un lego que tiene tres partes:
 1. `<script setup lang="ts">`: Aquí va el cerebro (la lógica y matemáticas en TypeScript).
 2. `<template>`: Aquí va la cara (la estructura HTML de los botones y textos).
@@ -140,10 +146,6 @@ Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" 
 
 Cuando le pidan código a la IA, no acepten algo que no entiendan. **Pregúntenle a la IA:**
 > *"Explícame línea por línea qué hace este código en `<script>` antes de que lo pegue en mi proyecto."*
-
-### 3. El Motor Lógico Central (El corazón del proyecto)
-Para que no tengan que programar desde cero cómo la computadora entiende qué es un `AND` o un `OR`, el equipo de Líderes creará un **Motor Lógico Central** en la carpeta `/src/core/`.
-Ustedes solo tendrán que **"llamar"** a este motor desde su carpeta para que haga las matemáticas pesadas.
 
 ---
 
