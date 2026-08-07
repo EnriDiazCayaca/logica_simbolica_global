@@ -1,5 +1,7 @@
 # 📖 Guía del Estudiante
 
+Esta guía te da total autonomía para que puedas avanzar sin depender de preguntar constantemente al líder del proyecto (Enri). Si es tu primera vez trabajando con programación, repositorios o Vue 3, **respira**. Este proyecto está diseñado para que lo logres usando Inteligencia Artificial. No tienes que saber todo de memoria, pero sí debes saber **cómo pedirlo**.
+
 ---
 
 ## 🤖 Por qué usar Antigravity (y no solo ChatGPT)
@@ -10,7 +12,7 @@ ChatGPT te responde. **Antigravity actúa.** La diferencia es que Antigravity pu
 
 ---
 
-## 📌 Entregable 1: Propuesta y Diseño
+## 📌 Entregable 1: Propuesta y Diseño (Semana 1)
 
 Todo lo que necesitas saber para completar la Tarea 01 está aquí.
 
@@ -75,9 +77,37 @@ git push origin equipo-1-inferencias
 
 5. Ve a GitHub → Haz clic en **"Compare & pull request"** → Envíalo.
 
-**¿Hay un error?** Copia el mensaje rojo de la consola y díselo a Antigravity:
-> *"Estoy intentando hacer un push a GitHub y me sale este error: [pega el error]. ¿Cómo lo soluciono paso a paso?"*
+---
+
+## 🟢 Comandos de Vue 3 (Para levantar el servidor local)
+
+Para ver la página web funcionando en tu computadora:
+
+1. **Instalar dependencias (Hazlo solo la primera vez o si alguien agregó una nueva librería):**
+   ```bash
+   npm install
+   ```
+2. **Arrancar el servidor de desarrollo:**
+   ```bash
+   npm run dev
+   ```
+   *Esto te dará un enlace local, normalmente `http://localhost:5173`. Haz ctrl+click para abrirlo en tu navegador.*
 
 ---
 
-> ⚠️ **Regla de Oro:** Investiga el error con la IA antes de preguntar al líder del proyecto. La guía de los Sprints 2, 3 y 4 se irá añadiendo semana a semana conforme avance el proyecto.
+## 🧠 Prompts Avanzados para Entregables 2, 3 y 4
+
+### Prompt para crear Lógica (Semana 2) - Entregable 2
+En la semana 2 usarán Antigravity para programar la lógica matemática base de su tema, inspirándose en motores de código abierto como el de Keith Schwarz.
+> *"Actúa como un experto en Lógica Simbólica y TypeScript. Necesito crear una función pura que reciba una expresión de Modus Ponens y valide si está correcta. No hagas interfaz gráfica todavía. Solo dame el código de la función lógica con sus tipos de datos y explícame dónde colocarlo dentro de mi proyecto Vue 3."*
+
+### Prompt para crear Interfaz (Semana 3) - Entregable 3
+> *"Analiza la ruta `src/pages/tablas/index.vue`. Quiero agregar un componente interactivo usando Vue 3 (`<script setup lang="ts">`) y Tailwind CSS v4. Necesito una tabla bonita con fondo oscuro y bordes redondeados que muestre los valores de Verdad de una proposición 'p'. Dame el código exacto."*
+
+### Prompt cuando hay un error (En cualquier momento)
+> *"He intentado correr `npm run dev` (o hacer un push a GitHub) pero la consola me arroja este error rojo: [Copia y pega el error aquí]. Explícame paso a paso cómo lo soluciono en mi sistema operativo."*
+
+---
+
+## ⚠️ Regla de Oro
+**Investiga primero.** Si tienes un problema, copia el error y pégalo en la IA. Si la IA no puede resolverlo después de varios intentos, recién escala el problema en las reuniones de equipo. ¡Conviértete en un Ingeniero Solucionador!
