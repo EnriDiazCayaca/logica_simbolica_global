@@ -36,10 +36,10 @@ La herramienta consistirá en un sistema web interactivo compuesto por **dos int
 ### 3. Boceto Visual (Wireframe)
 
 #### Módulo 1: Interfaz de Calcular y Resolver
-![Interfaz de Calcular y Resolver](assets/interfaz-arnold.png)
+![Interfaz de Calcular y Resolver](assets/propuesta-arnold.png)
 
 #### Módulo 2: Interfaz de Practicar Ejercicios
-![Interfaz de Practicar Ejercicios](assets/interfaz-mor.jpeg)
+![Interfaz de Practicar Ejercicios](assets/propuesta-morocho.jpeg)
 
 ---
 
