@@ -13,7 +13,7 @@ Dificultad para demostrar razonamientos mediante inferencias lógicas válidas
 > ### **2. Funcionalidad Propuesta**
 Te pide las premisas y la conclusión que se quiere demotrasr. Luego de pide el método para resolver (directo o indirecto)
 > ### **3. Boceto Visual (Wireframe)**
-![Interfaz](../assets/INTERFAZ.png)
+![Interfaz](../assets/interfaz-arnold.png)
 
 ### Observación:
 Para un desarrollo eficiente la plataforma debe conocer las equivalencias lógicas para reescribir las premisas según sea conveniente
