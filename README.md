@@ -18,17 +18,15 @@ Lograr que el 100% de los temas del sílabo estén implementados funcionalmente 
 
 ---
 
-## 👥 Organización de los Equipos (Distribución del Sílabo 16 Semanas)
-Cada estudiante es un desarrollador dentro de uno de los 6 Equipos de Dominio. Cada equipo tiene un **Sublíder** responsable de consolidar y comunicarse con GitHub para subir los avances.
+## 👥 Organización de los Equipos (Distribución del Sílabo - 4 Equipos)
+Cada estudiante es un desarrollador dentro de uno de los 4 Equipos de Dominio. Cada equipo tiene un **Sublíder** responsable de consolidar y comunicarse con GitHub para subir los avances.
 
 | # | Nombre | Sublíder | Integrantes | Tema | Carpeta |
 |---|---|---|---|---|---|
-| 1 | Los hijos de Linus | Arom | Centurión, Morocho, Altamirano, Mio | Reglas de Inferencia | `/src/pages/inferencias` |
-| 2 | Sinergia | Alexa | Aldair, Smith, Miguel Velarde, Jesús Núñez | Tablas de Verdad y Leyes | `/src/pages/tablas` |
-| 3 | (por definir) | (por definir) | — | Fundamentos y Conectivos | `/src/pages/fundamentos` |
-| 4 | (por definir) | (por definir) | — | Cuantificadores y Silogismos | `/src/pages/cuantificadores` |
-| 5 | (por definir) | (por definir) | — | Teoría de Conjuntos | `/src/pages/conjuntos` |
-| 6 | (por definir) | (por definir) | — | Operaciones y Diagramas de Venn | `/src/pages/operaciones_conjuntos` |
+| 1 | Sinergia | Alexa | Aldair, Smith, Miguel Velarde, Jesús Núñez | Fundamentos, Conectivos y Tablas de Verdad | `/src/pages/tablas` |
+| 2 | Los hijos de Linus | Arom | Centurión, Morocho, Altamirano, Mio | Inferencias Lógicas y Validaciones | `/src/pages/inferencias` |
+| 3 | (por definir) | (por definir) | — | Cuantificadores y Lógica de Predicados | `/src/pages/cuantificadores` |
+| 4 | (por definir) | (por definir) | — | Teoría de Conjuntos y Diagramas | `/src/pages/conjuntos` |
 
 ---
 

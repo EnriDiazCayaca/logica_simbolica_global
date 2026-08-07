@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
-import Fundamentos from '../pages/fundamentos/index.vue'
 import Tablas from '../pages/tablas/index.vue'
 import Cuantificadores from '../pages/cuantificadores/index.vue'
 import Inferencias from '../pages/inferencias/index.vue'
-import OperacionesConjuntos from '../pages/operaciones_conjuntos/index.vue'
 import Conjuntos from '../pages/conjuntos/index.vue'
 
 const router = createRouter({
@@ -16,19 +14,9 @@ const router = createRouter({
       component: Home
     },
     {
-      path: '/fundamentos',
-      name: 'fundamentos',
-      component: Fundamentos
-    },
-    {
       path: '/tablas',
       name: 'tablas',
       component: Tablas
-    },
-    {
-      path: '/cuantificadores',
-      name: 'cuantificadores',
-      component: Cuantificadores
     },
     {
       path: '/inferencias',
@@ -36,9 +24,9 @@ const router = createRouter({
       component: Inferencias
     },
     {
-      path: '/operaciones_conjuntos',
-      name: 'operaciones_conjuntos',
-      component: OperacionesConjuntos
+      path: '/cuantificadores',
+      name: 'cuantificadores',
+      component: Cuantificadores
     },
     {
       path: '/conjuntos',
