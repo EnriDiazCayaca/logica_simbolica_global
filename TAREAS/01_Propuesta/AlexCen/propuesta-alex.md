@@ -25,4 +25,4 @@ p o no(q) = p V ~q
 
 ### 3. Boceto Visual (Wireframe)
 # Diseño de la interfaz
-![Interfaz principal](/lhdl-logica-simbolica/TAREAS/assets/prototipo.png)
+![Interfaz principal](../assets/prototipo.png)
