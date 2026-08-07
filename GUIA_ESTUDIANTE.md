@@ -122,6 +122,29 @@ En la semana 2 usarán Antigravity para programar la lógica matemática base de
 ### Prompt cuando hay un error (En cualquier momento)
 > *"He intentado correr `npm run dev` (o hacer un push a GitHub) pero la consola me arroja este error rojo: [Copia y pega el error aquí]. Explícame paso a paso cómo lo soluciono en mi sistema operativo."*
 
+## 🛡️ ¿Qué sigue? Cómo no ser engañado por la IA (Semana 2 y 3)
+
+Como dice Arom: *"Ya sabemos usar Antigravity, pero ¿cómo hacemos para que los miembros no boten cualquier cosa que les diga la IA?"*.
+
+Para las próximas semanas (programar la lógica y diseñar la interfaz), la clave es que **ustedes tienen el criterio**. La IA es su teclado rápido, pero ustedes son los ingenieros.
+
+### 1. Entendiendo su espacio de trabajo (Arquitectura aislada)
+A partir de la Semana 2, cada equipo será dueño absoluto de una subcarpeta en `src/pages/`.
+Por ejemplo, el Equipo de Sinergia trabajará en `/src/pages/tablas/`. **Nadie de su equipo debe tocar archivos fuera de su carpeta.** Esto asegura que si se equivocan, no rompan el proyecto entero.
+
+### 2. Vue 3 para Dummies (Lo único que deben saber)
+Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" (un archivo `.vue`). Un archivo `.vue` es como un lego que tiene tres partes:
+1. `<script setup lang="ts">`: Aquí va el cerebro (la lógica y matemáticas en TypeScript).
+2. `<template>`: Aquí va la cara (la estructura HTML de los botones y textos).
+3. `<style>`: Aquí va la ropa (los colores y diseños, aunque usaremos Tailwind CSS directamente en el HTML).
+
+Cuando le pidan código a la IA, no acepten algo que no entiendan. **Pregúntenle a la IA:**
+> *"Explícame línea por línea qué hace este código en `<script>` antes de que lo pegue en mi proyecto."*
+
+### 3. El Motor Lógico Central (El corazón del proyecto)
+Para que no tengan que programar desde cero cómo la computadora entiende qué es un `AND` o un `OR`, el equipo de Líderes creará un **Motor Lógico Central** en la carpeta `/src/core/`.
+Ustedes solo tendrán que **"llamar"** a este motor desde su carpeta para que haga las matemáticas pesadas.
+
 ---
 
 ## ⚠️ Regla de Oro
