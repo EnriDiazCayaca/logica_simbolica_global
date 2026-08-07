@@ -1,6 +1,6 @@
 # 🧠 Lógica Simbólica Global - Proyecto de Aula 2026
 
-![Portada del Repositorio](https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?q=80&w=2089&auto=format&fit=crop) *(Nota: Imagen de portada referencial del repositorio)*
+![Portada del Repositorio](public/assets/banner.jpg) *(Estilo Cyberpunk 16-bits para Lógica Simbólica)*
 
 Bienvenidos al repositorio central del proyecto **Lógica Simbólica Global**.
 El **Objetivo Único (Norte)** de este proyecto es construir, de manera colaborativa, una plataforma web completa e interactiva para que cualquier persona en el mundo aprenda y aplique Lógica Simbólica.
