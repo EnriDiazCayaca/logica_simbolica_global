@@ -1,22 +1,34 @@
 # 📅 Cronograma (4 Sprints)
 
-El desarrollo del proyecto se divide en 4 entregables semanales hasta el **21 de Agosto**.
+Fecha de inicio: **3 de Agosto 2026** · Fecha límite: **30 de Agosto 2026**
 
-## 📌 Sem 1: Propuesta y Diseño (Actual)
-- **Objetivo:** Definir la idea y dibujar la interfaz.
-- **Entregable:** Archivo `propuesta.md` con el problema a resolver y un wireframe (boceto).
+---
 
-## 📌 Sem 2: Motor Lógico Matemática
-- **Objetivo:** Programar el algoritmo en TypeScript que procesa los datos (sin interfaz).
-- **Referencia Open Source:** Se recomienda fuertemente estudiar y basar su código en el motor lógico de **Keith Schwarz** para asegurar la rigurosidad matemática.
-- **Entregable:** Código TS (`.ts`) que reciba inputs y devuelva outputs lógicos.
+## Sprint 1 · Propuesta y Diseño
+**Lun 4 - Jue 7 Ago** → Trabajar el entregable.
+**Vie 8 Ago (4-6 PM)** → Revisión de PRs.
+**Sáb-Dom 9-10 Ago** → Correcciones y ajustes.
+- **Entregable:** `propuesta.md` con descripción de la herramienta y boceto visual.
+- **Herramienta principal:** Figma / Excalidraw + Antigravity para ideas.
 
-## 📌 Sem 3: Interfaz Visual (Vue 3)
-- **Objetivo:** Crear la web y conectarla al motor de la Semana 2.
-- **Entregable:** Componentes `.vue` estilizados con Tailwind CSS.
+## Sprint 2 · Motor Lógico (TypeScript)
+**Lun 11 - Jue 14 Ago** → Trabajar el entregable.
+**Vie 15 Ago (4-6 PM)** → Revisión de PRs.
+**Sáb-Dom 16-17 Ago** → Correcciones y ajustes.
+- **Entregable:** Código `.ts` que procesa la lógica matemática del tema (sin interfaz aún).
+- **Referencia Open Source:** Motor de [Keith Schwarz](https://web.stanford.edu/class/cs103/).
+- **Herramienta principal:** Antigravity (modo agente) para programar el motor.
 
-## 📌 Sem 4: Pruebas y Despliegue
-- **Objetivo:** Eliminar bugs y preparar la presentación.
-- **Entregable:** Código maestro integrado en `main`.
+## Sprint 3 · Interfaz Visual (Vue 3)
+**Lun 18 - Jue 21 Ago** → Trabajar el entregable.
+**Vie 22 Ago (4-6 PM)** → Revisión de PRs.
+**Sáb-Dom 23-24 Ago** → Correcciones y ajustes.
+- **Entregable:** Componentes `.vue` conectados al motor del Sprint 2.
+- **Herramienta principal:** Antigravity para generar y refactorizar componentes Vue.
 
-> ⏱️ **NOTA:** Todos los entregables se revisan vía Pull Request los **Viernes de 4:00 PM a 6:00 PM**.
+## Sprint 4 · Pruebas y Despliegue
+**Lun 25 - Jue 28 Ago** → Trabajar el entregable.
+**Vie 29 Ago (4-6 PM)** → Revisión final y merge a `main`.
+**Sáb 30 Ago** → 🏁 **FECHA LÍMITE ABSOLUTA.**
+- **Entregable:** Código final sin bugs, integrado en `main`.
+- **Herramienta principal:** Antigravity para debug y logs.
