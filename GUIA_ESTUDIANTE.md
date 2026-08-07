@@ -129,7 +129,7 @@ Para las próximas semanas (programar la lógica y diseñar la interfaz), la cla
 ### 1. Entendiendo su espacio de trabajo (Arquitectura aislada)
 A partir de la Semana 2, cada equipo será dueño absoluto de una subcarpeta en `src/pages/`.
 Por ejemplo, el Equipo de Sinergia trabajará en `/src/pages/tablas/`. **Nadie de su equipo debe tocar archivos fuera de su carpeta.** Esto asegura que si se equivocan, no rompan el proyecto entero.
-Cada equipo construirá su propia lógica matemática y visual de forma independiente con la ayuda de Antigravity.
+Cada equipo construirá su propia interfaz visual de forma independiente.
 
 ### 2. Lo básico de NPM (Para probar y corregir a la IA)
 Para probar su código localmente, deben entender estos comandos clave:
@@ -146,6 +146,10 @@ Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" 
 
 Cuando le pidan código a la IA, no acepten algo que no entiendan. **Pregúntenle a la IA:**
 > *"Explícame línea por línea qué hace este código en `<script>` antes de que lo pegue en mi proyecto."*
+
+### 4. El Motor Lógico Central (El corazón del proyecto)
+Para que no tengan que programar desde cero cómo la computadora entiende qué es un `AND` o un `OR`, el equipo de Líderes creará un **Motor Lógico Central** en la carpeta `/src/core/`.
+Ustedes solo tendrán que **"llamar"** a este motor desde su carpeta para que haga las matemáticas pesadas.
 
 ---
 
