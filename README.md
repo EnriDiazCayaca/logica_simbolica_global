@@ -1,6 +1,12 @@
-# 🧠 Lógica Simbólica Global - Proyecto de Aula 2026
+<p align="center">
+  <img src="public/assets/logo.jpg" alt="Logo Logica Simbolica" width="150" style="border-radius: 50%;">
+</p>
 
-![Portada del Repositorio](public/assets/banner.jpg) *(Estilo Cyberpunk 16-bits para Lógica Simbólica)*
+<p align="center">
+  <img src="public/assets/banner.jpg" alt="Banner Logica Simbolica">
+</p>
+
+# 🧠 Lógica Simbólica Global - Proyecto de Aula 2026
 
 Bienvenidos al repositorio central del proyecto **Lógica Simbólica Global**.
 El **Objetivo Único (Norte)** de este proyecto es construir, de manera colaborativa, una plataforma web completa e interactiva para que cualquier persona en el mundo aprenda y aplique Lógica Simbólica.
@@ -25,8 +31,8 @@ Cada estudiante es un desarrollador dentro de uno de los 4 Equipos de Dominio. C
 |---|---|---|---|---|---|
 | 1 | Sinergia | Alexa | Aldair, Smith, Miguel Velarde, Jesús Núñez | Fundamentos, Conectivos y Tablas de Verdad | `/src/pages/tablas` |
 | 2 | Los hijos de Linus | Arom | Centurión, Morocho, Altamirano, Mio | Inferencias Lógicas y Validaciones | `/src/pages/inferencias` |
-| 3 | (por definir) | (por definir) | — | Cuantificadores y Lógica de Predicados | `/src/pages/cuantificadores` |
-| 4 | (por definir) | (por definir) | — | Teoría de Conjuntos y Diagramas | `/src/pages/conjuntos` |
+| 3 | (por definir) | Cristian | Danuska, Marlon, Guillermo, Noemí | Cuantificadores y Lógica de Predicados | `/src/pages/cuantificadores` |
+| 4 | (por definir) | Jordy | Nil, Mike, Sergio, Fer, Alejandro | Teoría de Conjuntos y Diagramas | `/src/pages/conjuntos` |
 
 ---
 

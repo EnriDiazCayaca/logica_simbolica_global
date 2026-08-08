@@ -138,7 +138,14 @@ Para probar su código localmente, deben entender estos comandos clave:
 - `npm install <paquete>`: Saber cómo añadir una librería nueva si la IA les indica que la necesitan (ej. `npm install sweetalert2`).
 - El archivo `package.json`: Es el "índice" de su proyecto. Aquí están los comandos (en "scripts") y las librerías instaladas (en "dependencies").
 
-### 3. Vue 3 para Dummies (Lo único que deben saber)
+### 3. Flujo de Trabajo en Equipo (Resolviendo dudas de Arom y Quinto)
+**"¿Cómo hacemos si todos queremos usar Antigravity pero solo el líder sube el PR?"**
+Funciona igual que cuando juntaban partes de un trabajo en Word o diseñaban en un Figma colaborativo:
+1. **Los Miembros:** Cada integrante en su propia computadora usa su Antigravity local para crear su pequeña parte del proyecto (ej. un componente de botón, un diseño visual, o la lógica de una pequeña regla). 
+2. **Envío de piezas:** El miembro revisa que el código funcione y le envía ese archivo `.vue` o `.ts` (o el código en texto) al Sublíder por WhatsApp, Discord o creando una "Rama" en Git si tienen más experiencia.
+3. **El Sublíder:** Es el ensamblador. Recibe los archivos de su equipo, los junta en la carpeta oficial de su grupo, prueba que todo encaje bien y hace un único **Pull Request** el viernes.
+
+### 4. Vue 3 para Dummies (Lo único que deben saber)
 Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" (un archivo `.vue`). Un archivo `.vue` es como un lego que tiene tres partes:
 1. `<script setup lang="ts">`: Aquí va el cerebro (la lógica y matemáticas en TypeScript).
 2. `<template>`: Aquí va la cara (la estructura HTML de los botones y textos).
