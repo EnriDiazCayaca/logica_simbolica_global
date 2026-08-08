@@ -145,6 +145,17 @@ Funciona igual que cuando juntaban partes de un trabajo en Word o diseñaban en 
 2. **Envío de piezas:** El miembro revisa que el código funcione y le envía ese archivo `.vue` o `.ts` (o el código en texto) al Sublíder por WhatsApp, Discord o creando una "Rama" en Git si tienen más experiencia.
 3. **El Sublíder:** Es el ensamblador. Recibe los archivos de su equipo, los junta en la carpeta oficial de su grupo, prueba que todo encaje bien y hace un único **Pull Request** el viernes.
 
+#### 🌟 Pro-Tip para Sublíderes: ¿Cómo hacer que mi equipo aparezca en los "Contributors" de GitHub?
+Como el Sublíder es el único que sube el código, GitHub pensará que él hizo todo el trabajo solo. Para que **las fotos y perfiles de todos sus integrantes aparezcan en la pestaña Contributors** del repositorio, deben darles crédito en el commit.
+Al momento de escribir el mensaje de su commit (sea en la terminal o en GitHub Desktop), dejen dos líneas en blanco al final y escriban:
+```text
+Agregando el módulo de Tablas de Verdad
+
+Co-authored-by: Nombre del Miembro <su-correo-de-github@ejemplo.com>
+Co-authored-by: Otro Miembro <su-correo@ejemplo.com>
+```
+Con eso, GitHub automáticamente los reconocerá como co-autores del código.
+
 ### 4. Vue 3 para Dummies (Lo único que deben saber)
 Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" (un archivo `.vue`). Un archivo `.vue` es como un lego que tiene tres partes:
 1. `<script setup lang="ts">`: Aquí va el cerebro (la lógica y matemáticas en TypeScript).
