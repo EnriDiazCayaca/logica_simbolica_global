@@ -14,9 +14,17 @@
 
 ## 🛠️ Instrucciones de Entrega
 
-1. Creen el archivo `propuesta.md` dentro de la carpeta de su equipo (Ej: `/src/pages/fundamentos/propuesta.md`).
-2. Copien y llenen la plantilla de abajo.
-3. El Sublíder debe enviar los cambios a GitHub mediante un **Pull Request** antes del Viernes a las 4:00 PM.
+1. Creen el archivo `propuesta.md` dentro de la carpeta de su equipo en `TAREAS/01_Propuesta/` (Ej: `TAREAS/01_Propuesta/sinergia/propuesta.md`).
+2. Tomen capturas de pantalla de sus diseños de Figma o Excalidraw, guárdenlos en una carpeta `assets` al lado de su propuesta, y colóquenlos en su Markdown así: `![Boceto](assets/mi-foto.png)`.
+3. Copien y llenen la plantilla de abajo.
+4. El Sublíder debe enviar los cambios a GitHub mediante un **Pull Request** antes del Viernes a las 4:00 PM.
+
+> 🌟 **¡Ejemplo a Seguir!** 🌟
+> Si tienen dudas de cómo entregar, revisen la carpeta del Equipo 1 (Los hijos de Linus):
+> `TAREAS/01_Propuesta/los-hijos-de-linus/`
+> Ellos ya hicieron la entrega perfecta. Usen su archivo `propuesta.md` y su carpeta `assets/` como inspiración.
+
+---
 
 > **Plantilla Requerida para `propuesta.md`:**
 > ```md

@@ -30,14 +30,22 @@ Guía rápida para encontrar cualquier cosa en el proyecto.
 
 Cada carpeta pertenece a un equipo. Ahí vive todo su código Vue.
 
-| Carpeta | Equipo | Tema |
-|---|---|---|
-| `fundamentos/` | Equipo 3 | Fundamentos y Conectivos (Sem 1-3) |
-| `tablas/` | Equipo 2 · Sinergia (Alexa) | Tablas de Verdad y Leyes (Sem 4-6) |
-| `inferencias/` | Equipo 1 · Los hijos de Linus (Arom) | Reglas de Inferencia (Sem 7-9) |
-| `cuantificadores/` | Equipo 4 | Cuantificadores y Silogismos (Sem 10-12) |
-| `conjuntos/` | Equipo 5 | Teoría de Conjuntos (Sem 13-14) |
-| `operaciones_conjuntos/` | Equipo 6 | Operaciones y Diagramas de Venn (Sem 15-16) |
+## 🗺️ Mapa de Rutas (Páginas del Proyecto)
+
+La estructura web del proyecto se divide en 4 módulos interactivos, uno por equipo:
+
+1. **Equipo Sinergia** 
+   - `src/pages/tablas/` 
+   - Tema: *Fundamentos, Conectivos y Tablas de Verdad*
+2. **Equipo Los hijos de Linus** 
+   - `src/pages/inferencias/` 
+   - Tema: *Inferencias Lógicas y Validaciones*
+3. **Equipo 3 (Pendiente)** 
+   - `src/pages/cuantificadores/` 
+   - Tema: *Cuantificadores y Lógica de Predicados*
+4. **Equipo 4 (Pendiente)** 
+   - `src/pages/conjuntos/` 
+   - Tema: *Teoría de Conjuntos y Diagramas*
 
 ---
 
