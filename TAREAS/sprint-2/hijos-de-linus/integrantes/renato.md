@@ -12,3 +12,6 @@
 ## Temas a investigar (Para principiantes)
 - **Manejo de Errores (try/catch y throw):** Aprende cómo detener el programa a propósito si hay un error: `throw new Error("Entrada inválida")`.
 - **Testing Básico (Vitest o Jest):** Busca un tutorial de 10 minutos de Vitest. Aprende las palabras clave: `describe`, `it`, `test`, `expect`.
+
+---
+> ⚠️ **IMPORTANTE:** Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.

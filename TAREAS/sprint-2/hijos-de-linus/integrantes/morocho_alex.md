@@ -11,3 +11,6 @@
 ## Temas a investigar (Para principiantes)
 - **Arreglos (Arrays) en JavaScript/TypeScript:** Repasen los métodos `.push()`, `.map()`, y `.forEach()`.
 - **Trabajo con Objetos:** Repasen cómo crear objetos `{ clave: valor }` y cómo actualizar sus propiedades.
+
+---
+> ⚠️ **IMPORTANTE:** Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
