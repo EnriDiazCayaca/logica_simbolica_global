@@ -14,4 +14,20 @@
 - **Testing Básico (Vitest o Jest):** Busca un tutorial de 10 minutos de Vitest. Aprende las palabras clave: `describe`, `it`, `test`, `expect`.
 
 ---
-> ⚠️ **IMPORTANTE:** Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
+## ⚠️ IMPORTANTE: Estándares, Herramientas y Registro de Avance
+
+Para garantizar un código robusto, limpio y sin errores en el equipo (y con asistentes IA Antigravity), tener en cuenta lo siguiente:
+
+1. **Herramientas y Verificación (LSP & Testing):**
+   - **Verificación de Tipos (LSP / vue-tsc):** Ejecutar siempre `npm run type-check` antes de finalizar para asegurar TypeScript estricto (cero `any`).
+   - **Pruebas Automatizadas (Vitest):** Ejecutar `npm test` o `npm run test:watch` para validar que tus tests pasen y no existan regresiones.
+   - **Servidores de Lenguaje configurados:** `typescript-language-server` y `@vue/language-server` (Volar).
+
+2. **Skills y Buenas Prácticas del Proyecto:**
+   - Seguir las directrices de `AGENTS.md` y las skills de `vue-best-practices`.
+   - **Sanitización y Validación:** La función `sanitizarEntrada` debe ser una función pura y bien testeada contra casos límite.
+   - Para consultar documentación actualizada de librerías o testing, usar la CLI de **Context7** (`npx ctx7@latest ...`).
+
+3. **Registro Obligatorio:**
+   - Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
+

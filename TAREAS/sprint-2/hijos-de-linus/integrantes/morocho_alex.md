@@ -13,4 +13,20 @@
 - **Trabajo con Objetos:** Repasen cómo crear objetos `{ clave: valor }` y cómo actualizar sus propiedades.
 
 ---
-> ⚠️ **IMPORTANTE:** Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
+## ⚠️ IMPORTANTE: Estándares, Herramientas y Registro de Avance
+
+Para garantizar un código robusto, limpio y sin errores en el equipo (y con asistentes IA Antigravity), tener en cuenta lo siguiente:
+
+1. **Herramientas y Verificación (LSP & Testing):**
+   - **Verificación de Tipos (LSP / vue-tsc):** Ejecutar siempre `npm run type-check` antes de finalizar para asegurar TypeScript estricto (cero `any`).
+   - **Pruebas Automatizadas (Vitest):** Ejecutar `npm test` para validar que tus cambios no rompan funcionalidades.
+   - **Servidores de Lenguaje configurados:** `typescript-language-server` y `@vue/language-server` (Volar).
+
+2. **Skills y Buenas Prácticas del Proyecto:**
+   - Seguir las directrices de `AGENTS.md` y las skills de `vue-best-practices`.
+   - **Desacoplamiento:** Mantener la lógica de trazabilidad y datos en texto plano y estructuras limpias, sin etiquetas HTML.
+   - Para consultar documentación actualizada de herramientas, usar la CLI de **Context7** (`npx ctx7@latest ...`).
+
+3. **Registro Obligatorio:**
+   - Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
+
