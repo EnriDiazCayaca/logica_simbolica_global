@@ -1,5 +1,5 @@
 // Operadores lógicos en español
-export type Operador = 
+export type Operador =
   | 'Y'             // Conjunción (AND)
   | 'O'             // Disyunción (OR)
   | 'O_EXCLUSIVA'   // Disyunción exclusiva (XOR)
@@ -10,7 +10,7 @@ export type Operador =
   | 'INCOMPATIBLE'; // NAND (No Y)
 
 // Reglas de Inferencia (Principales)
-export type Inferencia = 
+export type Inferencia =
   | 'MODUS_PONENDO_PONENS'     // Alias: MPP, Afirmando afirmo
   | 'MODUS_TOLLENDO_TOLLENS'   // Alias: MTT, Negando niego
   | 'SILOGISMO_DISYUNTIVO'     // Alias: Modus Tollendo Ponens, MTP, Negando afirmo
@@ -21,12 +21,12 @@ export type Inferencia =
   | 'DILEMA_CONSTRUCTIVO';     // P->Q, R->S, P v R |- Q v S
 
 // Equivalencias Lógicas (Principales)
-export type Equivalencia = 
-  | 'DE_MORGAN' 
-  | 'DOBLE_NEGACION' 
-  | 'CONMUTATIVA' 
-  | 'ASOCIATIVA' 
-  | 'DISTRIBUTIVA' 
+export type Equivalencia =
+  | 'DE_MORGAN'
+  | 'DOBLE_NEGACION'
+  | 'CONMUTATIVA'
+  | 'ASOCIATIVA'
+  | 'DISTRIBUTIVA'
   | 'IMPLICACION_MATERIAL'     // Alias: Condicional a Disyunción (P -> Q = ~P v Q)
   | 'CONTRAPOSICION'           // Alias: Transposición (P -> Q = ~Q -> ~P)
   | 'EXPORTACION';             // (P ^ Q) -> R  equivale a  P -> (Q -> R)

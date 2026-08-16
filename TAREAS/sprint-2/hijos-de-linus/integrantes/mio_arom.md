@@ -16,9 +16,9 @@ Arom se encarga de la ingeniería pura del motor, las estructuras de datos y la 
 
 ### 📝 Mio: Transcripción Modular a Lenguaje Natural
 Mio toma los códigos y estructuras que genera el motor de Arom y los traduce a explicaciones didácticas en español.
-- [ ] **Paso 1: Diccionario de Traducciones.** Crear un módulo (`translations.ts` o similar) que mapee las operaciones lógicas de Arom a textos explicativos. (Ej: `operacion: 'SIMPLIFICACION_AND'` ➔ `"Se aplicó la regla de simplificación para la conjunción (Y)"`).
-- [ ] **Paso 2: Generador de Descripciones.** Desarrollar funciones que reciban el contexto del paso actual (los valores específicos) e inyecten esos valores en el texto. (Ej: `"Como A es Verdadero y B es Falso, entonces (A y B) es Falso"`).
-- [ ] **Paso 3: Integración Trazable.** Asegurar que los textos generados por Mio se acoplen perfectamente con el array de historial que esperan Morocho y Alex.
+- [x] **Paso 1: Diccionario de Traducciones.** Crear un módulo (`translations.ts` o similar) que mapee las operaciones lógicas de Arom a textos explicativos. (Ej: `operacion: 'SIMPLIFICACION_AND'` ➔ `"Se aplicó la regla de simplificación para la conjunción (Y)"`).
+- [x] **Paso 2: Generador de Descripciones.** Desarrollar funciones que reciban el contexto del paso actual (los valores específicos) e inyecten esos valores en el texto. (Ej: `"Como A es Verdadero y B es Falso, entonces (A y B) es Falso"`).
+- [x] **Paso 3: Integración Trazable.** Asegurar que los textos generados por Mio se acoplen perfectamente con el array de historial que esperan Morocho y Alex.
 
 ## Temas a investigar (Para principiantes)
 - **Árboles de Sintaxis Abstracta (AST):** Concepto clave para Arom al construir la estructura anidada de operaciones lógicas.
