@@ -67,6 +67,21 @@
   * `explicarDemostracion(premisas, resultado)` envuelve lo anterior y agrega una conclusión final en lenguaje natural según `resultado.esValido`.
   * Se validó la integración corriendo `ejemplo.ts` contra el `demostrarConclusion` real de Arom (mismo caso que su `solver.test.ts`, Modus Ponendo Ponens con P ENTONCES Q y P), confirmando compilación en modo estricto (0 errores) y salida correcta en español.
 
+## Integrante: Renato
+**Módulo:** Validaciones, Sanitización, Pruebas y Cobertura (Control de Calidad)
 
-
-
+### ✅ Completado (17 de Agosto)
+* **Matriz de Casos Borde (`casos_de_prueba.md`):**
+  * Se redactó una matriz exhaustiva de 25 casos de prueba y escenarios límite categorizados (entradas vacías, caracteres prohibidos/especiales, emojis, inyecciones de código/HTML, operadores matemáticos y lógicos en múltiples notaciones, variables compuestas con índices, paréntesis anidados, desbalanceados o vacíos, operadores consecutivos e incompletos, premisas redundantes, etc.).
+* **Módulo de Sanitización y Validación (`src/lib/validator/`):**
+  * Se diseñaron las interfaces de datos en `types.ts` (`ResultadoValidacion`, `ResultadoValidacionConjunto`, `OpcionesSanitizacion`).
+  * Se implementó `sanitizarEntrada(texto)` en `validator.ts`, que normaliza espacios redundantes, unifica notaciones lógicas universales (`->`, `∧`, `∨`, `¬`, `~`, `&`, `|`, `⊕`, `↓`, `↑`, `↔`, etc.) hacia las palabras clave estándar en mayúsculas del motor (`ENTONCES`, `Y`, `O`, `NO`, `SI_Y_SOLO_SI`, `O_EXCLUSIVA`, `NI`, `INCOMPATIBLE`), previene inyecciones maliciosas y valida la consistencia léxica y de paréntesis.
+  * Se implementó `validarExpresion(texto)` como función segura orientada a formularios reactivos en Vue (Sprint 3), retornando objetos de estado sin arrojar excepciones no controladas.
+  * Se implementó `validarPremisasYConclusion(premisas, conclusion)` para el procesamiento de lotes con deduplicación automática y acumulación de diagnósticos de error.
+  * Se creó el barrel file `index.ts` y la guía de uso `README.md` para el equipo.
+* **Pruebas Automatizadas y Cobertura:**
+  * Se desarrolló la suite unitaria `validator.test.ts` con 27 tests detallados cubriendo todos los casos de la matriz.
+  * Se desarrolló la suite de integración end-to-end `integracion_motor.test.ts` que valida el pipeline completo de todos los módulos (`Sanitización -> Parser -> Solver -> Trazabilidad -> Transcripción`).
+  * Se desarrolló la suite de pruebas avanzadas y estrés `validator_stress.test.ts` (15 tests adicionales) para comprobar resiliencia ante inyecciones maliciosas, fuzzer de expresiones corruptas, 10 niveles de anidación y deduplicación avanzada.
+  * Todas las suites del proyecto (7 archivos de pruebas y 67 tests) pasan al 100% en Vitest sin fallos ni regresiones.
+  * Se verificó la conformidad estricta de TypeScript con `vue-tsc --noEmit` (0 errores de tipado) y compilación limpia en producción con `npm run build`.
