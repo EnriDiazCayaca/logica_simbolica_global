@@ -7,7 +7,7 @@
  * simbólica legible, ej: "(P ENTONCES Q)", "(NO P)".
  */
 
-import type { NodoExpresion } from "./types";
+import type { NodoExpresion } from "../solver/types";
 
 export function renderizarNodo(nodo: NodoExpresion): string {
   if (nodo.tipo === "variable") {

@@ -24,6 +24,29 @@
 * **Expansión de Reglas (Módulo de Arom):** Seguir agregando las funciones unitarias para detectar y aplicar `MODUS_TOLLENDO_TOLLENS`, `SILOGISMO_HIPOTETICO`, `DE_MORGAN`, etc., basándose en la plantilla estructural de `aplicarModusPonendoPonens`.
 * **Algoritmo de Búsqueda:** Mejorar el interior de `demostrarConclusion` para que recorra cíclicamente el arreglo de premisas intentando derivar proposiciones nuevas usando encadenamiento hacia adelante (forward-chaining) hasta dar con la conclusión deseada.
 
+## Integrantes: Morocho y Alex
+**Módulo:** Trazabilidad y Explicación (Didáctico)
+
+### Completado (16 de Agosto)
+* **Diseño de Estructura de Paso (`types.ts`):**
+  * Se definió la interfaz `PasoTrazabilidad` con los campos: `numeroPaso`, `operacion`, `regla`, `alias`, `explicacion`, `expresionSimbolica`, `lineasBase`, `esConclusion` y `estadoActual`.
+  * Se definió `ResultadoTrazabilidad` como contenedor completo con `esValido`, `pasos`, `conclusion` y `totalPasos`, listo para consumir por la UI en el próximo sprint.
+* **Contenedor del Historial (`historial.ts`):**
+  * Se creó `crearHistorial()` que retorna un array vacío `[]` como punto de partida.
+  * Se implementó `registrarPaso()` que recibe un paso del solver, lo traduce a `PasoTrazabilidad` usando `generarPasoEnriquecido` de Mio, genera un snapshot del `estadoActual` con todas las líneas disponibles, y lo añade al array con `.push()`.
+  * Se implementaron funciones auxiliares `obtenerPaso(numero)` y `obtenerConclusiones()` para consultas sobre el historial.
+* **Integración con el Solver (`construirTrazabilidad()`):**
+  * Se creó la función principal que recibe `premisas[]` + `ResultadoDemostracion` del solver y produce un `ResultadoTrazabilidad` completo.
+  * Recorre los pasos EN ORDEN acumulando `pasosPrevios` para resolver referencias cruzadas de líneas, consumiendo el módulo de transcripción de Mio (`generarPasoEnriquecido`, `renderizarNodo`).
+  * Genera la conclusión final en lenguaje natural según `resultado.esValido`.
+* **Punto de Entrada (`index.ts`):**
+  * Se creó barrel file que re-exporta tipos y funciones del módulo.
+* **Pruebas y Verificación:**
+  * Se creó suite de pruebas en `trazabilidad.test.ts` con 9 tests (22 assertions) cubriendo: creación de historial vacío, registro de pasos con datos completos, acumulación de múltiples pasos, generación de `estadoActual`, proceso completo de `construirTrazabilidad`, y funciones auxiliares de consulta.
+  * Código cumple estrictamente el tipado (0 errores en `vue-tsc`) y 100% de cobertura en pruebas.
+* **Corrección de Bug:**
+  * Se corrigió importación rota en `src/lib/transcription/astRenderer.ts`: apuntaba a `"./types"` (inexistente) en vez de `"../solver/types"`.
+
 ## Integrante: Mio
 **Módulo:** Transcripción
 

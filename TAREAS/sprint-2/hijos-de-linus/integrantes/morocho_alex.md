@@ -3,17 +3,26 @@
 **Objetivo:** Hacer que el motor guarde el "paso a paso" detallado de la resolución para poder enseñarlo.
 
 ## Tareas Detalladas
-- [ ] **Paso 1: Diseñar cómo se guardará un "paso".** Piensen cómo quieren que la interfaz (que se hará en el próximo sprint) reciba la información. Un buen inicio es definir un objeto en TypeScript: `{ numeroPaso: 1, operacion: "Simplificar", explicacion: "Se aplicó la regla de De Morgan", estadoActual: "..." }`.
-- [ ] **Paso 2: Crear el contenedor del historial.** Creen una estructura (como un array vacío `[]`) al principio de la resolución donde se irán empujando (`.push()`) los pasos a medida que el motor (creado por Mio y Arom) avanza.
-- [ ] **Paso 3: Coordinación con el Solver.** Hablen con Mio y Arom para acordar en qué momentos exactos el motor debería avisarles que "ocurrió un paso nuevo" para que ustedes lo registren en su array.
-- [ ] **Paso 4: Mantenerlo limpio (Desacoplamiento).** Asegúrense de que las explicaciones sean texto plano (ej: `"Se aplica la regla X"`), sin código HTML (`<b>Se aplica...</b>`). El diseño visual se hará después.
+- [x] **Paso 1: Diseñar cómo se guardará un "paso".** Se definió la interfaz `PasoTrazabilidad` en `src/lib/trazabilidad/types.ts` con los campos: `numeroPaso`, `operacion`, `regla`, `alias`, `explicacion`, `expresionSimbolica`, `lineasBase`, `esConclusion` y `estadoActual`. Se creó también `ResultadoTrazabilidad` como contenedor completo con `esValido`, `pasos`, `conclusion` y `totalPasos`.
+- [x] **Paso 2: Crear el contenedor del historial.** Se implementó `crearHistorial()` en `src/lib/trazabilidad/historial.ts` que retorna un array vacío `[]`. La función `registrarPaso()` usa `.push()` para ir agregando cada paso a medida que el motor avanza. Se incluyeron funciones auxiliares `obtenerPaso()` y `obtenerConclusiones()` para consultas sobre el historial.
+- [x] **Paso 3: Coordinación con el Solver.** La función `construirTrazabilidad()` integra directamente con la salida de `demostrarConclusion()` del solver. Recorre `resultado.pasos` en orden, acumulando `pasosPrevios` para resolver referencias cruzadas de líneas. Consume el módulo de transcripción de Mio (`generarPasoEnriquecido`, `renderizarNodo`) para generar las descripciones en español.
+- [x] **Paso 4: Mantenerlo limpio (Desacoplamiento).** Toda la lógica de trazabilidad está en `src/lib/trazabilidad/`, separada del solver y de la transcripción. Los textos generados son plano (sin HTML). La interfaz está diseñada para que la UI (próximo sprint) pueda consumirla directamente sin procesamiento adicional.
+
+## Archivos Creados
+- `src/lib/trazabilidad/types.ts` — Interfaces `PasoTrazabilidad` y `ResultadoTrazabilidad`
+- `src/lib/trazabilidad/historial.ts` — Funciones `crearHistorial`, `registrarPaso`, `construirTrazabilidad`, `obtenerPaso`, `obtenerConclusiones`
+- `src/lib/trazabilidad/index.ts` — Punto de entrada del módulo (re-exports)
+- `src/lib/trazabilidad/trazabilidad.test.ts` — Suite de pruebas Vitest (9 tests, 22 assertions totales)
+
+## Corrección Adicional
+- Se corrigió un bug en `src/lib/transcription/astRenderer.ts`: la importación de tipos apuntaba a `"./types"` (inexistente) en lugar de `"../solver/types"`.
 
 ## Temas a investigar (Para principiantes)
 - **Arreglos (Arrays) en JavaScript/TypeScript:** Repasen los métodos `.push()`, `.map()`, y `.forEach()`.
 - **Trabajo con Objetos:** Repasen cómo crear objetos `{ clave: valor }` y cómo actualizar sus propiedades.
 
 ---
-## ⚠️ IMPORTANTE: Estándares, Herramientas y Registro de Avance
+## IMPORTANTE: Estándares, Herramientas y Registro de Avance
 
 Para garantizar un código robusto, limpio y sin errores en el equipo (y con asistentes IA Antigravity), tener en cuenta lo siguiente:
 
@@ -29,4 +38,3 @@ Para garantizar un código robusto, limpio y sin errores en el equipo (y con asi
 
 3. **Registro Obligatorio:**
    - Al finalizar tu parte de las tareas, debes añadir obligatoriamente tu avance formal (detallando lo completado) en el archivo `../avance.md`.
-
