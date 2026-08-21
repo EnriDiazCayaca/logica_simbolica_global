@@ -5,9 +5,9 @@
         &larr; Volver al inicio
       </router-link>
       <div class="bg-white p-8 rounded-xl border border-neutral-200 shadow-sm space-y-4">
-        <h1 class="text-3xl font-bold text-neutral-900">Equipo 3: Transformaciones Condicionales</h1>
-        <p class="text-neutral-600">
-          Espacio de trabajo para el equipo de Condicionales (Conversa, Inversa, Contrapositiva).
+        <h1 class="text-3xl font-bold text-neutral-900">Equipo 3: Cuantificadores y Lógica de Predicados</h1>
+<p class="text-neutral-600">
+      Espacio de trabajo para el equipo de Cuantificadores y Lógica de Predicados (traducir y negar fórmulas con ∀, ∃).
         </p>
       </div>
     </div>

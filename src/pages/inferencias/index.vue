@@ -5,7 +5,7 @@
         &larr; Volver al inicio
       </router-link>
       <div class="bg-white p-8 rounded-xl border border-neutral-200 shadow-sm space-y-4">
-        <h1 class="text-3xl font-bold text-neutral-900">Equipo 4: Inferencias Lógicas Básicas</h1>
+        <h1 class="text-3xl font-bold text-neutral-900">Equipo 1: Inferencias Lógicas y Validaciones</h1>
         <p class="text-neutral-600">
           Espacio de trabajo para el equipo de Inferencias Lógicas (Modus Ponens, Modus Tollens, Silogismos).
         </p>

@@ -5,7 +5,7 @@
         &larr; Volver al inicio
       </router-link>
       <div class="bg-white p-8 rounded-xl border border-neutral-200 shadow-sm space-y-4">
-        <h1 class="text-3xl font-bold text-neutral-900">Equipo 6: Teoría de Conjuntos</h1>
+        <h1 class="text-3xl font-bold text-neutral-900">Equipo Linus: Teoría de Conjuntos y Diagramas</h1>
         <p class="text-neutral-600">
           Espacio de trabajo para el equipo de Conjuntos (Diagramas de Venn, operaciones con conjuntos).
         </p>

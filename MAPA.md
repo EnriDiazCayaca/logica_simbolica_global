@@ -40,10 +40,10 @@ La estructura web del proyecto se divide en 4 módulos interactivos, uno por equ
 2. **Equipo Los hijos de Linus** 
    - `src/pages/inferencias/` 
    - Tema: *Inferencias Lógicas y Validaciones*
-3. **Equipo 3 (Pendiente)** 
+3. **Equipo 3** 
    - `src/pages/cuantificadores/` 
    - Tema: *Cuantificadores y Lógica de Predicados*
-4. **Equipo 4 (Pendiente)** 
+4. **Equipo Linus**
    - `src/pages/conjuntos/` 
    - Tema: *Teoría de Conjuntos y Diagramas*
 

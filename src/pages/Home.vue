@@ -37,7 +37,7 @@
       </main>
 
       <footer class="text-center text-sm text-neutral-400 pt-12 border-t border-neutral-200">
-        Proyecto EO - Liderado por Enri - Fecha Límite: 21 de Agosto de 2026
+        Proyecto EO - Liderado por Enri - Fecha Límite: 25 de Agosto de 2026
       </footer>
     </div>
   </div>
@@ -45,11 +45,9 @@
 
 <script setup lang="ts">
 const teams = [
-  { id: "fundamentos", name: "1. Fundamentos del Lenguaje", desc: "Enunciados vs Proposiciones, Valores de verdad." },
-  { id: "tablas", name: "2. Conectivos y Tablas de Verdad", desc: "Funciones veritativas, tautología, contingencia." },
-  { id: "condicionales", name: "3. Transformaciones Condicionales", desc: "Conversa, Inversa, Contrapositiva." },
-  { id: "inferencias", name: "4. Inferencias Lógicas Básicas", desc: "Modus Ponens, Tollens, Silogismos." },
-  { id: "derivaciones", name: "5. Validaciones y Derivaciones", desc: "Método abreviado, derivación formal." },
-  { id: "conjuntos", name: "6. Teoría de Conjuntos", desc: "Diagramas de Venn, operaciones con conjuntos." },
+  { id: "tablas", name: "Equipo Sinergia · Tablas de Verdad", desc: "Fundamentos, conectivos y tablas de verdad." },
+  { id: "inferencias", name: "Equipo Los Hijos de Linus · Inferencias", desc: "Inferencias lógicas y validaciones." },
+  { id: "cuantificadores", name: "Equipo Modus Innova · Cuantificadores", desc: "Cuantificadores y lógica de predicados." },
+  { id: "conjuntos", name: "Equipo Linus · Conjuntos", desc: "Teoría de conjuntos y diagramas de Venn." },
 ]
 </script>
