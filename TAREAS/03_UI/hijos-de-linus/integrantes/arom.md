@@ -13,12 +13,12 @@
 ## Tareas Detalladas
 
 ### 🟢 FASE 1: Fundación y Contratos (Haz esto primero)
-- [ ] **Paso 0: Verificación Base y Tipos.**
+- [x] **Paso 0: Verificación Base y Tipos.**
   - Verifica que Tailwind esté configurado y si existen `Card.vue`, `Button.vue` y `Badge.vue` en `src/components/ui/`. Si no, créalos guiándote por `../glosario-diseno.md`.
   - Crea `src/types/inferencias.ts` exportando `InferenciaRequest`, `PasoInferencia` y `ResultadoInferencia` ('valida', 'invalida', 'error', 'pendiente').
   - Asegura que `src/pages/inferencias/index.vue` esté registrado en el router.
   - 📢 **Aviso de Desbloqueo:** Deja una nota en `avance.md` o en el commit: *"Fase 1 lista: tipos en `src/types/inferencias.ts`. Morocho, Mio y Alex pueden comenzar."*
-- [ ] **Paso 1: Maquetación principal (`index.vue`).** Crea el esqueleto base con placeholders donde irán los componentes hijos.
+- [x] **Paso 1: Maquetación principal (`index.vue`).** Crea el esqueleto base con placeholders donde irán los componentes hijos.
 
 ### 🟢 FASE 3: Integración y Ensamble (Tras finalizar Morocho, Mio y Alex)
 - [ ] **Paso 2: Gestión de Estado.** Define: premisas, conclusión, resultado, pasos, `isLoading` (booleano) y `error` (string | null).
