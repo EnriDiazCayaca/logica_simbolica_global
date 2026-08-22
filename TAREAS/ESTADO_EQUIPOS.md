@@ -112,3 +112,14 @@ npm run test
 # Type check
 npm run type-check
 ```
+
+---
+
+## 📋 Log de Cambios
+
+| Fecha | Quién | Qué hizo | PR |
+|---|---|---|---|
+| 21/08/2026 | Enri | Corrigió nombres de equipos (Linus = equipo 4), creó estructura TAREAS/, branding (Button.vue, Card.vue, Badge.vue), deploy GitHub Pages, actualizó docs | — |
+| — | — | — | — |
+
+> **Instrucción para equipos:** Cuando envíen un PR para cualquier entregable, actualizar esta tabla con la fecha, quién hizo el cambio, qué hizo y el número del PR.

@@ -3,12 +3,10 @@
 **Objetivo:** Diseñar la funcionalidad de la herramienta web (SIN programar aún).
 
 ## 📌 Equipos y Temas Asignados
-- **Equipo 1 (Los hijos de Linus | Arom):** Fundamentos y Conectivos (`/src/pages/fundamentos`)
-- **Equipo 2 (Sinergia | Alexa):** Tablas de Verdad y Leyes (`/src/pages/tablas`)
-- **Equipo 3:** Reglas de Inferencia (`/src/pages/inferencias`)
-- **Equipo 4:** Cuantificadores y Silogismos (`/src/pages/cuantificadores`)
-- **Equipo 5:** Teoría de Conjuntos (`/src/pages/conjuntos`)
-- **Equipo 6:** Operaciones de Conjuntos (`/src/pages/operaciones_conjuntos`)
+- **Equipo 1 — Sinergia (Alexa):** Fundamentos, Conectivos y Tablas de Verdad (`/src/pages/tablas`)
+- **Equipo 2 — Los Hijos de Linus (Arom):** Inferencias Lógicas y Validaciones (`/src/pages/inferencias`)
+- **Equipo 3 — Modus Innova (Cristian):** Cuantificadores y Lógica de Predicados (`/src/pages/cuantificadores`)
+- **Equipo 4 — Linus (Jordy):** Teoría de Conjuntos y Diagramas (`/src/pages/conjuntos`)
 
 ---
 
@@ -20,7 +18,7 @@
 4. El Sublíder debe enviar los cambios a GitHub mediante un **Pull Request** antes del Viernes a las 4:00 PM.
 
 > 🌟 **¡Ejemplo a Seguir!** 🌟
-> Si tienen dudas de cómo entregar, revisen la carpeta del Equipo 1 (Los hijos de Linus):
+> Si tienen dudas de cómo entregar, revisen la carpeta del Equipo 2 (Los Hijos de Linus):
 > `TAREAS/01_Propuesta/los-hijos-de-linus/`
 > Ellos ya hicieron la entrega perfecta. Usen su archivo `propuesta.md` y su carpeta `assets/` como inspiración.
 

@@ -12,85 +12,14 @@ ChatGPT te responde. **Antigravity actúa.** La diferencia es que Antigravity pu
 
 ---
 
-## 📌 Entregable 1: Propuesta y Diseño (Semana 1)
+## 📌 Equipos y Temas
 
-Todo lo que necesitas saber para completar la Tarea 01 está aquí.
-
-### ¿Qué tienes que producir?
-Un archivo `propuesta.md` en tu carpeta asignada (Ej: `/src/pages/inferencias/propuesta.md`) con:
-- Nombre de la herramienta.
-- Problema que resuelve.
-- Boceto visual (wireframe).
-
-Usa la plantilla que está en `TAREAS/01_Propuesta.md`.
-
----
-
-### Paso 1: Diseña el boceto visual
-
-No programes nada aún. Dibuja cómo se verá la interfaz.
-
-- **[Excalidraw](https://excalidraw.com/)** → Bocetos rápidos, pizarra virtual. Recomendado para empezar.
-- **[Figma](https://figma.com/)** → Herramienta profesional de diseño UI. Tiene plan gratuito.
-  - Tutorial: [Figma en 10 minutos (YouTube)](https://www.youtube.com/results?search_query=figma+tutorial+para+principiantes+10+minutos)
-- **Alternativa:** Papel y lápiz + una foto clara.
-
-**Prompt para Antigravity (cópialo y pégalo):**
-> *"Soy estudiante de ingeniería de sistemas. Tenemos una web en Vue 3 sobre Lógica Simbólica. A mi equipo le tocó el tema [escribe tu tema]. Dime qué herramienta interactiva podríamos construir para que los alumnos practiquen este tema. Dame 3 ideas concretas con su descripción en 2 líneas."*
-
----
-
-### Paso 2: Escribe el archivo en Markdown
-
-Tu archivo debe estar en formato `.md`. Es texto simple con símbolos especiales.
-
-| Sintaxis | Resultado |
-|---|---|
-| `# Título` | Título grande |
-| `## Subtítulo` | Subtítulo |
-| `- Item` | Viñeta |
-| `**negrita**` | **negrita** |
-
-> 💡 **Tip para pasar de Figma a Markdown (¡Para los de Diseño!):** 
-> No tienen que programar la interfaz en HTML. Simplemente tomen una captura de pantalla a su diseño en Figma, guárdenla como `.png` o `.jpg` en una carpeta llamada `assets/` al lado de su propuesta, y añádanla al Markdown usando este código: 
-> `![Mi diseño](assets/nombre-imagen.png)`
-
-- 📖 Referencia completa: [Guía de Markdown de GitHub](https://docs.github.com/es/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax)
-
----
-
-### Paso 3: Sube tu tarea a GitHub (Solo el Sublíder)
-
-El **Sublíder** es el responsable de ejecutar estos comandos en su terminal para entregar la tarea oficial. Sigan este flujo exacto:
-
-```bash
-# 1. Clona el repositorio a tu PC (haz esto solo la primera vez que trabajes)
-git clone https://github.com/EnriDiazCayaca/logica_simbolica_global.git
-cd logica_simbolica_global
-
-# 2. Crea una rama para tu equipo (NUNCA trabajes en la rama "main")
-git checkout -b equipo-2-sinergia
-
-# 3. Mueve o crea tu archivo propuesta.md y tus imágenes dentro de tu carpeta en TAREAS/01_Propuesta/
-
-# 4. Dile a Git que prepare todos los archivos nuevos
-git add .
-
-# 5. Guarda una "foto" de tus cambios con un mensaje
-git commit -m "Entregable 1: Propuesta del Equipo Sinergia"
-
-# 6. Sube los cambios al servidor de GitHub
-git push origin equipo-2-sinergia
-```
-
-7. Una vez que corran esos comandos, abran la página web del repositorio de GitHub. 
-8. Verán un gran botón verde que dice **"Compare & pull request"**. Háganle clic.
-9. Rellenen el título y denle al botón final verde de **"Create pull request"**. ¡Tarea entregada!
-
-> 🌟 **¿Dudas de cómo debe quedar?** Revisen el código y la entrega del Equipo 1 (Los hijos de Linus) en la carpeta `/TAREAS/01_Propuesta/los-hijos-de-linus/`. Ellos lo hicieron perfecto y pueden usarlo de modelo.
-
-**¿Hay un error rojo en la consola?** Copia el mensaje y díselo a Antigravity:
-> *"Estoy intentando hacer un push a GitHub y me sale este error: [pega el error]. ¿Cómo lo soluciono paso a paso?"*
+| # | Equipo | Carpeta | Tema |
+|---|---|---|---|
+| 1 | Sinergia | `src/pages/tablas/` | Tablas de Verdad |
+| 2 | Los Hijos de Linus | `src/pages/inferencias/` | Inferencias Lógicas |
+| 3 | Modus Innova | `src/pages/cuantificadores/` | Cuantificadores |
+| 4 | Linus | `src/pages/conjuntos/` | Conjuntos y Venn |
 
 ---
 
@@ -110,66 +39,141 @@ Para ver la página web funcionando en tu computadora:
 
 ---
 
-## 🧠 Prompts Avanzados para Entregables 2, 3 y 4
+## 📌 Entregable 1: Propuesta y Diseño (Semana 1) ✅
 
-### Prompt para crear Lógica (Semana 2) - Entregable 2
-En la semana 2 usarán Antigravity para programar la lógica matemática base de su tema, inspirándose en motores de código abierto como el de Keith Schwarz.
-> *"Actúa como un experto en Lógica Simbólica y TypeScript. Necesito crear una función pura que reciba una expresión de Modus Ponens y valide si está correcta. No hagas interfaz gráfica todavía. Solo dame el código de la función lógica con sus tipos de datos y explícame dónde colocarlo dentro de mi proyecto Vue 3."*
+Todo lo que necesitas saber para completar la Tarea 01 está aquí.
 
-### Prompt para crear Interfaz (Semana 3) - Entregable 3
-> *"Analiza la ruta `src/pages/tablas/index.vue`. Quiero agregar un componente interactivo usando Vue 3 (`<script setup lang="ts">`) y Tailwind CSS v4. Necesito una tabla bonita con fondo oscuro y bordes redondeados que muestre los valores de Verdad de una proposición 'p'. Dame el código exacto."*
+### ¿Qué tienes que producir?
+Un archivo `propuesta.md` en tu carpeta asignada (Ej: `TAREAS/01_Propuesta/sinergia/propuesta.md`) con:
+- Nombre de la herramienta.
+- Problema que resuelve.
+- Boceto visual (wireframe).
 
-### Prompt cuando hay un error (En cualquier momento)
-> *"He intentado correr `npm run dev` (o hacer un push a GitHub) pero la consola me arroja este error rojo: [Copia y pega el error aquí]. Explícame paso a paso cómo lo soluciono en mi sistema operativo."*
+Usa la plantilla que está en `TAREAS/01_Propuesta.md`.
 
-## 🛡️ ¿Qué sigue? Cómo no ser engañado por la IA (Semana 2 y 3)
+### Paso 1: Diseña el boceto visual
+No programes nada aún. Dibuja cómo se verá la interfaz.
 
-Para las próximas semanas (programar la lógica y diseñar la interfaz), la clave es que **ustedes tienen el criterio**. La IA es su teclado rápido, pero ustedes son los ingenieros.
+- **[Excalidraw](https://excalidraw.com/)** → Bocetos rápidos, pizarra virtual. Recomendado para empezar.
+- **[Figma](https://figma.com/)** → Herramienta profesional de diseño UI. Tiene plan gratuito.
+- **Alternativa:** Papel y lápiz + una foto clara.
 
-### 1. Entendiendo su espacio de trabajo (Arquitectura aislada)
-A partir de la Semana 2, cada equipo será dueño absoluto de una subcarpeta en `src/pages/`.
-Por ejemplo, el Equipo de Sinergia trabajará en `/src/pages/tablas/`. **Nadie de su equipo debe tocar archivos fuera de su carpeta.** Esto asegura que si se equivocan, no rompan el proyecto entero.
-Cada equipo construirá su propia interfaz visual de forma independiente.
-
-### 2. Lo básico de NPM (Para probar y corregir a la IA)
-Para probar su código localmente, deben entender estos comandos clave:
-- `npm run dev`: El comando diario para encender el servidor local y ver la web en el navegador.
-- `npm install` (sin argumentos): Para descargar todas las dependencias cuando clonan el repositorio o bajan cambios nuevos de sus compañeros.
-- `npm install <paquete>`: Saber cómo añadir una librería nueva si la IA les indica que la necesitan (ej. `npm install sweetalert2`).
-- El archivo `package.json`: Es el "índice" de su proyecto. Aquí están los comandos (en "scripts") y las librerías instaladas (en "dependencies").
-
-### 3. Flujo de Trabajo en Equipo (Resolviendo dudas de Arom y Quinto)
-**"¿Cómo hacemos si todos queremos usar Antigravity pero solo el líder sube el PR?"**
-Funciona igual que cuando juntaban partes de un trabajo en Word o diseñaban en un Figma colaborativo:
-1. **Los Miembros:** Cada integrante en su propia computadora usa su Antigravity local para crear su pequeña parte del proyecto (ej. un componente de botón, un diseño visual, o la lógica de una pequeña regla). 
-2. **Envío de piezas:** El miembro revisa que el código funcione y le envía ese archivo `.vue` o `.ts` (o el código en texto) al Sublíder por WhatsApp, Discord o creando una "Rama" en Git si tienen más experiencia.
-3. **El Sublíder:** Es el ensamblador. Recibe los archivos de su equipo, los junta en la carpeta oficial de su grupo, prueba que todo encaje bien y hace un único **Pull Request** el viernes.
-
-#### 🌟 Pro-Tip para Sublíderes: ¿Cómo hacer que mi equipo aparezca en los "Contributors" de GitHub?
-Como el Sublíder es el único que sube el código, GitHub pensará que él hizo todo el trabajo solo. Para que **las fotos y perfiles de todos sus integrantes aparezcan en la pestaña Contributors** del repositorio, deben darles crédito en el commit.
-Al momento de escribir el mensaje de su commit (sea en la terminal o en GitHub Desktop), dejen dos líneas en blanco al final y escriban:
-```text
-Agregando el módulo de Tablas de Verdad
-
-Co-authored-by: Nombre del Miembro <su-correo-de-github@ejemplo.com>
-Co-authored-by: Otro Miembro <su-correo@ejemplo.com>
+### Paso 2: Sube tu tarea a GitHub (Solo el Sublíder)
+```bash
+git checkout -b equipo-1-sinergia-propuesta
+git add .
+git commit -m "Entregable 1: Propuesta del Equipo Sinergia"
+git push origin equipo-1-sinergia-propuesta
 ```
-Con eso, GitHub automáticamente los reconocerá como co-autores del código.
-
-### 4. Vue 3 para Dummies (Lo único que deben saber)
-Todo el proyecto web está hecho con **Vue 3**. En Vue, todo es un "Componente" (un archivo `.vue`). Un archivo `.vue` es como un lego que tiene tres partes:
-1. `<script setup lang="ts">`: Aquí va el cerebro (la lógica y matemáticas en TypeScript).
-2. `<template>`: Aquí va la cara (la estructura HTML de los botones y textos).
-3. `<style>`: Aquí va la ropa (los colores y diseños, aunque usaremos Tailwind CSS directamente en el HTML).
-
-Cuando le pidan código a la IA, no acepten algo que no entiendan. **Pregúntenle a la IA:**
-> *"Explícame línea por línea qué hace este código en `<script>` antes de que lo pegue en mi proyecto."*
-
-### 4. El Motor Lógico Central (El corazón del proyecto)
-Para que no tengan que programar desde cero cómo la computadora entiende qué es un `AND` o un `OR`, el equipo de Líderes creará un **Motor Lógico Central** en la carpeta `/src/core/`.
-Ustedes solo tendrán que **"llamar"** a este motor desde su carpeta para que haga las matemáticas pesadas.
+Luego crea el Pull Request en GitHub.
 
 ---
 
-## ⚠️ Regla de Oro
-**Investiga primero.** Si tienes un problema, copia el error y pégalo en la IA. Si la IA no puede resolverlo después de varios intentos, recién escala el problema en las reuniones de equipo. ¡Conviértete en un Ingeniero Solucionador!
+## 🔧 Entregable 2: Motor Lógico (Semana 2)
+
+### 📚 Recursos y Manuales
+- **TypeScript Handbook:** https://www.typescriptlang.org/docs/handbook/
+- **Vitest (tests):** https://vitest.dev/guide/
+- **Referencia viva:** Explorar `src/lib/solver/` — motor de inferencias ya funcional
+- **Keith Schwarz CS103:** https://web.stanford.edu/class/cs103/ (inspiración para motores lógicos)
+
+### ¿Qué tienes que producir?
+Archivos `.ts` con la lógica matemática de tu tema + tests unitarios.
+
+| Equipo | Qué crear | Archivos |
+|---|---|---|
+| Sinergia | Evaluator de tablas de verdad | `src/lib/truth-table/evaluator.ts` + tests |
+| Hijos de Linus | Expandir solver con forward-chaining | `src/lib/solver/solver.ts` + tests |
+| Modus Innova | Evaluator de cuantificadores (∀, ∃) | `src/lib/quantifiers/evaluator.ts` + tests |
+| Linus | Operaciones con conjuntos | `src/lib/sets/operations.ts` + tests |
+
+### Prompt para Antigravity
+> *"Actúa como un experto en Lógica Simbólica y TypeScript. Necesito crear una función pura que [describe tu necesidad]. No hagas interfaz gráfica todavía. Solo dame el código de la función lógica con sus tipos de datos y explícame dónde colocarlo dentro de mi proyecto Vue 3."*
+
+### Sube tu tarea
+```bash
+git checkout -b equipo-X-nombre-motor
+git add .
+git commit -m "feat(sprint-2): motor lógico del equipo X"
+git push origin equipo-X-nombre-motor
+```
+
+---
+
+## 🎨 Entregable 3: Interfaz Visual (Semana 3)
+
+### 📚 Recursos y Manuales
+- **Vue 3 Composition API:** https://vuejs.org/guide/extras/composition-api-faq.html
+- **`<script setup>`:** https://vuejs.org/api/sfc-script-setup.html
+- **Tailwind CSS v4:** https://tailwindcss.com/docs
+- **Componentes Vue:** https://vuejs.org/guide/components/registration.html
+
+### 🎨 Branding — Vibe Duolingo (Azul)
+- **Color primario:** `blue-600` (#2563eb)
+- **Fondo:** `neutral-50`
+- **Texto:** `neutral-900`
+- **Bordes:** `rounded-xl` para tarjetas, `rounded-full` para badges
+- **Sombras:** `shadow-sm` → `hover:shadow-md`
+- **Componentes:** Usar `Button.vue`, `Card.vue`, `Badge.vue` de `src/components/ui/`
+
+### ¿Qué tienes que producir?
+Un componente `.vue` funcional en tu `src/pages/{equipo}/index.vue` conectado al motor.
+
+### Prompt para Antigravity
+> *"Analiza la ruta `src/pages/tablas/index.vue`. Quiero agregar un componente interactivo usando Vue 3 (`<script setup lang="ts">`) y Tailwind CSS v4. Conéctalo a mi motor en `src/lib/`. Dame el código exacto."*
+
+### Sube tu tarea
+```bash
+git checkout -b equipo-X-nombre-ui
+git add .
+git commit -m "feat(sprint-3): UI del equipo X"
+git push origin equipo-X-nombre-ui
+```
+
+---
+
+## 🚀 Entregable 4: Pruebas y Despliegue (Semana 4)
+
+### 📚 Recursos y Manuales
+- **GitHub Pages:** https://docs.github.com/en/pages
+- **Vite Build:** https://vitejs.dev/guide/build.html
+- **Vitest:** https://vitest.dev/guide/
+
+### ¿Qué tienes que producir?
+- Verificar que tu módulo funciona en la app completa.
+- Escribir al menos 1 test básico por función principal.
+- Documentar uso de tu módulo.
+
+### Deploy
+El deploy es automático a GitHub Pages cuando se hace merge a `main`. Verifica que `npm run build` funcione correctamente.
+
+---
+
+## 🛡️ Reglas de Oro
+
+1. **Investiga primero.** Si tienes un problema, copia el error y pégalo en la IA.
+2. **Solo toca tu carpeta.** Nunca modifiques archivos fuera de `src/pages/tu-equipo/` o `src/lib/`.
+3. **Prueba antes de enviar.** Ejecuta `npm run dev` y `npm run type-check`.
+4. **El Sublíder es el único que hace PRs.** Los miembros le envían su código por WhatsApp/Discord.
+5. **Usa el branding.** Colores azul, bordes redondeados, sombras sutiles.
+
+---
+
+## 📁 Comandos Útiles
+
+```bash
+# Instalar dependencias
+npm install
+
+# Desarrollo local
+npm run dev
+
+# Build para producción
+npm run build
+
+# Tests
+npm run test
+
+# Type check
+npm run type-check
+```

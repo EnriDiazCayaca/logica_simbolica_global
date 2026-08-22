@@ -1,25 +1,25 @@
 ## 📝 Descripción del Pull Request
 
-**Equipo:** [Ej: Equipo 2 - Tablas de Verdad]
-**Sublíder que envía el código:** @usuario
+**Sprint/Entregable:** [ ] Motor (2) | [ ] UI (3) | [ ] Deploy (4)
+**Equipo:** [ ] Sinergia (Tablas) | [ ] Hijos de Linus (Inferencias) | [ ] Modus Innova (Cuantificadores) | [ ] Linus (Conjuntos)
+**Sublíder que envía:** @usuario
 
 ### ¿Qué cambios se hicieron?
-- (Describe aquí qué agregaron o programaron en este Pull Request)
+- 
 - 
 
 ---
 
 ## ✅ Lista de Verificación (Checklist)
 
-Por favor, marca con una `x` todas las casillas que apliquen antes de solicitar la revisión:
-
-- [ ] He revisado mi propio código.
-- [ ] Mi código solo modifica la carpeta de mi equipo (`/src/app/mi-equipo`).
-- [ ] No he borrado ni tocado archivos de otros equipos ni el `README.md`.
-- [ ] Ejecuté `npm run dev` en mi computadora y la página web no se rompe ni muestra errores de consola.
-- [ ] He usado herramientas de IA (Cursor/Antigravity) para verificar que no haya errores lógicos.
+- [ ] Mi código solo modifica la carpeta de mi equipo (`/src/pages/mi-equipo/`) o `src/lib/` si es motor.
+- [ ] No he borrado ni tocado archivos de otros equipos.
+- [ ] Ejecuté `npm run dev` y la página no se rompe.
+- [ ] Ejecuté `npm run type-check` y no hay errores de tipos.
+- [ ] Ejecuté `npm test` y los tests pasan (si aplique).
+- [ ] Mi código sigue el branding azul (rounded-xl, blue-600, shadow-sm).
 
 ---
 
-## 📸 Evidencia (Opcional pero recomendado)
-*(Si agregaste algún componente visual, pega aquí una captura de pantalla de cómo se ve)*
+## 📸 Evidencia (Opcional)
+*(Si agregaste componente visual, pega una captura aquí)*

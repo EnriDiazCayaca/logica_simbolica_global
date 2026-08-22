@@ -62,3 +62,32 @@ Aunque **solo los sublíderes tienen acceso a subir código directamente a GitHu
 - 🗺️ **Índice del Repositorio:** `MAPA.md`
 - 📖 **Tutoriales y Ayuda:** `GUIA_ESTUDIANTE.md`
 - 📋 **Instrucciones de la tarea actual:** `TAREAS/01_Propuesta.md`
+- 📊 **Estado de los Equipos:** `TAREAS/ESTADO_EQUIPOS.md`
+
+---
+
+## 🗺️ Mapa del Repositorio
+
+| Archivo | Para qué sirve |
+|---|---|
+| `README.md` | Presentación, equipos, reglas, rúbrica |
+| `CRONOGRAMA.md` | Fechas de los 4 sprints |
+| `GUIA_ESTUDIANTE.md` | Manual de herramientas y tutoriales |
+| `CONTRIBUTING.md` | Reglas para hacer Pull Requests |
+| `MAPA.md` | Índice completo del repositorio |
+| `TAREAS/ESTADO_EQUIPOS.md` | Estado actual de cada equipo (log) |
+| `TAREAS/01_Propuesta.md` | Instrucciones Entregable 1 |
+| `TAREAS/02_Motor.md` | Instrucciones Entregable 2 |
+| `TAREAS/03_UI.md` | Instrucciones Entregable 3 |
+| `TAREAS/04_Deploy.md` | Instrucciones Entregable 4 |
+
+### 📁 Estructura de Código
+
+| Carpeta | Equipo | Tema |
+|---|---|---|
+| `src/pages/tablas/` | Sinergia | Tablas de Verdad |
+| `src/pages/inferencias/` | Hijos de Linus | Inferencias Lógicas |
+| `src/pages/cuantificadores/` | Modus Innova | Cuantificadores |
+| `src/pages/conjuntos/` | Linus | Conjuntos y Venn |
+| `src/lib/` | Compartido | Motor lógico, parser, validator |
+| `src/components/ui/` | Compartido | Componentes Button, Card, Badge |
