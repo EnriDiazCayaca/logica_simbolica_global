@@ -8,12 +8,18 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 ## 👥 Asignación de Tareas
 
 ### Mio: Traducción y Lenguaje Natural
-- **Interfaz de Variables:** Crear un componente (ej. `TraductorLenguajeNatural.vue`) que detecte automáticamente las variables usadas (P, Q, etc.) y permita al usuario asignarles una proposición en texto real.
-- **Traducción Final:** Generar y mostrar las premisas y la conclusión completamente redactadas en lenguaje natural (aprovechando el trabajo previo de traducción).
+- **Interfaz de Variables:** Crear un componente (ej. `TraductorLenguajeNatural.vue`) que detecte automáticamente las variables usadas y permita asignarles una proposición en texto.
+- **Traducción Final:** Generar y mostrar las premisas y la conclusión en lenguaje natural.
+- ⚠️ **Restricción de UI (Layout):** Para evitar la regresión visual y no romper el balance de las 2 columnas, el traductor DEBE integrarse en la columna izquierda mediante un sistema de **Pestañas (Tabs)** (ej. "Símbolos" | "Lenguaje Natural") o un Acordeón.
 
 ### Morocho: Motor Lógico Exhaustivo
-- **Revisión del Solver:** Auditar, corregir y expandir exhaustivamente las reglas de inferencia (`solver.ts`). Asegurar que no haya "callejones sin salida" en deducciones válidas y que todas las reglas funcionen a la perfección.
-- **Motivos de Invalidez:** Extender la lógica para que, cuando una inferencia sea inválida, el motor retorne posibles motivos o pistas del error lógico (ej. "Posible falacia de afirmación del consecuente", "Faltan premisas para conectar P con R").
+- **Revisión del Solver:** Auditar y corregir exhaustivamente las reglas de inferencia (`solver.ts`).
+- **Motivos de Invalidez (Pattern Matching):** Extender la lógica para retornar posibles motivos del error lógico. 
+- ⚠️ **Restricción Algorítmica:** El motor actual usa *Forward Chaining*. **NO** implementes árboles de refutación ni alteres la arquitectura base. Limítate a hacer *pattern matching* superficial sobre las premisas no resueltas (ej. detectar patrones como la falacia de afirmación del consecuente) o devolver un mensaje de "No hay reglas aplicables". Evita bucles infinitos.
+
+### Alex: UX/UI y Detalles de Resolución
+- **Resolución Detallada (Acordeón):** Modificar el `PanelTrazabilidad` para que cada paso incluya un menú desplegable que explique la regla usada.
+- **Estado Invalidez Detallado:** Renderizar los motivos de fallo/error proveídos por Morocho.
 
 ---
 
@@ -21,17 +27,17 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 Para evitar bloqueos y reescrituras, el orden de ejecución y dependencias es el siguiente:
 
 1. **Morocho (Motor Lógico) ➔ Alex (UI de Errores):**
-   - Alex **no puede** diseñar los motivos de invalidez hasta que Morocho haya modificado los tipos (`src/types/`) y el motor para retornar dichos motivos.
-2. **Mio (Lenguaje Natural) y Morocho (Reglas) pueden trabajar en paralelo:**
-   - Mio trabaja en la nueva UI de la columna izquierda.
-   - Morocho trabaja puramente en los archivos de `/lib/solver/`.
+   - Alex **no puede** diseñar los motivos de invalidez hasta que Morocho haya modificado los tipos (`src/types/`) y retorne dichos motivos.
+2. **Mio (Lenguaje Natural) y Morocho (Reglas) pueden trabajar en paralelo.**
 3. **Alex (Resolución Detallada):**
-   - Puede avanzar con los menús desplegables del `PanelTrazabilidad` mientras los demás trabajan, usando las explicaciones ya existentes en `translations.ts`.
+   - Puede avanzar con los menús desplegables mientras los demás trabajan.
+4. **Testing Obligatorio (Responsabilidad Compartida):**
+   - Dado que Rennato no participa en este Sprint, **cada agente es responsable de escribir y actualizar los tests unitarios (`.test.ts`)** de los componentes o lógica que modifique/cree. No dejen caer la cobertura.
 
 ---
 
-## 📝 Documentación Continua (Obligatorio)
-Cada integrante debe documentar TODO lo que hace (interfaces modificadas, decisiones tomadas, qué falta) en el archivo **`avance.md`** (o crear un `avance-3.5.md`). **Si terminas tu tarea, debes dejar un comentario claro para el compañero del que dependes o que depende de ti.** ¡El contexto lo es todo para el siguiente agente!
+## 📝 Documentación Continua (Único Archivo)
+Cada integrante debe documentar TODO lo que hace en el **ÚNICO** archivo de registro: **`avance.md`** (usar la sección `## 🚀 SPRINT 3.5 (En Curso)` que ya está preparada). **Queda prohibido crear archivos paralelos.** Si terminas tu tarea, deja un mensaje para el compañero que depende de ti.
 
 ---
 
