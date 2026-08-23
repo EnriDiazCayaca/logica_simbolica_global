@@ -8,22 +8,12 @@ import { construirTrazabilidad } from '@/lib/trazabilidad/historial'
 import FormularioInferencia from '@/components/inferencias/FormularioInferencia.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
-import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
 
 // Estado global de la UI
 const isLoading = ref(false)
 const resultado = ref<ResultadoInferencia>('pendiente')
 const error = ref<string | undefined>(undefined)
 const pasos = ref<PasoInferencia[]>([])
-
-// Texto reactivo del formulario para el traductor de lenguaje natural
-const premisasActuales = ref<string[]>(['P → Q', 'P'])
-const conclusionActual = ref<string>('Q')
-
-const handleFormUpdate = (data: { premisas: string[]; conclusion: string }) => {
-  premisasActuales.value = data.premisas
-  conclusionActual.value = data.conclusion
-}
 
 const procesarInferencia = async (payload: InferenciaRequest) => {
   isLoading.value = true
@@ -37,7 +27,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     const conclusionNodo = parsearExpresion(payload.conclusion)
 
     // 2. Pequeña pausa para feedback visual de carga en la UI
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 450))
 
     // 3. Ejecutar motor (solver)
     const resultadoDemostracion = demostrarConclusion(premisasNodos, conclusionNodo)
@@ -60,7 +50,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     })
 
     if (!trazabilidad.esValido) {
-      error.value = 'No se logró demostrar la conclusión con las reglas evaluadas.'
+      error.value = 'No se logró demostrar la conclusión con las reglas lógicas evaluadas.'
     }
   } catch (e: any) {
     console.error('Error en inferencia:', e)
@@ -87,26 +77,19 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           Demostrador de Inferencias Lógicas
         </h1>
         <p class="text-sm text-neutral-600 mt-1.5">
-          Escribe tus premisas formales con simbología matemática y valida la deducción lógica paso a paso.
+          Escribe tus premisas con simbología formal y valida la deducción lógica paso a paso.
         </p>
       </div>
 
       <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <!-- Columna Izquierda: Entrada de Datos & Traductor Natural -->
+        <!-- Columna Izquierda: Formulario y Teclado Simbólico -->
         <div class="lg:col-span-6 space-y-6">
           <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
             <FormularioInferencia
               :isLoading="isLoading"
               @submit="procesarInferencia"
-              @update:modelValue="handleFormUpdate"
             />
           </section>
-
-          <!-- Sección de Interpretación en Lenguaje Natural -->
-          <TraductorLenguajeNatural
-            :premisas="premisasActuales"
-            :conclusion="conclusionActual"
-          />
         </div>
 
         <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad (Abajo) -->
