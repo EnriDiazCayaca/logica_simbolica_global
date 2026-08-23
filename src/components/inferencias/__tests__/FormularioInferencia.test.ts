@@ -10,7 +10,6 @@ describe('FormularioInferencia', () => {
       global: { components: { Button } }
     })
     
-    // Por defecto, texto vacío
     const btn = wrapper.findComponent(Button)
     expect(btn.props('disabled')).toBe(true)
   })
@@ -21,7 +20,7 @@ describe('FormularioInferencia', () => {
       global: { components: { Button } }
     })
     
-    await wrapper.find('textarea').setValue('P\nP -> Q')
+    await wrapper.find('textarea').setValue('P\nP ENTONCES Q')
     await wrapper.find('input').setValue('Q')
 
     const btn = wrapper.findComponent(Button)
@@ -42,7 +41,7 @@ describe('FormularioInferencia', () => {
     expect(wrapper.text()).toContain('Procesando...')
   })
 
-  it('emite submit con payload limpio tras click', async () => {
+  it('emite submit normalizando símbolos a palabras clave del motor', async () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: false },
       global: { components: { Button } }
@@ -56,8 +55,22 @@ describe('FormularioInferencia', () => {
     const emitidos = wrapper.emitted('submit')
     expect(emitidos).toBeTruthy()
     expect(emitidos![0][0]).toEqual({
-      premisas: ['P', 'P -> Q'], // Se limpian lineas vacias y espacios (trim)
+      premisas: ['P', 'P ENTONCES Q'], // Se normaliza -> a ENTONCES
       conclusion: 'Q'
     })
+  })
+
+  it('inserta tokens al presionar los botones del teclado lógico', async () => {
+    const wrapper = mount(FormularioInferencia, {
+      props: { isLoading: false },
+      global: { components: { Button } }
+    })
+
+    // Hacer clic en botón 'P'
+    const btnP = wrapper.findAll('button').find(b => b.text() === 'P')
+    expect(btnP).toBeDefined()
+    await btnP!.trigger('click')
+
+    expect(wrapper.find('textarea').element.value).toBe('P')
   })
 })
