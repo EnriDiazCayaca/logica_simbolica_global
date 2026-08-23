@@ -21,6 +21,21 @@ const premisasRef = ref<HTMLTextAreaElement | null>(null)
 const conclusionRef = ref<HTMLInputElement | null>(null)
 const lastFocusedField = ref<'premisas' | 'conclusion'>('premisas')
 
+const premisasCursor = ref(0)
+const conclusionCursor = ref(0)
+
+const guardarPosicionCursor = (campo: 'premisas' | 'conclusion') => {
+  lastFocusedField.value = campo
+  const inputEl = campo === 'premisas' ? premisasRef.value : conclusionRef.value
+  if (inputEl && inputEl.selectionStart !== null) {
+    if (campo === 'premisas') {
+      premisasCursor.value = inputEl.selectionStart
+    } else {
+      conclusionCursor.value = inputEl.selectionStart
+    }
+  }
+}
+
 watch(
   () => props.premisasIniciales,
   (nuevas) => {
@@ -91,58 +106,74 @@ const advertenciasSintaxis = computed<string[]>(() => {
  * Conectivos y variables
  */
 const CONECTIVOS = ['¬', '∧', '∨', '△', '→', '↔', '(', ')']
+const CONECTIVOS_CON_ESPACIO = ['∧', '∨', '△', '→', '↔']
 const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
 const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
 /**
  * Inserta un símbolo con regla determinista de espaciado:
- * - Conectivos y paréntesis: ponen un espacio antes y después.
- * - Variables: NO ponen ningún espacio.
- * - Salto de línea: inserta \n sin espacios.
+ * - Conectivos binarios (∧, ∨, △, →, ↔): ponen un espacio antes y después de forma inteligente.
+ * - Paréntesis, negación (¬), variables y salto de línea: NO ponen ningún espacio adicional.
+ * - En dispositivos móviles, evita forzar .focus() para impedir que salte el teclado virtual por defecto.
  */
-const insertarSimbolo = (simbolo: string, esConectivo: boolean = false) => {
+const insertarSimbolo = (simbolo: string) => {
   const isPremisas = lastFocusedField.value === 'premisas'
   const inputEl = isPremisas ? premisasRef.value : conclusionRef.value
   const currentVal = isPremisas ? premisasText.value : conclusionText.value
 
   if (!isPremisas && simbolo === '\n') return
 
+  let start = isPremisas ? premisasCursor.value : conclusionCursor.value
+  if (inputEl && inputEl.selectionStart !== null) {
+    start = inputEl.selectionStart
+  }
+  let end = isPremisas ? premisasCursor.value : conclusionCursor.value
+  if (inputEl && inputEl.selectionEnd !== null) {
+    end = inputEl.selectionEnd
+  }
+
+  if (start < 0 || start > currentVal.length) {
+    start = currentVal.length
+    end = currentVal.length
+  }
+
+  const before = currentVal.substring(0, start)
+  const after = currentVal.substring(end)
+
   let toInsert = simbolo
-  if (esConectivo) {
-    toInsert = ` ${simbolo} `
+  if (CONECTIVOS_CON_ESPACIO.includes(simbolo)) {
+    const spaceBefore = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') && !before.endsWith('(') ? ' ' : ''
+    const spaceAfter = after.startsWith(' ') || after.startsWith(')') || after.startsWith('\n') ? '' : ' '
+    toInsert = `${spaceBefore}${simbolo}${spaceAfter}`
   }
 
-  if (inputEl) {
-    const start = inputEl.selectionStart ?? currentVal.length
-    const end = inputEl.selectionEnd ?? currentVal.length
-    const before = currentVal.substring(0, start)
-    const after = currentVal.substring(end)
+  const newVal = before + toInsert + after
+  const newPos = start + toInsert.length
 
-    const newVal = before + toInsert + after
-    if (isPremisas) {
-      premisasText.value = newVal
-    } else {
-      conclusionText.value = newVal
-    }
-
-    nextTick(() => {
-      inputEl.focus({ preventScroll: true })
-      const newPos = start + toInsert.length
-      inputEl.setSelectionRange(newPos, newPos)
-    })
+  if (isPremisas) {
+    premisasText.value = newVal
+    premisasCursor.value = newPos
   } else {
-    const newVal = currentVal + toInsert
-    if (isPremisas) {
-      premisasText.value = newVal
-    } else {
-      conclusionText.value = newVal
-    }
+    conclusionText.value = newVal
+    conclusionCursor.value = newPos
   }
+
+  nextTick(() => {
+    if (inputEl) {
+      inputEl.setSelectionRange(newPos, newPos)
+      const esDispositivoTactil = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+      if (!esDispositivoTactil) {
+        inputEl.focus({ preventScroll: true })
+      }
+    }
+  })
 }
 
 const limpiarFormulario = () => {
   premisasText.value = ''
   conclusionText.value = ''
+  premisasCursor.value = 0
+  conclusionCursor.value = 0
 }
 
 const handleSubmit = () => {
@@ -181,7 +212,10 @@ const handleSubmit = () => {
         id="premisas"
         ref="premisasRef"
         v-model="premisasText"
-        @focus="lastFocusedField = 'premisas'"
+        @focus="guardarPosicionCursor('premisas')"
+        @click="guardarPosicionCursor('premisas')"
+        @keyup="guardarPosicionCursor('premisas')"
+        @select="guardarPosicionCursor('premisas')"
         rows="4"
         :disabled="isLoading"
         placeholder="Ej: P → Q&#10;P"
@@ -198,7 +232,10 @@ const handleSubmit = () => {
         id="conclusion"
         ref="conclusionRef"
         v-model="conclusionText"
-        @focus="lastFocusedField = 'conclusion'"
+        @focus="guardarPosicionCursor('conclusion')"
+        @click="guardarPosicionCursor('conclusion')"
+        @keyup="guardarPosicionCursor('conclusion')"
+        @select="guardarPosicionCursor('conclusion')"
         type="text"
         :disabled="isLoading"
         placeholder="Ej: Q"
@@ -219,22 +256,23 @@ const handleSubmit = () => {
       </ul>
     </div>
 
-    <!-- Teclado Simbólico Estructurado (Exactamente 2 filas sin saltos residuales) -->
+    <!-- Teclado Simbólico Estructurado (2 filas fijas simétricas) -->
     <div class="p-2.5 sm:p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2">
-      <!-- Fila 1: Grid estricto de 8 columnas simétricas (Nunca salta a otra línea) -->
+      <!-- Fila 1: Grid estricto de 8 columnas simétricas -->
       <div class="grid grid-cols-8 gap-1 sm:gap-1.5">
         <button
           v-for="op in CONECTIVOS"
           :key="op"
           type="button"
-          @click="insertarSimbolo(op, true)"
-          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
+          @mousedown.prevent
+          @click="insertarSimbolo(op)"
+          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer select-none"
         >
           {{ op }}
         </button>
       </div>
 
-      <!-- Fila 2: Variables a la izquierda y Botón Salto + Texto a la derecha -->
+      <!-- Fila 2: Variables a la izquierda y Botón Salto a la derecha -->
       <div class="flex items-center justify-between gap-1.5 pt-1.5 border-t border-neutral-200/80">
         <!-- Grupo de Variables: P, Q, R, S | A, B, C, D -->
         <div class="flex items-center gap-1 overflow-x-auto">
@@ -242,8 +280,9 @@ const handleSubmit = () => {
             v-for="v in GRUPO_VARS_1"
             :key="v"
             type="button"
-            @click="insertarSimbolo(v, false)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0"
+            @mousedown.prevent
+            @click="insertarSimbolo(v)"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none"
           >
             {{ v }}
           </button>
@@ -254,8 +293,9 @@ const handleSubmit = () => {
             v-for="v in GRUPO_VARS_2"
             :key="v"
             type="button"
-            @click="insertarSimbolo(v, false)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0"
+            @mousedown.prevent
+            @click="insertarSimbolo(v)"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none"
           >
             {{ v }}
           </button>
@@ -270,9 +310,10 @@ const handleSubmit = () => {
           <button
             v-if="lastFocusedField === 'premisas'"
             type="button"
-            @click="insertarSimbolo('\n', false)"
+            @mousedown.prevent
+            @click="insertarSimbolo('\n')"
             title="Salto de línea"
-            class="h-7 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-md shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+            class="h-7 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-md shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none"
           >
             ↵ Salto
           </button>
