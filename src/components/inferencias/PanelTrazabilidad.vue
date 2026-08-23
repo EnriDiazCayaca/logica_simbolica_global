@@ -1,17 +1,25 @@
 <script setup lang="ts">
 /**
  * PanelTrazabilidad.vue
- * Renderiza el paso a paso de una deducción lógica con acordeones explicativos.
+ * Renderiza el paso a paso de una deducción lógica con explicaciones particionadas
+ * o el diagnóstico detallado en caso de inferencias inválidas.
  */
 import { ref } from 'vue'
-import { ChevronDown, Info } from '@lucide/vue'
-import type { PasoInferencia } from '@/types/inferencias'
+import { ChevronDown, Info, AlertOctagon, HelpCircle, CheckCircle2 } from '@lucide/vue'
+import type { PasoInferencia, ErrorLogico } from '@/types/inferencias'
 import Card from '@/components/ui/Card.vue'
 import Badge from '@/components/ui/Badge.vue'
 
-const props = defineProps<{
+interface Props {
   pasos: PasoInferencia[]
-}>()
+  errorLogico?: ErrorLogico
+  esInvalido?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  esInvalido: false,
+  errorLogico: undefined
+})
 
 // Registro de pasos cuyo acordeón de explicación está abierto
 const pasosAbiertos = ref<Record<number, boolean>>({})
@@ -23,20 +31,71 @@ const togglePaso = (numeroPaso: number) => {
 
 <template>
   <section
-    class="space-y-3"
-    role="list"
-    aria-label="Trazabilidad de la deducción lógica"
+    class="space-y-4"
+    role="region"
+    aria-label="Trazabilidad y análisis de la demostración"
     aria-live="polite"
   >
-    <TransitionGroup name="fade" tag="div" class="space-y-3">
+    <!-- CASO A: INFERENCIA INVÁLIDA (Diagnóstico detallado y particionado) -->
+    <div v-if="props.esInvalido && props.errorLogico" class="space-y-4">
+      <div class="p-5 bg-orange-50/80 border border-orange-200 rounded-xl shadow-xs space-y-4">
+        <!-- Encabezado del Diagnóstico -->
+        <div class="flex items-start gap-3 border-b border-orange-200/80 pb-3.5">
+          <div class="p-2 bg-orange-100 text-orange-700 rounded-lg flex-shrink-0">
+            <AlertOctagon :size="20" />
+          </div>
+          <div>
+            <span class="text-[11px] font-bold text-orange-600 uppercase tracking-wider">
+              Diagnóstico del Fallo
+            </span>
+            <h3 class="text-base font-extrabold text-orange-950">
+              {{ props.errorLogico.titulo }}
+            </h3>
+          </div>
+        </div>
+
+        <!-- Partición 1: Detalle del Problema Detectado -->
+        <div class="space-y-1.5 text-xs text-orange-900 bg-white/80 p-3 rounded-lg border border-orange-100">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-orange-700 block">
+            📋 Análisis de las premisas:
+          </span>
+          <p class="leading-relaxed">
+            {{ props.errorLogico.mensaje }}
+          </p>
+        </div>
+
+        <!-- Partición 2: ¿Por qué falla el razonamiento? -->
+        <div class="space-y-1.5 text-xs text-neutral-800 bg-white/80 p-3 rounded-lg border border-orange-100">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-neutral-600 block flex items-center gap-1">
+            <span>❌</span> ¿Por qué falla este razonamiento?
+          </span>
+          <p class="leading-relaxed text-neutral-700">
+            {{ props.errorLogico.porQueFalla }}
+          </p>
+        </div>
+
+        <!-- Partición 3: ¿Cómo corregir el argumento? -->
+        <div class="space-y-1.5 text-xs text-blue-900 bg-blue-50/80 p-3 rounded-lg border border-blue-100">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-blue-700 block flex items-center gap-1">
+            <span>💡</span> ¿Cómo solucionarlo o deducirlo válidamente?
+          </span>
+          <p class="leading-relaxed text-blue-950">
+            {{ props.errorLogico.sugerencia }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASO B: INFERENCIA VÁLIDA CON PASOS DEMOSTRADOS -->
+    <TransitionGroup v-else-if="props.pasos && props.pasos.length > 0" name="fade" tag="div" class="space-y-3">
       <Card
         v-for="paso in props.pasos"
         :key="paso.paso"
         hoverable
         role="listitem"
-        class="transition-all"
+        class="transition-all border border-neutral-200/80"
       >
-        <div class="flex items-start gap-3">
+        <div class="flex items-start gap-3.5">
           <!-- Número de paso -->
           <div
             class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-xs"
@@ -45,7 +104,7 @@ const togglePaso = (numeroPaso: number) => {
             {{ paso.paso }}
           </div>
 
-          <div class="min-w-0 flex-1 space-y-2">
+          <div class="min-w-0 flex-1 space-y-2.5">
             <!-- Encabezado del paso: Regla y botón de acordeón -->
             <div class="flex flex-wrap items-center justify-between gap-2">
               <div class="flex flex-wrap items-center gap-2">
@@ -67,15 +126,15 @@ const togglePaso = (numeroPaso: number) => {
 
               <!-- Botón desplegable / acordeón de explicación -->
               <button
-                v-if="paso.explicacion"
+                v-if="paso.explicacion || paso.detalle"
                 type="button"
                 @click="togglePaso(paso.paso)"
                 :aria-expanded="Boolean(pasosAbiertos[paso.paso])"
-                :title="pasosAbiertos[paso.paso] ? 'Ocultar explicación didáctica' : 'Ver explicación didáctica'"
-                class="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:bg-blue-50 px-2.5 py-1 rounded-lg transition-colors border border-blue-200/60 cursor-pointer"
+                :title="pasosAbiertos[paso.paso] ? 'Ocultar desglose detallado' : 'Ver desglose detallado'"
+                class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50/80 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition-colors border border-blue-200/70 cursor-pointer"
               >
-                <Info :size="13" />
-                <span>{{ pasosAbiertos[paso.paso] ? 'Ocultar explicación' : '¿Por qué esta regla?' }}</span>
+                <HelpCircle :size="13" />
+                <span>{{ pasosAbiertos[paso.paso] ? 'Ocultar desglose' : '¿Cómo se deduce?' }}</span>
                 <ChevronDown
                   :size="14"
                   class="transition-transform duration-200"
@@ -92,18 +151,49 @@ const togglePaso = (numeroPaso: number) => {
               </p>
             </div>
 
-            <!-- Contenido desplegable del acordeón (Explicación didáctica) -->
+            <!-- Contenido particionado del acordeón -->
             <Transition name="desplegar">
               <div
-                v-if="pasosAbiertos[paso.paso] && paso.explicacion"
-                class="mt-2.5 p-3.5 bg-blue-50/70 border border-blue-100 rounded-xl text-xs sm:text-sm text-neutral-700 leading-relaxed space-y-1.5 shadow-2xs"
+                v-if="pasosAbiertos[paso.paso]"
+                class="mt-3 p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3 shadow-2xs text-xs"
               >
-                <div class="flex items-center gap-1.5 font-bold text-blue-900 text-xs uppercase tracking-wider">
-                  <span>📖</span> Explicación de la deducción:
+                <!-- 1. Premisas Base Involucradas -->
+                <div v-if="paso.detalle?.premisasBase?.length" class="space-y-1.5">
+                  <span class="font-bold text-neutral-500 uppercase tracking-wider text-[10px] block">
+                    📌 Premisas base utilizadas:
+                  </span>
+                  <div class="grid grid-cols-1 gap-1.5">
+                    <div
+                      v-for="(pBase, pbIdx) in paso.detalle.premisasBase"
+                      :key="pbIdx"
+                      class="flex items-center justify-between p-2 bg-white rounded-lg border border-neutral-200/70 text-xs"
+                    >
+                      <div class="flex items-center gap-2">
+                        <span class="font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded text-[11px]">
+                          Línea {{ pBase.linea }}
+                        </span>
+                        <code class="font-mono font-bold text-neutral-800">{{ pBase.expresion }}</code>
+                      </div>
+                      <span class="text-[11px] text-neutral-500 italic">{{ pBase.rol }}</span>
+                    </div>
+                  </div>
                 </div>
-                <p class="text-neutral-700">
-                  {{ paso.explicacion }}
-                </p>
+
+                <!-- 2. Justificación Lógica de la Regla -->
+                <div v-if="paso.detalle?.reglaJustificacion" class="space-y-1 p-2.5 bg-blue-50/70 rounded-lg border border-blue-100/80">
+                  <span class="font-bold text-blue-800 uppercase tracking-wider text-[10px] block">
+                    ⚙️ Regla aplicada: {{ paso.detalle.reglaNombre }} {{ paso.detalle.reglaAlias ? `(${paso.detalle.reglaAlias})` : '' }}
+                  </span>
+                  <p class="text-neutral-700 text-xs leading-relaxed">
+                    {{ paso.detalle.reglaJustificacion }}
+                  </p>
+                </div>
+
+                <!-- 3. Deducción Resultante -->
+                <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200/60">
+                  <CheckCircle2 :size="14" class="text-emerald-600 flex-shrink-0" />
+                  <span>Resultado: {{ paso.detalle?.conclusionDeducida || paso.explicacion }}</span>
+                </div>
               </div>
             </Transition>
           </div>
@@ -111,12 +201,12 @@ const togglePaso = (numeroPaso: number) => {
       </Card>
     </TransitionGroup>
 
-    <!-- Estado vacío -->
+    <!-- Estado vacío / Inicial -->
     <p
-      v-if="!props.pasos || props.pasos.length === 0"
+      v-else
       class="py-8 text-center text-sm text-neutral-500"
     >
-      Aún no hay pasos de deducción para mostrar. Ingresa las premisas y presiona Demostrar.
+      Aún no hay pasos de deducción para mostrar. Ingresa las premisas y presiona <strong>Demostrar Inferencia</strong>.
     </p>
   </section>
 </template>
@@ -149,6 +239,6 @@ const togglePaso = (numeroPaso: number) => {
 .desplegar-leave-from {
   opacity: 1;
   transform: translateY(0);
-  max-height: 300px;
+  max-height: 500px;
 }
 </style>

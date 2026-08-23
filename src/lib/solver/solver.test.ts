@@ -110,7 +110,9 @@ describe('Motor Lógico (Solver)', () => {
       const resultado = demostrarConclusion([implPQ, nodoQ], nodoP);
       expect(resultado.esValido).toBe(false);
       expect(resultado.errorLogico?.tipo).toBe('FALACIA_AFIRMACION_CONSECUENTE');
-      expect(resultado.errorLogico?.mensaje).toContain('Afirmación del Consecuente');
+      expect(resultado.errorLogico?.titulo).toContain('Afirmación del Consecuente');
+      expect(resultado.errorLogico?.porQueFalla).toBeDefined();
+      expect(resultado.errorLogico?.sugerencia).toBeDefined();
     });
 
     it('debe diagnosticar cuando la conclusión contiene variables inexistentes en las premisas', () => {

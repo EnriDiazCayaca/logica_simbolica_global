@@ -63,7 +63,7 @@ export interface PasoDemostracion {
   esConclusion: boolean; // Verdadero si este paso alcanzó la conclusión final
 }
 
-// Motivos de Invalidez y Diagnóstico
+// Motivos de Invalidez y Diagnóstico Estructurado
 export type MotivoInvalidez =
   | 'FALACIA_AFIRMACION_CONSECUENTE'
   | 'FALACIA_NEGACION_ANTECEDENTE'
@@ -73,8 +73,11 @@ export type MotivoInvalidez =
 
 export interface ErrorLogico {
   tipo: MotivoInvalidez;
+  titulo: string;
   lineasInvolucradas?: number[];
   mensaje: string;
+  porQueFalla: string;
+  sugerencia: string;
 }
 
 // Resultado completo de la verificación

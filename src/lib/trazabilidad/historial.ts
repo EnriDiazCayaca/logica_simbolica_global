@@ -1,16 +1,3 @@
-/**
- * historial.ts
- * ------------
- * Paso 2 (Morocho/Alex): Contenedor del historial de trazabilidad.
- *
- * Proporciona funciones para construir y gestionar un array de pasos
- * de trazabilidad a partir de la salida del solver y del módulo de
- * transcripción (Mio/Arom).
- *
- * El contenedor es un array plano que se llena con `.push()` a medida
- * que el motor avanza. Todo es texto plano (sin HTML).
- */
-
 import type {
   PasoTrazabilidad,
   ResultadoTrazabilidad,
@@ -25,21 +12,13 @@ import { renderizarNodo } from "../transcription/astRenderer";
 
 /**
  * Crea un array vacío de pasos de trazabilidad.
- * Este es el contenedor que se irá llenando con `.push()` a medida
- * que el solver avanza en la demostración.
  */
 export function crearHistorial(): PasoTrazabilidad[] {
   return [];
 }
 
 /**
- * Registra un paso individual en el historial.
- *
- * @param historial  - Array acumulador de pasos (se muta con .push()).
- * @param paso       - Paso raw del solver (PasoDemostracion).
- * @param premisas   - Premisas originales (para resolver números de línea).
- * @param pasosPrevios - Pasos raw ya registrados antes de este.
- * @returns El paso de trazabilidad registrado.
+ * Registra un paso individual en el historial con detalle particionado.
  */
 export function registrarPaso(
   historial: PasoTrazabilidad[],
@@ -62,6 +41,7 @@ export function registrarPaso(
     regla: paso.idPaso,
     alias: enriquecido.alias,
     explicacion: enriquecido.descripcion,
+    detalle: enriquecido.detalle,
     expresionSimbolica: enriquecido.expresionResultante,
     lineasBase: paso.lineasInvolucradas,
     esConclusion: paso.esConclusion,
@@ -75,14 +55,6 @@ export function registrarPaso(
 /**
  * Procesa un ResultadoDemostracion completo del solver y produce
  * un ResultadoTrazabilidad listo para consumir por la UI.
- *
- * Esta es la función principal de integración con el solver:
- * recorre los pasos EN ORDEN, registrando cada uno en el historial
- * y acumulando el estado de la demostración.
- *
- * @param premisas  - Premisas originales (NodoExpresion[]).
- * @param resultado - Resultado que devolvió demostrarConclusion().
- * @returns ResultadoTrazabilidad completo con todos los pasos traducidos.
  */
 export function construirTrazabilidad(
   premisas: NodoExpresion[],
@@ -102,20 +74,13 @@ export function construirTrazabilidad(
 
   return {
     esValido: resultado.esValido,
+    errorLogico: resultado.errorLogico,
     pasos: historial,
     conclusion,
     totalPasos: historial.length,
   };
 }
 
-/**
- * Obtiene un paso específico del historial por su número.
- * Útil para que la UI navegue entre pasos.
- *
- * @param historial   - Array de pasos de trazabilidad.
- * @param numeroPaso  - Número del paso a buscar (1-indexed).
- * @returns El paso encontrado, o undefined si no existe.
- */
 export function obtenerPaso(
   historial: PasoTrazabilidad[],
   numeroPaso: number
@@ -123,10 +88,6 @@ export function obtenerPaso(
   return historial.find((p) => p.numeroPaso === numeroPaso);
 }
 
-/**
- * Filtra los pasos del historial que son conclusiones.
- * Puede haber más de uno si la demostración tiene múltiples ramas.
- */
 export function obtenerConclusiones(
   historial: PasoTrazabilidad[]
 ): PasoTrazabilidad[] {

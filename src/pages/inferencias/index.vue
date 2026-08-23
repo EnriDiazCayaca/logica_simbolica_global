@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { InferenciaRequest, ResultadoInferencia, PasoInferencia } from '@/types/inferencias'
+import type {
+  InferenciaRequest,
+  ResultadoInferencia,
+  PasoInferencia,
+  ErrorLogico
+} from '@/types/inferencias'
 import { parsearExpresion } from '@/lib/solver/parser'
 import { demostrarConclusion } from '@/lib/solver/solver'
 import { construirTrazabilidad } from '@/lib/trazabilidad/historial'
@@ -23,6 +28,7 @@ const formulaData = ref<{ premisas: string[]; conclusion: string }>({
 const isLoading = ref(false)
 const resultado = ref<ResultadoInferencia>('pendiente')
 const error = ref<string | undefined>(undefined)
+const errorLogicoActual = ref<ErrorLogico | undefined>(undefined)
 const pasos = ref<PasoInferencia[]>([])
 
 const handleFormUpdate = (data: { premisas: string[]; conclusion: string }) => {
@@ -33,6 +39,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
   isLoading.value = true
   resultado.value = 'pendiente'
   error.value = undefined
+  errorLogicoActual.value = undefined
   pasos.value = []
 
   try {
@@ -51,6 +58,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
     // 5. Mapear al estado de UI
     resultado.value = trazabilidad.esValido ? 'valida' : 'invalida'
+    errorLogicoActual.value = resultadoDemostracion.errorLogico
 
     pasos.value = trazabilidad.pasos.map((p) => {
       const premisasMapeadas = p.lineasBase.map((l) => `Línea ${l}`)
@@ -60,7 +68,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         premisas: premisasMapeadas,
         conclusion: p.expresionSimbolica,
         regla: p.alias || p.operacion,
-        explicacion: p.explicacion
+        explicacion: p.explicacion,
+        detalle: p.detalle
       }
     })
 
@@ -149,7 +158,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           </div>
         </div>
 
-        <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad (Abajo) -->
+        <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad / Diagnóstico (Abajo) -->
         <div class="lg:col-span-6 space-y-6">
           <!-- Indicador de Resultado (Posicionado arriba de la trazabilidad) -->
           <IndicadorResultado
@@ -157,11 +166,12 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             :mensaje="error"
           />
 
-          <!-- Panel de Trazabilidad Lógica -->
+          <!-- Panel de Trazabilidad / Análisis de la Demostración -->
           <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80 min-h-[380px]">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-5">
-              <h2 class="text-lg font-bold text-neutral-800 flex items-center gap-2">
-                <span>⚡</span> Trazabilidad de la Demostración
+              <h2 class="text-base md:text-lg font-bold text-neutral-800 flex items-center gap-2">
+                <span>{{ resultado === 'invalida' ? '🔍' : '⚡' }}</span>
+                {{ resultado === 'invalida' ? 'Análisis y Diagnóstico de la Demostración' : 'Trazabilidad de la Demostración' }}
               </h2>
               <span v-if="isLoading" class="flex items-center gap-2 text-xs font-medium text-blue-600">
                 <span class="flex h-2.5 w-2.5 relative">
@@ -172,7 +182,11 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               </span>
             </div>
 
-            <PanelTrazabilidad :pasos="pasos" />
+            <PanelTrazabilidad
+              :pasos="pasos"
+              :errorLogico="errorLogicoActual"
+              :esInvalido="resultado === 'invalida'"
+            />
           </section>
         </div>
       </main>

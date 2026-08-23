@@ -89,6 +89,43 @@ describe('Integración: Página Inferencias', () => {
     expect(wrapper.text()).toContain('Significado de las Variables')
   })
 
+  it('muestra el diagnóstico en el panel cuando la inferencia es inválida', async () => {
+    vi.mocked(demostrarConclusion).mockReturnValueOnce({
+      esValido: false,
+      pasos: [],
+      errorLogico: {
+        tipo: 'FALACIA_AFIRMACION_CONSECUENTE',
+        titulo: 'Falacia de Afirmación del Consecuente',
+        mensaje: 'Se intentó deducir el antecedente.',
+        porQueFalla: 'Tener el consecuente no garantiza el antecedente.',
+        sugerencia: 'Afirma el antecedente.'
+      }
+    })
+    vi.mocked(construirTrazabilidad).mockReturnValueOnce({
+      esValido: false,
+      conclusion: 'No demostrado',
+      totalPasos: 0,
+      pasos: []
+    })
+
+    const wrapper = mount(IndexView, {
+      global: {
+        stubs: {
+          'router-link': true
+        }
+      }
+    })
+
+    await wrapper.find('textarea').setValue('P ENTONCES Q\nQ')
+    await wrapper.find('input').setValue('P')
+    await wrapper.find('form').trigger('submit.prevent')
+    await flushPromises()
+
+    expect(wrapper.text()).toContain('Análisis y Diagnóstico de la Demostración')
+    expect(wrapper.text()).toContain('Falacia de Afirmación del Consecuente')
+    expect(wrapper.text()).toContain('¿Por qué falla este razonamiento?')
+  })
+
   it('muestra el mensaje de error cuando ocurre una excepción', async () => {
     const wrapper = mount(IndexView, {
       global: {
@@ -108,7 +145,7 @@ describe('Integración: Página Inferencias', () => {
     await flushPromises()
 
     // Verificar que se muestre error
-    expect(wrapper.text()).toContain('Error en la inferencia')
+    expect(wrapper.text()).toContain('Error')
     expect(wrapper.text()).toContain('Error de sintaxis: Tokens inesperados al final: INVALIDA')
   })
 })

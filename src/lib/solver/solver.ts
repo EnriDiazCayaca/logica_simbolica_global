@@ -324,9 +324,13 @@ export function detectarErrorLogico(
   const varsFaltantes = varsConclusion.filter((v) => !varsPremisas.includes(v));
 
   if (varsFaltantes.length > 0) {
+    const faltantesStr = varsFaltantes.join(', ');
     return {
       tipo: 'VARIABLE_NO_EXISTE_EN_PREMISAS',
-      mensaje: `La variable '${varsFaltantes.join(', ')}' de la conclusión no aparece en ninguna de las premisas dadas. Es lógicamente imposible deducir conclusiones sobre variables ausentes en el argumento.`,
+      titulo: 'Variable ausente en las premisas',
+      mensaje: `La variable '${faltantesStr}' de la conclusión no aparece en ninguna de las premisas dadas.`,
+      porQueFalla: `No es posible deducir conclusiones sobre una proposición ('${faltantesStr}') que jamás fue declarada ni relacionada en el argumento inicial.`,
+      sugerencia: `Verifica que no haya un error tipográfico en la conclusión o añade las premisas que involucren a '${faltantesStr}'.`,
     };
   }
 
@@ -348,8 +352,11 @@ export function detectarErrorLogico(
         ) {
           return {
             tipo: 'FALACIA_AFIRMACION_CONSECUENTE',
+            titulo: 'Falacia de Afirmación del Consecuente',
             lineasInvolucradas: [i + 1, j + 1],
-            mensaje: `Falacia formal de Afirmación del Consecuente (entre Líneas ${i + 1} y ${j + 1}): Conocer el condicional y afirmar su consecuente no garantiza el antecedente. El consecuente podría ser verdadero por otras causas independientes.`,
+            mensaje: `Se intentó deducir el antecedente a partir del condicional (Línea ${i + 1}) y su consecuente (Línea ${j + 1}).`,
+            porQueFalla: `Tener 'P → Q' y afirmar 'Q' no garantiza que 'P' sea verdadero. El condicional garantiza qué ocurre si 'P' es cierto, pero 'Q' podría ocurrir por otras causas independientes.`,
+            sugerencia: `Para deducir válidamente, necesitarías afirmar el antecedente 'P' para obtener 'Q' (Modus Ponens) o contar con el condicional inverso 'Q → P'.`,
           };
         }
       }
@@ -374,8 +381,11 @@ export function detectarErrorLogico(
         ) {
           return {
             tipo: 'FALACIA_NEGACION_ANTECEDENTE',
+            titulo: 'Falacia de Negación del Antecedente',
             lineasInvolucradas: [i + 1, j + 1],
-            mensaje: `Falacia formal de Negación del Antecedente (entre Líneas ${i + 1} y ${j + 1}): Conocer el condicional y negar su antecedente no permite deducir la negación del consecuente. Aunque el antecedente no ocurra, el consecuente aún podría cumplirse por otras razones.`,
+            mensaje: `Se intentó negar el consecuente a partir del condicional (Línea ${i + 1}) y la negación del antecedente (Línea ${j + 1}).`,
+            porQueFalla: `Tener 'P → Q' y negar '¬P' no permite concluir '¬Q'. Aunque la condición inicial 'P' no se cumpla, el consecuente 'Q' aún podría ser verdadero por otras razones.`,
+            sugerencia: `Para deducir una negación válida con un condicional, debes negar el consecuente '¬Q' para obtener '¬P' (Modus Tollens).`,
           };
         }
       }
@@ -386,16 +396,20 @@ export function detectarErrorLogico(
   if (totalPasosInferidos === 0) {
     return {
       tipo: 'SIN_REGLAS_APLICABLES',
-      mensaje:
-        'No se encontraron reglas de inferencia aplicables con las premisas dadas. Las premisas no comparten conectivos ni variables intermedias compatibles para construir una deducción.',
+      titulo: 'Premisas desconectadas / Sin reglas aplicables',
+      mensaje: 'Ninguna regla de inferencia estándar pudo combinar las premisas proporcionadas.',
+      porQueFalla: 'Las premisas no comparten conectivos ni proposiciones puente en la posición requerida para aplicar reglas de deducción (como Modus Ponens, Silogismo Disyuntivo o Silogismo Hipotético).',
+      sugerencia: 'Revisa que las premisas compartan variables comunes que permitan encadenar una demostración hacia la conclusión.',
     };
   }
 
   // 5. Conclusión no alcanzada (cadena deductiva incompleta)
   return {
     tipo: 'CONCLUSION_NO_ALCANZADA',
-    mensaje:
-      'Se lograron derivar inferencias intermedias, pero no existen suficientes premisas puente para conectar los pasos demostrados con la conclusión deseada.',
+    titulo: 'Cadena deductiva incompleta',
+    mensaje: 'Se realizaron deducciones intermedias pero no fue posible alcanzar la conclusión objetivo.',
+    porQueFalla: 'El conjunto de premisas permite deducir nuevos hechos intermedios, pero ninguno de los caminos lógicos evaluados conecta con la conclusión solicitada.',
+    sugerencia: 'Verifica si hace falta una premisa intermedia que conecte los pasos inferidos con la conclusión final.',
   };
 }
 
