@@ -1,21 +1,23 @@
-﻿import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   aplicarModusPonendoPonens,
   aplicarModusTollendoTollens,
   aplicarSilogismoDisyuntivo,
   aplicarSilogismoHipotetico,
   demostrarConclusion,
+  detectarErrorLogico,
   sonNodosIguales,
   negarNodo
 } from './solver';
 import type { NodoExpresion } from './types';
 
-describe('Motor LÃ³gico (Solver)', () => {
+describe('Motor Lógico (Solver)', () => {
   const nodoP: NodoExpresion = { tipo: 'variable', nombre: 'P' };
   const nodoQ: NodoExpresion = { tipo: 'variable', nombre: 'Q' };
   const nodoR: NodoExpresion = { tipo: 'variable', nombre: 'R' };
   const nodoNoP: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoP };
   const nodoNoQ: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoQ };
+  const nodoNoR: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoR };
 
   const implPQ: NodoExpresion = {
     tipo: 'operacion',
@@ -79,7 +81,7 @@ describe('Motor LÃ³gico (Solver)', () => {
     });
   });
 
-  describe('Regla: Silogismo HipotÃ©tico', () => {
+  describe('Regla: Silogismo Hipotético', () => {
     it('debe retornar P -> R si se da P -> Q y Q -> R', () => {
       const resultado = aplicarSilogismoHipotetico(implPQ, implQR);
       expect(resultado).not.toBeNull();
@@ -110,6 +112,7 @@ describe('Motor LÃ³gico (Solver)', () => {
     it('debe demostrar Q a partir de P v Q y NO P (Silogismo Disyuntivo)', () => {
       const resultado = demostrarConclusion([disyPQ, nodoNoP], nodoQ);
       expect(resultado.esValido).toBe(true);
+      expect(resultado.pasos.length).toBe(1);
       expect(resultado.pasos[0].idPaso).toBe('SILOGISMO_DISYUNTIVO');
     });
 
@@ -120,12 +123,35 @@ describe('Motor LÃ³gico (Solver)', () => {
       expect(resultado.pasos.some(p => p.esConclusion)).toBe(true);
     });
 
-    it('debe rechazar inferencias falaces', () => {
-      // P -> Q y Q |- P (AfirmaciÃ³n del consecuente = falacia)
+    it('debe diagnosticar falacia de Afirmación del Consecuente', () => {
+      // P -> Q y Q |- P
       const resultado = demostrarConclusion([implPQ, nodoQ], nodoP);
       expect(resultado.esValido).toBe(false);
+      expect(resultado.errorLogico).toBeDefined();
+      expect(resultado.errorLogico?.tipo).toBe('FALACIA_AFIRMACION_CONSECUENTE');
+      expect(resultado.errorLogico?.lineasInvolucradas).toEqual([1, 2]);
+    });
+
+    it('debe diagnosticar falacia de Negación del Antecedente', () => {
+      // P -> Q y NO P |- NO Q
+      const resultado = demostrarConclusion([implPQ, nodoNoP], nodoNoQ);
+      expect(resultado.esValido).toBe(false);
+      expect(resultado.errorLogico).toBeDefined();
+      expect(resultado.errorLogico?.tipo).toBe('FALACIA_NEGACION_ANTECEDENTE');
+    });
+
+    it('debe diagnosticar cuando no hay reglas aplicables', () => {
+      // P y R |- Q
+      const resultado = demostrarConclusion([nodoP, nodoR], nodoQ);
+      expect(resultado.esValido).toBe(false);
+      expect(resultado.errorLogico?.tipo).toBe('SIN_REGLAS_APLICABLES');
+    });
+
+    it('debe diagnosticar conclusión no alcanzada a pesar de pasos intermedios', () => {
+      // P -> Q, P |- R (Genera Q por Modus Ponens, pero nunca llega a R)
+      const resultado = demostrarConclusion([implPQ, nodoP], nodoR);
+      expect(resultado.esValido).toBe(false);
+      expect(resultado.errorLogico?.tipo).toBe('CONCLUSION_NO_ALCANZADA');
     });
   });
 });
-
-

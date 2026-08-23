@@ -1,10 +1,10 @@
-﻿// Operadores lÃ³gicos en espaÃ±ol
+// Operadores lógicos en español
 export type Operador =
-  | 'Y'             // ConjunciÃ³n (AND)
-  | 'O'             // DisyunciÃ³n (OR)
-  | 'O_EXCLUSIVA'   // DisyunciÃ³n exclusiva (XOR)
-  | 'NO'            // NegaciÃ³n (NOT)
-  | 'ENTONCES'      // ImplicaciÃ³n / Condicional (IMPLIES)
+  | 'Y'             // Conjunción (AND)
+  | 'O'             // Disyunción (OR)
+  | 'O_EXCLUSIVA'   // Disyunción exclusiva (XOR)
+  | 'NO'            // Negación (NOT)
+  | 'ENTONCES'      // Implicación / Condicional (IMPLIES)
   | 'SI_Y_SOLO_SI'  // Bicondicional (EQUIV)
   | 'NI'            // NOR (No O)
   | 'INCOMPATIBLE'; // NAND (No Y)
@@ -20,20 +20,20 @@ export type Inferencia =
   | 'CONJUNCION'               // Alias: CONJ
   | 'DILEMA_CONSTRUCTIVO';     // P->Q, R->S, P v R |- Q v S
 
-// Equivalencias LÃ³gicas (Principales)
+// Equivalencias Lógicas (Principales)
 export type Equivalencia =
   | 'DE_MORGAN'
   | 'DOBLE_NEGACION'
   | 'CONMUTATIVA'
   | 'ASOCIATIVA'
   | 'DISTRIBUTIVA'
-  | 'IMPLICACION_MATERIAL'     // Alias: Condicional a DisyunciÃ³n (P -> Q = ~P v Q)
-  | 'CONTRAPOSICION'           // Alias: TransposiciÃ³n (P -> Q = ~Q -> ~P)
+  | 'IMPLICACION_MATERIAL'     // Alias: Condicional a Disyunción (P -> Q = ~P v Q)
+  | 'CONTRAPOSICION'           // Alias: Transposición (P -> Q = ~Q -> ~P)
   | 'EXPORTACION';             // (P ^ Q) -> R  equivale a  P -> (Q -> R)
 
 export type ReglaLogica = Inferencia | Equivalencia;
 
-// Nodos del Ãrbol de Sintaxis Abstracta (AST)
+// Nodos del Árbol de Sintaxis Abstracta (AST)
 export interface NodoBase {
   tipo: 'variable' | 'operacion';
 }
@@ -52,21 +52,15 @@ export interface NodoOperacion extends NodoBase {
 
 export type NodoExpresion = NodoVariable | NodoOperacion;
 
-// Estructura de un "Paso" en la demostraciÃ³n
+// Estructura de un "Paso" en la demostración
 export interface PasoDemostracion {
   idPaso: ReglaLogica;
-  lineasInvolucradas: number[]; // De quÃ© premisas o pasos anteriores se deduce (ej. [1, 2])
+  lineasInvolucradas: number[]; // De qué premisas o pasos anteriores se deduce (ej. [1, 2])
   expresionResultante: NodoExpresion; // La nueva premisa inferida
-  esConclusion: boolean; // Verdadero si este paso alcanzÃ³ la conclusiÃ³n final
+  esConclusion: boolean; // Verdadero si este paso alcanzó la conclusión final
 }
 
-// Resultado completo de la verificaciÃ³n
-export interface ResultadoDemostracion {
-  errorLogico?: ErrorLogico;
-  esValido: boolean; // Â¿Se logrÃ³ demostrar la conclusiÃ³n?
-  pasos: PasoDemostracion[]; // El paso a paso de la demostraciÃ³n para que Mio lo traduzca
-}
-
+// Motivos de Invalidez y Diagnóstico
 export type MotivoInvalidez =
   | 'FALACIA_AFIRMACION_CONSECUENTE'
   | 'FALACIA_NEGACION_ANTECEDENTE'
@@ -77,4 +71,11 @@ export interface ErrorLogico {
   tipo: MotivoInvalidez;
   lineasInvolucradas?: number[];
   mensaje: string;
+}
+
+// Resultado completo de la verificación
+export interface ResultadoDemostracion {
+  errorLogico?: ErrorLogico;
+  esValido: boolean; // ¿Se logró demostrar la conclusión?
+  pasos: PasoDemostracion[]; // El paso a paso de la demostración para que Mio lo traduzca
 }

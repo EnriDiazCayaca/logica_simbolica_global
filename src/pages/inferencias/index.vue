@@ -50,7 +50,9 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     })
 
     if (!trazabilidad.esValido) {
-      error.value = 'No se logró demostrar la conclusión con las reglas lógicas evaluadas.'
+      error.value =
+        resultadoDemostracion.errorLogico?.mensaje ||
+        'No se logró demostrar la conclusión con las reglas lógicas evaluadas.'
     }
   } catch (e: any) {
     console.error('Error en inferencia:', e)
