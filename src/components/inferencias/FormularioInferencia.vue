@@ -2,7 +2,6 @@
 import { ref, computed, nextTick, watch } from 'vue'
 import type { InferenciaRequest } from '@/types/inferencias'
 import Button from '@/components/ui/Button.vue'
-import { AlertCircle } from '@lucide/vue'
 
 const props = defineProps<{
   isLoading: boolean
@@ -75,32 +74,6 @@ const normalizarSintaxis = (linea: string): string => {
     .replace(/\s+/g, ' ')
     .trim()
 }
-
-/**
- * Validador en tiempo real (Linter para paréntesis no balanceados)
- */
-const advertenciasSintaxis = computed<string[]>(() => {
-  const advertencias: string[] = []
-  const lineas = premisasText.value.split('\n').filter((l) => l.trim() !== '')
-
-  lineas.forEach((linea, idx) => {
-    const izq = (linea.match(/\(/g) || []).length
-    const der = (linea.match(/\)/g) || []).length
-    if (izq !== der) {
-      advertencias.push(`Premisa ${idx + 1}: paréntesis sin cerrar (${izq} abiertos vs ${der} cerrados).`)
-    }
-  })
-
-  if (conclusionText.value.trim()) {
-    const izqC = (conclusionText.value.match(/\(/g) || []).length
-    const derC = (conclusionText.value.match(/\)/g) || []).length
-    if (izqC !== derC) {
-      advertencias.push(`Conclusión: paréntesis sin cerrar (${izqC} abiertos vs ${derC} cerrados).`)
-    }
-  }
-
-  return advertencias
-})
 
 /**
  * Conectivos y variables
@@ -219,7 +192,7 @@ const handleSubmit = () => {
         rows="4"
         :disabled="isLoading"
         placeholder="Ej: P → Q&#10;P"
-        class="w-full font-mono text-sm rounded-xl border border-neutral-200 px-4 py-3 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs"
+        class="w-full font-mono text-base rounded-xl border border-neutral-200 px-4 py-3 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs leading-relaxed"
       ></textarea>
     </div>
 
@@ -239,21 +212,8 @@ const handleSubmit = () => {
         type="text"
         :disabled="isLoading"
         placeholder="Ej: Q"
-        class="w-full font-mono text-sm rounded-xl border border-neutral-200 px-4 py-2.5 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs"
+        class="w-full font-mono text-base rounded-xl border border-neutral-200 px-4 py-2.5 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs leading-relaxed"
       />
-    </div>
-
-    <!-- Linter de Sintaxis en Tiempo Real -->
-    <div v-if="advertenciasSintaxis.length > 0" class="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 space-y-1">
-      <div class="flex items-center gap-1.5 font-bold text-amber-900">
-        <AlertCircle :size="14" />
-        <span>Aviso de sintaxis:</span>
-      </div>
-      <ul class="list-disc list-inside space-y-0.5 text-[11px]">
-        <li v-for="(adv, aIdx) in advertenciasSintaxis" :key="aIdx">
-          {{ adv }}
-        </li>
-      </ul>
     </div>
 
     <!-- Teclado Simbólico Estructurado (2 filas fijas simétricas) -->
@@ -266,7 +226,7 @@ const handleSubmit = () => {
           type="button"
           @mousedown.prevent
           @click="insertarSimbolo(op)"
-          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer select-none"
+          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm sm:text-base rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
         >
           {{ op }}
         </button>
@@ -282,7 +242,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
@@ -295,7 +255,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
