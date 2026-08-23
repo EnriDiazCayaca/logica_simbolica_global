@@ -1,56 +1,62 @@
-# Registro de Avances — UI Sprint 3
+# 📊 Registro de Avances — Los Hijos de Linus
 
-## 📝 Formato de Registro
-Por favor, cada integrante debe copiar este template y llenarlo al finalizar sus tareas:
+## 🚀 SPRINT 3.5 (En Curso)
+> **Instrucciones:** Cada integrante debe registrar sus avances copiando este template al finalizar su tarea.
 
 ### [Nombre del Integrante] - [Fecha]
 - **Tareas Completadas:** 
   - (Ej: Componente X finalizado)
-- **Problemas Encontrados (y Soluciones):**
-  - (Ej: Hubo un conflicto con tipos, se resolvió acordando la interfaz Y con Arom)
+- **Decisiones Importantes Consultadas con el Humano:**
+  - (Ej: Se acordó con Arom el formato de los errores)
 - **Checklist Manual Ejecutado (QA Humano):**
   - [ ] Navegación por teclado probada
   - [ ] Responsividad manual verificada
-  - [ ] Lector de pantalla testeado (si aplica)
+  - [ ] Contrastes visuales y legibilidad comprobados
+- **Mensaje para el siguiente integrante:**
+  - (Ej: @Alex ya puedes usar la nueva interfaz de errores)
 
+---
 
-### Arom - 2026-08-22
+## 📦 SPRINT 3 (Completado)
+
+### Arom - 2026-08-23
 - **Tareas Completadas:** 
-  - Fase 1 lista: tipos en `src/types/inferencias.ts`.
-  - Esqueleto principal preparado en `src/pages/inferencias/index.vue`.
-  - Verificación base exitosa: `Card.vue`, `Button.vue`, `Badge.vue` presentes.
-  - 📢 Morocho, Mio y Alex ya pueden comenzar la Fase 2.
+  - Fase 3 completada: Integración completa de `index.vue` conectando `FormularioInferencia`, `IndicadorResultado` y `PanelTrazabilidad` con el motor lógico (`demostrarConclusion` y `construirTrazabilidad`).
+  - Implementación de Teclado Lógico Simbólico (`¬`, `∧`, `∨`, `→`, `↔`, `(`, `)`) y normalizador automático de símbolos matemáticos.
+  - Corrección de base URL en `src/router/index.ts` para despliegues.
+  - Reorganización de layout balanceado en 2 columnas (formulario a la izquierda, indicador y trazabilidad a la derecha).
 - **Problemas Encontrados (y Soluciones):**
-  - Ninguno en esta etapa inicial.
+  - El motor lógico solo tenía un caso hardcodeado de Modus Ponens; se expandió a un motor de deducción completo (Forward Chaining) con reglas formales (MPP, MTT, SD, SH, SIMP, DN, DC).
 - **Checklist Manual Ejecutado (QA Humano):**
-  - [x] N/A para esta fase, es solo setup estructural.
+  - [x] Navegación por teclado (`Tab`, `Enter`)
+  - [x] Responsividad de 2 columnas a 1 columna
+  - [x] Validación de contrastes y símbolos limpios
 
+### Rennato - 2026-08-23
+- **Tareas Completadas:**
+  - Fase 4 completada: Setup de `@vue/test-utils` y `happy-dom` en `vite.config.ts`.
+  - Creación de suites de prueba unitarias para `FormularioInferencia.test.ts`, `IndicadorResultado.test.ts`, `PanelTrazabilidad.test.ts`.
+  - Creación de prueba de integración `src/pages/inferencias/__tests__/index.test.ts` cubriendo flujos exitosos y captura de excepciones.
+  - Pruebas exhaustivas del motor lógico en `src/lib/solver/solver.test.ts` (12 tests pasando).
+- **Checklist Manual Ejecutado:**
+  - [x] Ejecución de suite de tests: 88 tests en verde (12 archivos).
+  - [x] `npm run type-check` pasando al 100%.
 
 ### Alex - 2026-08-22
 - **Tareas Completadas:**
   - Fase 2 (Indicador de Resultados y Feedback Visual) completada.
-  - Creación de `src/components/inferencias/IndicadorResultado.vue` con props tipadas (`resultado: ResultadoInferencia`, `mensaje?: string`) importando los tipos de Arom.
-  - 4 estados implementados: válido (verde `green-600`, icono Check), inválido (naranja `orange-600`, icono X), error (rojo `red-600`, icono AlertTriangle mostrando `mensaje`) y pendiente (invisible).
+  - Creación de `src/components/inferencias/IndicadorResultado.vue` con props tipadas (`resultado: ResultadoInferencia`, `mensaje?: string`).
+  - 4 estados implementados: válido (`green-600`), inválido (`orange-600`), error (`red-600`) y pendiente.
   - Accesibilidad: `role="status"` + `aria-live="polite"` en el contenedor.
-  - `<Transition>` con animación de opacidad + transform; título destacado `text-2xl md:text-4xl font-bold`.
-  - Verificado: `npm run type-check` OK y `npm test` OK (67 tests).
-  - 📢 **IndicadorResultado.vue completado por Alex. @Arom, puedes integrarlo en `index.vue` pasando las props `:resultado` y `:mensaje`.**
-- **Problemas Encontrados (y Soluciones):**
-  - `alex.md` sugiere `lucide-vue-next`, pero el proyecto tiene instalado `@lucide/vue` (paquete oficial actual, misma API). Se usó `@lucide/vue` para no añadir dependencias duplicadas.
-  - `npm run lint` no existe en `package.json`; se ejecutaron `type-check` y `test` como verificación disponible.
-- **Checklist Manual Ejecutado (QA Humano):**
-  - [ ] Navegación por teclado probada
-  - [ ] Responsividad manual verificada (título escala `2xl→4xl`, icono `14→16` en pantallas grandes)
-  - [ ] Lector de pantalla testeado (anuncio de cambio de estado vía `aria-live`)
-  - [ ] Contrastes verificados en monitor (blanco sobre green/orange/red-600)
-
+- **Checklist Manual Ejecutado:**
+  - [x] Responsividad e iconos escalables.
 
 ### Mio - 2026-08-22
 - **Tareas Completadas:** 
-  - Fase 2 (Panel de Trazabilidad y Explicación Visual)
-  - Creación y desarrollo de `PanelTrazabilidad.vue` en `PanelTrazabilidad.vue` en base a los archivos `Card.vue` y `Badge.vue` de Arom
-  - 📢 Arom puede seguir con la Fase 3
-- **Problemas Encontrados (y Soluciones):**
-  - Ninguno en esta etapa inicial.
-- **Checklist Manual Ejecutado (QA Humano):**
-  - [x] N/A para esta fase, es solo setup estructural.
+  - Fase 2 (Panel de Trazabilidad y Explicación Visual).
+  - Creación y desarrollo de `PanelTrazabilidad.vue` en base a los componentes base de UI.
+
+### Morocho - 2026-08-22
+- **Tareas Completadas:**
+  - Fase 2 (Formulario de Inferencia).
+  - Desarrollo de `FormularioInferencia.vue` con textarea de premisas y campo de conclusión.
