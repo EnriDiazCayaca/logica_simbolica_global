@@ -10,7 +10,7 @@ describe('IndicadorResultado', () => {
     expect(wrapper.find('div.flex').exists()).toBe(false)
   })
 
-  it('renderiza caso válido', () => {
+  it('renderiza caso válido demostrada', () => {
     const wrapper = mount(IndicadorResultado, {
       props: { resultado: 'valida' }
     })
@@ -18,12 +18,20 @@ describe('IndicadorResultado', () => {
     expect(wrapper.text()).toContain('La conclusión se deduce correctamente')
   })
 
-  it('renderiza caso inválido', () => {
+  it('renderiza caso válido con método indirecto requerido', () => {
+    const wrapper = mount(IndicadorResultado, {
+      props: { resultado: 'no_demostrable_directa' }
+    })
+    expect(wrapper.text()).toContain('Inferencia válida')
+    expect(wrapper.text()).toContain('Método indirecto requerido')
+  })
+
+  it('renderiza caso inválido refutado', () => {
     const wrapper = mount(IndicadorResultado, {
       props: { resultado: 'invalida' }
     })
     expect(wrapper.text()).toContain('Inferencia inválida')
-    expect(wrapper.text()).toContain('La conclusión no se deduce')
+    expect(wrapper.text()).toContain('contraejemplo')
   })
 
   it('renderiza caso error con mensaje personalizado', () => {

@@ -21,7 +21,7 @@ interface ItemHistorial {
   fecha: string
   premisas: string[]
   conclusion: string
-  esValido: boolean
+  resultado: ResultadoInferencia
 }
 
 // Pestaña activa en la columna izquierda
@@ -55,19 +55,25 @@ onMounted(() => {
   }
 })
 
-const guardarEnHistorial = (premisas: string[], conclusion: string, esValido: boolean) => {
+const guardarEnHistorial = (
+  premisas: string[],
+  conclusion: string,
+  res: ResultadoInferencia
+) => {
   try {
     const nuevo: ItemHistorial = {
       id: Date.now().toString(),
       fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       premisas,
       conclusion,
-      esValido
+      resultado: res
     }
-    // Mantener solo los últimos 6
-    const filtrado = [nuevo, ...historialLocal.value.filter(
-      (h) => h.premisas.join(';') !== premisas.join(';') || h.conclusion !== conclusion
-    )].slice(0, 6)
+    const filtrado = [
+      nuevo,
+      ...historialLocal.value.filter(
+        (h) => h.premisas.join(';') !== premisas.join(';') || h.conclusion !== conclusion
+      )
+    ].slice(0, 6)
 
     historialLocal.value = filtrado
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrado))
@@ -109,7 +115,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     const conclusionNodo = parsearExpresion(payload.conclusion)
 
     // 2. Pequeña pausa para feedback visual
-    await new Promise((resolve) => setTimeout(resolve, 350))
+    await new Promise((resolve) => setTimeout(resolve, 300))
 
     // 3. Ejecutar motor (solver)
     const resultadoDemostracion = demostrarConclusion(premisasNodos, conclusionNodo)
@@ -117,8 +123,15 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     // 4. Generar trazabilidad con el motor
     const trazabilidad = construirTrazabilidad(premisasNodos, resultadoDemostracion)
 
-    // 5. Mapear al estado de UI
-    resultado.value = trazabilidad.esValido ? 'valida' : 'invalida'
+    // 5. Mapear estado formal explícito (Válida demostrada, Válida método indirecto, Inválida refutada)
+    if (trazabilidad.esValido) {
+      resultado.value = 'valida'
+    } else if (resultadoDemostracion.errorLogico?.tipo === 'DEMOSTRACION_INCOMPLETA') {
+      resultado.value = 'no_demostrable_directa'
+    } else {
+      resultado.value = 'invalida'
+    }
+
     errorLogicoActual.value = resultadoDemostracion.errorLogico
 
     pasos.value = trazabilidad.pasos.map((p) => {
@@ -134,12 +147,10 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
       }
     })
 
-    guardarEnHistorial(payload.premisas, payload.conclusion, trazabilidad.esValido)
+    guardarEnHistorial(payload.premisas, payload.conclusion, resultado.value)
 
     if (!trazabilidad.esValido) {
-      error.value =
-        resultadoDemostracion.errorLogico?.mensaje ||
-        'No se logró demostrar la conclusión con las reglas lógicas evaluadas.'
+      error.value = resultadoDemostracion.errorLogico?.mensaje
     }
   } catch (e: any) {
     console.error('Error en inferencia:', e)
@@ -206,8 +217,15 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             class="p-3 bg-neutral-50 hover:bg-blue-50/70 border border-neutral-200/80 hover:border-blue-300 rounded-lg cursor-pointer transition-all space-y-1.5 shadow-2xs group"
           >
             <div class="flex items-center justify-between text-[10px]">
-              <span class="font-bold uppercase px-1.5 py-0.5 rounded" :class="item.esValido ? 'bg-emerald-100 text-emerald-800' : 'bg-orange-100 text-orange-800'">
-                {{ item.esValido ? 'Válida' : 'Inválida' }}
+              <span
+                class="font-bold uppercase px-1.5 py-0.5 rounded"
+                :class="{
+                  'bg-emerald-100 text-emerald-800': item.resultado === 'valida',
+                  'bg-indigo-100 text-indigo-800': item.resultado === 'no_demostrable_directa',
+                  'bg-red-100 text-red-800': item.resultado === 'invalida' || item.resultado === 'error'
+                }"
+              >
+                {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
               </span>
               <span class="text-neutral-400">{{ item.fecha }}</span>
             </div>
@@ -286,8 +304,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80 min-h-[380px]">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-5">
               <h2 class="text-base md:text-lg font-bold text-neutral-800 flex items-center gap-2">
-                <span>{{ resultado === 'invalida' ? '🔍' : '⚡' }}</span>
-                {{ resultado === 'invalida' ? 'Análisis y Diagnóstico de la Demostración' : 'Trazabilidad de la Demostración' }}
+                <span>{{ resultado === 'valida' ? '⚡' : '🔍' }}</span>
+                {{ resultado === 'valida' ? 'Trazabilidad de la Demostración' : 'Análisis y Diagnóstico de la Demostración' }}
               </h2>
               <span v-if="isLoading" class="flex items-center gap-2 text-xs font-medium text-blue-600">
                 <span class="flex h-2.5 w-2.5 relative">
@@ -303,7 +321,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               :premisasOriginales="formulaData.premisas"
               :conclusionOriginal="formulaData.conclusion"
               :errorLogico="errorLogicoActual"
-              :esInvalido="resultado === 'invalida'"
+              :esInvalido="resultado === 'invalida' || resultado === 'no_demostrable_directa'"
             />
           </section>
         </div>

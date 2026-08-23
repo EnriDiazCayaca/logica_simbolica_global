@@ -15,7 +15,12 @@ export interface PasoInferencia {
   detalle?: ExplicacionParticionada
 }
 
-export type ResultadoInferencia = 'valida' | 'invalida' | 'error' | 'pendiente';
+export type ResultadoInferencia =
+  | 'valida'
+  | 'invalida'
+  | 'no_demostrable_directa'
+  | 'error'
+  | 'pendiente';
 
 export interface DiagnosticoInvalidez {
   errorLogico: ErrorLogico

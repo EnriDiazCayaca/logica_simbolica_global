@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { AlertTriangle, Check, X } from '@lucide/vue'
+import { AlertTriangle, Check, X, Compass } from '@lucide/vue'
 import type { ResultadoInferencia } from '@/types/inferencias'
 import Card from '@/components/ui/Card.vue'
 
@@ -23,27 +23,35 @@ interface EstadoVisual {
 const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> = {
   valida: {
     icono: Check,
-    titulo: 'Inferencia válida',
-    descripcion: 'La conclusión se deduce correctamente de las premisas mediante las reglas lógicas.',
+    titulo: 'Inferencia válida (Demostrada)',
+    descripcion: 'La conclusión se deduce correctamente de las premisas mediante deducción directa.',
     clasesIcono: 'bg-green-600',
-    clasesTitulo: 'text-green-600',
+    clasesTitulo: 'text-green-700',
     clasesBorde: 'border-l-green-600'
   },
   invalida: {
     icono: X,
-    titulo: 'Inferencia inválida',
-    descripcion: 'La conclusión no se deduce de las premisas. Revisa el análisis y diagnóstico abajo.',
-    clasesIcono: 'bg-orange-600',
-    clasesTitulo: 'text-orange-600',
-    clasesBorde: 'border-l-orange-600'
+    titulo: 'Inferencia inválida (Refutada)',
+    descripcion: 'La conclusión no se sigue de las premisas. Se encontró un contraejemplo explícito que falsea el argumento.',
+    clasesIcono: 'bg-red-600',
+    clasesTitulo: 'text-red-700',
+    clasesBorde: 'border-l-red-600'
+  },
+  no_demostrable_directa: {
+    icono: Compass,
+    titulo: 'Inferencia válida (Método indirecto requerido)',
+    descripcion: 'El argumento es lógicamente válido (sin contraejemplos), pero su prueba formal requiere técnicas avanzadas como Reducción al Absurdo o Prueba Condicional.',
+    clasesIcono: 'bg-indigo-600',
+    clasesTitulo: 'text-indigo-700',
+    clasesBorde: 'border-l-indigo-600'
   },
   error: {
     icono: AlertTriangle,
     titulo: 'Error de sintaxis o procesamiento',
     descripcion: 'Ocurrió un problema al evaluar la inferencia.',
-    clasesIcono: 'bg-red-600',
-    clasesTitulo: 'text-red-600',
-    clasesBorde: 'border-l-red-600'
+    clasesIcono: 'bg-amber-600',
+    clasesTitulo: 'text-amber-700',
+    clasesBorde: 'border-l-amber-600'
   }
 }
 
@@ -73,19 +81,19 @@ const descripcion = computed<string>(() => {
       <div class="flex items-center gap-4 sm:gap-5">
         <div
           :class="[
-            'flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full text-white sm:h-16 sm:w-16 shadow-xs',
+            'flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center rounded-full text-white shadow-xs',
             estado.clasesIcono
           ]"
           aria-hidden="true"
         >
-          <component :is="estado.icono" :size="30" :stroke-width="2.5" />
+          <component :is="estado.icono" :size="26" :stroke-width="2.5" />
         </div>
 
         <div class="min-w-0">
-          <p :class="['text-2xl font-bold md:text-3xl', estado.clasesTitulo]">
+          <p :class="['text-xl sm:text-2xl font-bold tracking-tight', estado.clasesTitulo]">
             {{ estado.titulo }}
           </p>
-          <p v-if="descripcion" class="mt-1 text-xs sm:text-sm text-neutral-600 leading-snug">
+          <p v-if="descripcion" class="mt-0.5 text-xs sm:text-sm text-neutral-600 leading-snug">
             {{ descripcion }}
           </p>
         </div>
