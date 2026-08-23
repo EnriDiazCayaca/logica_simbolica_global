@@ -56,7 +56,7 @@ const normalizarSintaxis = (linea: string): string => {
     .replace(/\^|∧|&&/g, ' Y ')
     .replace(/∨|\|\|/g, ' O ')
     .replace(/~|¬|!/g, ' NO ')
-    .replace(/⊕|⊻/g, ' O_EXCLUSIVA ')
+    .replace(/△|∆|▲|⊕|⊻/g, ' O_EXCLUSIVA ')
     .replace(/\s+/g, ' ')
     .trim()
 }
@@ -88,10 +88,9 @@ const advertenciasSintaxis = computed<string[]>(() => {
 })
 
 /**
- * Conectivos agrupados simétricamente
+ * Conectivos y variables
  */
-const GRUPO_CONECTIVOS_1 = ['¬', '∧', '∨', '⊕']
-const GRUPO_CONECTIVOS_2 = ['→', '↔', '(', ')']
+const CONECTIVOS = ['¬', '∧', '∨', '△', '→', '↔', '(', ')']
 const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
 const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
@@ -220,45 +219,29 @@ const handleSubmit = () => {
       </ul>
     </div>
 
-    <!-- Teclado Simbólico Minimalista y Simétrico -->
+    <!-- Teclado Simbólico Minimalista -->
     <div class="p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2.5">
-      <!-- Fila 1: Conectivos y Paréntesis (Organizados simétricamente en 2 bloques de 4 para evitar saltos asimétricos) -->
-      <div class="flex items-center justify-between flex-wrap gap-2">
-        <div class="flex items-center gap-2 flex-wrap">
-          <!-- Bloque A: ¬, ∧, ∨, ⊕ -->
-          <div class="flex items-center gap-1.5">
-            <button
-              v-for="op in GRUPO_CONECTIVOS_1"
-              :key="op"
-              type="button"
-              @click="insertarSimbolo(op, true)"
-              class="h-8 min-w-[34px] px-2.5 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
-            >
-              {{ op }}
-            </button>
-          </div>
-
-          <!-- Bloque B: →, ↔, (, ) -->
-          <div class="flex items-center gap-1.5">
-            <button
-              v-for="op in GRUPO_CONECTIVOS_2"
-              :key="op"
-              type="button"
-              @click="insertarSimbolo(op, true)"
-              class="h-8 min-w-[34px] px-2.5 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
-            >
-              {{ op }}
-            </button>
-          </div>
+      <!-- Fila 1: Conectivos y Salto alineados a la derecha -->
+      <div class="flex items-center justify-between gap-1.5 flex-wrap">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button
+            v-for="op in CONECTIVOS"
+            :key="op"
+            type="button"
+            @click="insertarSimbolo(op, true)"
+            class="h-8 min-w-[32px] px-2 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
+          >
+            {{ op }}
+          </button>
         </div>
 
-        <!-- Botón Salto de Línea Contextual -->
+        <!-- Botón Salto a la derecha sin crear una fila separada -->
         <button
           v-if="lastFocusedField === 'premisas'"
           type="button"
           @click="insertarSimbolo('\n', false)"
           title="Salto de línea"
-          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer"
+          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
         >
           ↵ Salto
         </button>

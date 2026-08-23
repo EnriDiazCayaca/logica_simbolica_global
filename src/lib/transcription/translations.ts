@@ -30,7 +30,7 @@ export const REGLAS: Record<ReglaLogica, InfoRegla> = {
     nombre: "Silogismo Disyuntivo Exclusivo",
     alias: "SDE, Disyunción Fuerte",
     descripcion:
-      "en una disyunción exclusiva (P ⊕ Q) exactamente una proposición es verdadera; afirmar una niega la otra, y negar una afirma la otra",
+      "en una disyunción exclusiva (P △ Q) exactamente una proposición es verdadera; afirmar una niega la otra, y negar una afirma la otra",
   },
   SILOGISMO_HIPOTETICO: {
     nombre: "Silogismo Hipotético",
