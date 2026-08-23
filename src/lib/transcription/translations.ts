@@ -1,3 +1,13 @@
+/**
+ * Mapea cada ReglaLogica (Inferencia | Equivalencia) a su nombre
+ * para mostrar, alias populares, y una descripción en español de
+ * QUÉ hace la regla en general (independiente del caso puntual).
+ *
+ * La descripción específica de un paso concreto (con las expresiones
+ * reales involucradas) se arma en descriptionGenerator.ts combinando
+ * esta info con las expresiones del AST.
+ */
+
 import type { ReglaLogica } from "../solver/types";
 
 export interface InfoRegla {
