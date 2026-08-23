@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
-export default defineConfig({
-  base: '/logica_simbolica_global/',
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/logica_simbolica_global/' : '/',
   plugins: [
     vue(),
     tailwindcss(),
@@ -14,4 +14,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
-})
+}))
