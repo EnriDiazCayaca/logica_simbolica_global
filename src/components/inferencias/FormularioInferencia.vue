@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import type { InferenciaRequest } from '@/types/inferencias'
 import Button from '@/components/ui/Button.vue'
 
@@ -9,6 +9,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'submit', payload: InferenciaRequest): void
+  (e: 'update:modelValue', payload: { premisas: string[]; conclusion: string }): void
 }>()
 
 const premisasText = ref('')
@@ -21,8 +22,16 @@ const isFormEmpty = computed(() => {
   return premisasText.value.trim() === '' || conclusionText.value.trim() === ''
 })
 
+// Emitir cambios para sincronizar con el traductor de lenguaje natural
+watch([premisasText, conclusionText], () => {
+  emit('update:modelValue', {
+    premisas: premisasText.value.split('\n'),
+    conclusion: conclusionText.value
+  })
+})
+
 /**
- * Normaliza símbolos matemáticos o atajos comunes a las palabras clave del motor.
+ * Normaliza símbolos matemáticos a las palabras clave internas del motor lógico.
  */
 const normalizarSintaxis = (linea: string): string => {
   return linea
@@ -37,9 +46,9 @@ const normalizarSintaxis = (linea: string): string => {
 }
 
 /**
- * Inserta un token o símbolo en la posición actual del cursor del campo activo.
+ * Inserta un símbolo matemático en la posición actual del cursor del campo activo.
  */
-const insertarToken = (token: string, esVariable = false) => {
+const insertarSimbolo = (simbolo: string) => {
   const isPremisas = lastFocusedField.value === 'premisas'
   const inputEl = isPremisas ? premisasRef.value : conclusionRef.value
 
@@ -50,10 +59,10 @@ const insertarToken = (token: string, esVariable = false) => {
       const before = premisasText.value.substring(0, start)
       const after = premisasText.value.substring(end)
 
-      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') && token !== ')' && token !== '\n'
-      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && !after.startsWith('\n') && token !== '(' && token !== '\n'
+      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') && simbolo !== ')' && simbolo !== '\n'
+      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && !after.startsWith('\n') && simbolo !== '(' && simbolo !== '\n'
 
-      const toInsert = (needsSpaceBefore ? ' ' : '') + token + (needsSpaceAfter ? ' ' : '')
+      const toInsert = (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
       premisasText.value = before + toInsert + after
 
       nextTick(() => {
@@ -62,10 +71,10 @@ const insertarToken = (token: string, esVariable = false) => {
         inputEl.setSelectionRange(newPos, newPos)
       })
     } else {
-      premisasText.value += (premisasText.value ? ' ' : '') + token
+      premisasText.value += (premisasText.value ? ' ' : '') + simbolo
     }
   } else {
-    if (token === '\n') return // No permitir salto de línea en la conclusión
+    if (simbolo === '\n') return
 
     if (inputEl) {
       const start = inputEl.selectionStart ?? conclusionText.value.length
@@ -73,10 +82,10 @@ const insertarToken = (token: string, esVariable = false) => {
       const before = conclusionText.value.substring(0, start)
       const after = conclusionText.value.substring(end)
 
-      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && token !== ')'
-      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && token !== '('
+      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && simbolo !== ')'
+      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && simbolo !== '('
 
-      const toInsert = (needsSpaceBefore ? ' ' : '') + token + (needsSpaceAfter ? ' ' : '')
+      const toInsert = (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
       conclusionText.value = before + toInsert + after
 
       nextTick(() => {
@@ -85,24 +94,8 @@ const insertarToken = (token: string, esVariable = false) => {
         inputEl.setSelectionRange(newPos, newPos)
       })
     } else {
-      conclusionText.value += (conclusionText.value ? ' ' : '') + token
+      conclusionText.value += (conclusionText.value ? ' ' : '') + simbolo
     }
-  }
-}
-
-/**
- * Carga un ejemplo predefinido para probar inmediatamente.
- */
-const cargarEjemplo = (tipo: 'mpp' | 'mtt' | 'sd') => {
-  if (tipo === 'mpp') {
-    premisasText.value = 'P ENTONCES Q\nP'
-    conclusionText.value = 'Q'
-  } else if (tipo === 'mtt') {
-    premisasText.value = 'P ENTONCES Q\nNO Q'
-    conclusionText.value = 'NO P'
-  } else if (tipo === 'sd') {
-    premisasText.value = 'P O Q\nNO P'
-    conclusionText.value = 'Q'
   }
 }
 
@@ -116,8 +109,8 @@ const handleSubmit = () => {
 
   const premisas = premisasText.value
     .split('\n')
-    .map(p => normalizarSintaxis(p))
-    .filter(p => p !== '')
+    .map((p) => normalizarSintaxis(p))
+    .filter((p) => p !== '')
 
   emit('submit', {
     premisas,
@@ -127,142 +120,129 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-6">
-    <!-- Ejemplos Rápidos -->
-    <div class="space-y-2">
-      <div class="flex items-center justify-between text-xs font-semibold text-neutral-500 uppercase tracking-wider">
-        <span>Plantillas y Ejemplos Rápidos</span>
-        <button
-          type="button"
-          @click="limpiarFormulario"
-          class="text-neutral-400 hover:text-red-600 transition-colors lowercase"
-        >
-          limpiar campos
-        </button>
-      </div>
-      <div class="flex flex-wrap gap-2">
-        <button
-          type="button"
-          @click="cargarEjemplo('mpp')"
-          class="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-full border border-blue-200 transition-all shadow-xs"
-        >
-          ⚡ Modus Ponens (P → Q, P ⊢ Q)
-        </button>
-        <button
-          type="button"
-          @click="cargarEjemplo('mtt')"
-          class="px-3 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-full border border-emerald-200 transition-all shadow-xs"
-        >
-          ⚡ Modus Tollens (P → Q, ¬Q ⊢ ¬P)
-        </button>
-        <button
-          type="button"
-          @click="cargarEjemplo('sd')"
-          class="px-3 py-1 text-xs font-medium bg-amber-50 text-amber-700 hover:bg-amber-100 rounded-full border border-amber-200 transition-all shadow-xs"
-        >
-          ⚡ Silogismo Disyuntivo (P ∨ Q, ¬P ⊢ Q)
-        </button>
-      </div>
-    </div>
-
-    <!-- Botonera de Símbolos y Proposiciones -->
-    <div class="p-3.5 bg-neutral-50 rounded-xl border border-neutral-200 space-y-3">
-      <div class="text-xs font-semibold text-neutral-600 flex items-center justify-between">
-        <span>Teclado Lógico (haz clic para insertar en el campo activo):</span>
+  <form @submit.prevent="handleSubmit" class="space-y-5">
+    <!-- Panel de Botonera: Conectivos y Variables Claramente Separados -->
+    <div class="space-y-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
+      <div class="flex items-center justify-between text-xs font-semibold text-neutral-600">
+        <span class="flex items-center gap-1.5">
+          <span>⌨️</span> Teclado Simbólico
+        </span>
         <span class="text-[11px] font-normal text-blue-600">
           Insertando en: <strong>{{ lastFocusedField === 'premisas' ? 'Premisas' : 'Conclusión' }}</strong>
         </span>
       </div>
 
-      <!-- Fila 1: Variables proposicionales -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-xs font-medium text-neutral-400 mr-1">Variables:</span>
-        <button
-          v-for="v in ['P', 'Q', 'R', 'S', 'T']"
-          :key="v"
-          type="button"
-          @click="insertarToken(v, true)"
-          class="h-8 min-w-[32px] px-2.5 bg-white hover:bg-blue-50 text-blue-700 font-bold text-sm rounded-lg border border-neutral-300 shadow-xs hover:border-blue-400 active:scale-95 transition-all"
-        >
-          {{ v }}
-        </button>
+      <!-- Sección 1: Conectivos Lógicos (Simbología Pura) -->
+      <div class="space-y-1.5">
+        <span class="text-[11px] font-bold text-neutral-500 uppercase tracking-wider block">
+          Conectivos Lógicos:
+        </span>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button
+            type="button"
+            @click="insertarSimbolo('¬')"
+            title="Negación (¬)"
+            class="h-9 px-3 bg-white hover:bg-neutral-100 text-red-600 font-bold text-base rounded-lg border border-neutral-300 shadow-xs hover:border-red-300 active:scale-95 transition-all"
+          >
+            ¬
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo('∧')"
+            title="Conjunción (∧)"
+            class="h-9 px-3 bg-white hover:bg-neutral-100 text-blue-600 font-bold text-base rounded-lg border border-neutral-300 shadow-xs hover:border-blue-300 active:scale-95 transition-all"
+          >
+            ∧
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo('∨')"
+            title="Disyunción (∨)"
+            class="h-9 px-3 bg-white hover:bg-neutral-100 text-amber-600 font-bold text-base rounded-lg border border-neutral-300 shadow-xs hover:border-amber-300 active:scale-95 transition-all"
+          >
+            ∨
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo('→')"
+            title="Condicional / Implicación (→)"
+            class="h-9 px-3.5 bg-white hover:bg-neutral-100 text-emerald-600 font-bold text-base rounded-lg border border-neutral-300 shadow-xs hover:border-emerald-300 active:scale-95 transition-all"
+          >
+            →
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo('↔')"
+            title="Bicondicional (↔)"
+            class="h-9 px-3.5 bg-white hover:bg-neutral-100 text-purple-600 font-bold text-base rounded-lg border border-neutral-300 shadow-xs hover:border-purple-300 active:scale-95 transition-all"
+          >
+            ↔
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo('(')"
+            title="Paréntesis izquierdo"
+            class="h-9 w-9 bg-white hover:bg-neutral-100 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all"
+          >
+            (
+          </button>
+          <button
+            type="button"
+            @click="insertarSimbolo(')')"
+            title="Paréntesis derecho"
+            class="h-9 w-9 bg-white hover:bg-neutral-100 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all"
+          >
+            )
+          </button>
+          <button
+            v-if="lastFocusedField === 'premisas'"
+            type="button"
+            @click="insertarSimbolo('\n')"
+            title="Nueva línea para siguiente premisa"
+            class="h-9 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-xs active:scale-95 transition-all"
+          >
+            ↵ Salto de Línea
+          </button>
+        </div>
       </div>
 
-      <!-- Fila 2: Conectivos y operadores -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-xs font-medium text-neutral-400 mr-1">Operadores:</span>
-        <button
-          type="button"
-          @click="insertarToken('NO')"
-          title="Negación (NO / ¬)"
-          class="h-8 px-2.5 bg-white hover:bg-neutral-100 text-neutral-800 font-medium text-xs rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span class="font-bold text-red-600 text-sm">¬</span> NO
-        </button>
-        <button
-          type="button"
-          @click="insertarToken('Y')"
-          title="Conjunción (Y / ∧)"
-          class="h-8 px-2.5 bg-white hover:bg-neutral-100 text-neutral-800 font-medium text-xs rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span class="font-bold text-blue-600 text-sm">∧</span> Y
-        </button>
-        <button
-          type="button"
-          @click="insertarToken('O')"
-          title="Disyunción (O / ∨)"
-          class="h-8 px-2.5 bg-white hover:bg-neutral-100 text-neutral-800 font-medium text-xs rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span class="font-bold text-amber-600 text-sm">∨</span> O
-        </button>
-        <button
-          type="button"
-          @click="insertarToken('ENTONCES')"
-          title="Condicional / Implicación (ENTONCES / →)"
-          class="h-8 px-2.5 bg-white hover:bg-neutral-100 text-neutral-800 font-medium text-xs rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span class="font-bold text-emerald-600 text-sm">→</span> ENTONCES
-        </button>
-        <button
-          type="button"
-          @click="insertarToken('SI_Y_SOLO_SI')"
-          title="Bicondicional (SI_Y_SOLO_SI / ↔)"
-          class="h-8 px-2.5 bg-white hover:bg-neutral-100 text-neutral-800 font-medium text-xs rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all flex items-center gap-1"
-        >
-          <span class="font-bold text-purple-600 text-sm">↔</span> SI_Y_SOLO_SI
-        </button>
-        <button
-          type="button"
-          @click="insertarToken('(')"
-          class="h-8 w-8 bg-white hover:bg-neutral-100 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all"
-        >
-          (
-        </button>
-        <button
-          type="button"
-          @click="insertarToken(')')"
-          class="h-8 w-8 bg-white hover:bg-neutral-100 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-xs active:scale-95 transition-all"
-        >
-          )
-        </button>
-        <button
-          v-if="lastFocusedField === 'premisas'"
-          type="button"
-          @click="insertarToken('\n')"
-          title="Agregar nueva línea de premisa"
-          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-xs active:scale-95 transition-all"
-        >
-          ↵ Nueva Premisa
-        </button>
+      <!-- Sección 2: Variables de Ejemplo -->
+      <div class="pt-2 border-t border-neutral-200/80 flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-1.5">
+          <span class="text-[11px] font-bold text-neutral-500 uppercase tracking-wider mr-1">
+            Variables de ejemplo:
+          </span>
+          <button
+            v-for="v in ['P', 'Q', 'R']"
+            :key="v"
+            type="button"
+            @click="insertarSimbolo(v)"
+            class="h-7 min-w-[28px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all"
+          >
+            {{ v }}
+          </button>
+        </div>
+        <span class="text-[11px] text-neutral-400 italic">
+          (o escribe cualquier letra con tu teclado)
+        </span>
       </div>
     </div>
 
     <!-- Campo de Premisas -->
-    <div class="space-y-2">
-      <label for="premisas" class="block text-sm font-medium text-neutral-700 flex justify-between items-center">
-        <span>Premisas (una por cada línea)</span>
-        <span class="text-xs text-neutral-400 font-normal">Acepta palabras clave o símbolos (→, ∧, ¬, etc.)</span>
-      </label>
+    <div class="space-y-1.5">
+      <div class="flex justify-between items-center">
+        <label for="premisas" class="block text-sm font-semibold text-neutral-700">
+          Premisas (una por cada línea)
+        </label>
+        <button
+          v-if="premisasText || conclusionText"
+          type="button"
+          @click="limpiarFormulario"
+          class="text-xs text-neutral-400 hover:text-red-600 transition-colors"
+        >
+          Limpiar campos
+        </button>
+      </div>
       <textarea
         id="premisas"
         ref="premisasRef"
@@ -270,16 +250,15 @@ const handleSubmit = () => {
         @focus="lastFocusedField = 'premisas'"
         rows="4"
         :disabled="isLoading"
-        placeholder="Ej: P ENTONCES Q&#10;P&#10;(o usando símbolos: P -> Q)"
+        placeholder="Ej: P → Q&#10;P"
         class="w-full font-mono text-sm rounded-xl border border-neutral-200 px-4 py-3 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs"
       ></textarea>
     </div>
 
     <!-- Campo de Conclusión -->
-    <div class="space-y-2">
-      <label for="conclusion" class="block text-sm font-medium text-neutral-700 flex justify-between items-center">
-        <span>Conclusión a Demostrar</span>
-        <span class="text-xs text-neutral-400 font-normal">Ej: Q</span>
+    <div class="space-y-1.5">
+      <label for="conclusion" class="block text-sm font-semibold text-neutral-700">
+        Conclusión a Demostrar
       </label>
       <input
         id="conclusion"
@@ -294,14 +273,12 @@ const handleSubmit = () => {
     </div>
 
     <!-- Botón de Envío -->
-    <div class="flex items-center justify-between pt-2">
-      <p class="text-xs text-neutral-500">
-        💡 Tip: También puedes escribir <code class="bg-neutral-100 px-1 py-0.5 rounded text-neutral-700">-></code>, <code class="bg-neutral-100 px-1 py-0.5 rounded text-neutral-700">^</code>, <code class="bg-neutral-100 px-1 py-0.5 rounded text-neutral-700">v</code>, <code class="bg-neutral-100 px-1 py-0.5 rounded text-neutral-700">~</code>
-      </p>
+    <div class="flex justify-end pt-1">
       <Button
         type="submit"
         variant="primary"
         size="md"
+        class="w-full sm:w-auto"
         :disabled="isFormEmpty || isLoading"
       >
         <span v-if="isLoading" class="flex items-center gap-2">
@@ -309,7 +286,7 @@ const handleSubmit = () => {
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Procesando...
+          Procesando Demostración...
         </span>
         <span v-else class="flex items-center gap-1.5 font-semibold">
           Demostrar Inferencia &rarr;

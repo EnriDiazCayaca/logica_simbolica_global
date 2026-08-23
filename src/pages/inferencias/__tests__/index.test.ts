@@ -39,7 +39,13 @@ describe('Integración: Página Inferencias', () => {
       ]
     })
 
-    const wrapper = mount(IndexView)
+    const wrapper = mount(IndexView, {
+      global: {
+        stubs: {
+          'router-link': true
+        }
+      }
+    })
 
     // 1. Verificar estado inicial
     expect(wrapper.text()).not.toContain('Inferencia válida')
@@ -66,7 +72,13 @@ describe('Integración: Página Inferencias', () => {
   it('muestra el mensaje de error cuando ocurre una excepción', async () => {
     // No necesitamos mockear el solver para este caso porque el error ocurrirá en el parser real
 
-    const wrapper = mount(IndexView)
+    const wrapper = mount(IndexView, {
+      global: {
+        stubs: {
+          'router-link': true
+        }
+      }
+    })
 
     // Llenar formulario con sintaxis inválida (faltan operadores)
     await wrapper.find('textarea').setValue('SINTAXIS INVALIDA')

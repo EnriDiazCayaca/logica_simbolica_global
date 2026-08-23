@@ -8,12 +8,22 @@ import { construirTrazabilidad } from '@/lib/trazabilidad/historial'
 import FormularioInferencia from '@/components/inferencias/FormularioInferencia.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
+import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
 
 // Estado global de la UI
 const isLoading = ref(false)
 const resultado = ref<ResultadoInferencia>('pendiente')
 const error = ref<string | undefined>(undefined)
 const pasos = ref<PasoInferencia[]>([])
+
+// Texto reactivo del formulario para el traductor de lenguaje natural
+const premisasActuales = ref<string[]>(['P → Q', 'P'])
+const conclusionActual = ref<string>('Q')
+
+const handleFormUpdate = (data: { premisas: string[]; conclusion: string }) => {
+  premisasActuales.value = data.premisas
+  conclusionActual.value = data.conclusion
+}
 
 const procesarInferencia = async (payload: InferenciaRequest) => {
   isLoading.value = true
@@ -22,27 +32,25 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
   pasos.value = []
 
   try {
-    // 1. Parsear
-    const premisasNodos = payload.premisas.map(p => parsearExpresion(p))
+    // 1. Parsear premisas y conclusión (el payload ya viene sanitizado/normalizado)
+    const premisasNodos = payload.premisas.map((p) => parsearExpresion(p))
     const conclusionNodo = parsearExpresion(payload.conclusion)
 
-    // 2. Ejecutar motor (solver) - Esto podría ser asíncrono si el motor evoluciona
-    // pero por ahora es síncrono. Lo envolvemos en una pequeña pausa para UX
-    await new Promise(resolve => setTimeout(resolve, 600)) 
+    // 2. Pequeña pausa para feedback visual de carga en la UI
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
+    // 3. Ejecutar motor (solver)
     const resultadoDemostracion = demostrarConclusion(premisasNodos, conclusionNodo)
 
-    // 3. Generar trazabilidad con el motor
+    // 4. Generar trazabilidad con el motor
     const trazabilidad = construirTrazabilidad(premisasNodos, resultadoDemostracion)
 
-    // 4. Mapear al estado de UI
+    // 5. Mapear al estado de UI
     resultado.value = trazabilidad.esValido ? 'valida' : 'invalida'
-    
+
     pasos.value = trazabilidad.pasos.map((p) => {
-      // DECISIÓN DE DISEÑO: Mapeamos lineasBase (números) a un formato string para los badges
-      // Ej: [1, 2] -> ["Línea 1", "Línea 2"]
-      const premisasMapeadas = p.lineasBase.map(l => `Línea ${l}`)
-      
+      const premisasMapeadas = p.lineasBase.map((l) => `Línea ${l}`)
+
       return {
         paso: p.numeroPaso,
         premisas: premisasMapeadas,
@@ -52,13 +60,12 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     })
 
     if (!trazabilidad.esValido) {
-      error.value = "No se logró demostrar la conclusión con las reglas actuales."
+      error.value = 'No se logró demostrar la conclusión con las reglas evaluadas.'
     }
-
   } catch (e: any) {
-    console.error("Error en inferencia:", e)
+    console.error('Error en inferencia:', e)
     resultado.value = 'error'
-    error.value = e.message || "Ocurrió un error de sintaxis o procesamiento en el motor lógico."
+    error.value = e.message || 'Ocurrió un error de sintaxis o procesamiento en el motor lógico.'
   } finally {
     isLoading.value = false
   }
@@ -66,41 +73,65 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-50 p-6 md:p-12 text-neutral-900 font-sans">
-    <div class="max-w-5xl mx-auto space-y-8">
-      <header>
-        <h1 class="text-3xl font-bold text-blue-600">Motor de Inferencias</h1>
-        <p class="text-neutral-600 mt-2">
-          Ingresa tus premisas y la conclusión a demostrar paso a paso.
+  <div class="min-h-screen bg-neutral-50 p-6 md:p-10 text-neutral-900 font-sans">
+    <div class="max-w-6xl mx-auto space-y-8">
+      <!-- Navegación & Encabezado -->
+      <div>
+        <router-link
+          to="/"
+          class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
+        >
+          &larr; Volver al Inicio
+        </router-link>
+        <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+          Demostrador de Inferencias Lógicas
+        </h1>
+        <p class="text-sm text-neutral-600 mt-1.5">
+          Escribe tus premisas formales con simbología matemática y valida la deducción lógica paso a paso.
         </p>
-      </header>
+      </div>
 
-      <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <!-- Columna Izquierda: Controles e Indicador -->
-        <div class="lg:col-span-5 space-y-8">
-          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100">
-            <FormularioInferencia 
-              :isLoading="isLoading" 
-              @submit="procesarInferencia" 
+      <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Columna Izquierda: Entrada de Datos & Traductor Natural -->
+        <div class="lg:col-span-6 space-y-6">
+          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+            <FormularioInferencia
+              :isLoading="isLoading"
+              @submit="procesarInferencia"
+              @update:modelValue="handleFormUpdate"
             />
           </section>
 
-          <IndicadorResultado 
-            :resultado="resultado" 
-            :mensaje="error" 
+          <!-- Sección de Interpretación en Lenguaje Natural -->
+          <TraductorLenguajeNatural
+            :premisas="premisasActuales"
+            :conclusion="conclusionActual"
           />
         </div>
 
-        <!-- Columna Derecha: Trazabilidad -->
-        <div class="lg:col-span-7">
-          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-100 min-h-[400px]">
-            <h2 class="text-xl font-bold text-neutral-800 mb-6 flex items-center gap-2">
-              Trazabilidad Lógica
-              <span v-if="isLoading" class="flex h-4 w-4 relative">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-500"></span>
+        <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad (Abajo) -->
+        <div class="lg:col-span-6 space-y-6">
+          <!-- Indicador de Resultado (Posicionado arriba de la trazabilidad) -->
+          <IndicadorResultado
+            :resultado="resultado"
+            :mensaje="error"
+          />
+
+          <!-- Panel de Trazabilidad Lógica -->
+          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80 min-h-[380px]">
+            <div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-5">
+              <h2 class="text-lg font-bold text-neutral-800 flex items-center gap-2">
+                <span>⚡</span> Trazabilidad de la Demostración
+              </h2>
+              <span v-if="isLoading" class="flex items-center gap-2 text-xs font-medium text-blue-600">
+                <span class="flex h-2.5 w-2.5 relative">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
+                </span>
+                Calculando...
               </span>
-            </h2>
+            </div>
+
             <PanelTrazabilidad :pasos="pasos" />
           </section>
         </div>

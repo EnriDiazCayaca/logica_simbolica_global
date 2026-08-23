@@ -38,7 +38,7 @@ describe('FormularioInferencia', () => {
 
     const btn = wrapper.findComponent(Button)
     expect(btn.props('disabled')).toBe(true)
-    expect(wrapper.text()).toContain('Procesando...')
+    expect(wrapper.text()).toContain('Procesando')
   })
 
   it('emite submit normalizando símbolos a palabras clave del motor', async () => {
