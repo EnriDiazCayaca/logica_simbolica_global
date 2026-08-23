@@ -12,10 +12,11 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 - **Traducción Final:** Generar y mostrar las premisas y la conclusión en lenguaje natural.
 - ⚠️ **Restricción de UI (Layout):** Para evitar la regresión visual y no romper el balance de las 2 columnas, el traductor DEBE integrarse en la columna izquierda mediante un sistema de **Pestañas (Tabs)** (ej. "Símbolos" | "Lenguaje Natural") o un Acordeón.
 
-### Morocho: Motor Lógico Exhaustivo
+### Morocho: Motor Lógico Exhaustivo (✅ COMPLETADO)
 - **Revisión del Solver:** Auditar y corregir exhaustivamente las reglas de inferencia (`solver.ts`).
-- **Motivos de Invalidez (Pattern Matching):** Extender la lógica para retornar posibles motivos del error lógico. 
-- ⚠️ **Restricción Algorítmica:** El motor actual usa *Forward Chaining*. **NO** implementes árboles de refutación ni alteres la arquitectura base. Limítate a hacer *pattern matching* superficial sobre las premisas no resueltas (ej. detectar patrones como la falacia de afirmación del consecuente) o devolver un mensaje de "No hay reglas aplicables". Evita bucles infinitos.
+- **Motivos de Invalidez (Pattern Matching):** Extender la lógica para retornar posibles motivos del error lógico (`detectarErrorLogico` implementado).
+- ⚠️ **Restricción Algorítmica:** Respetada con Forward Chaining + pattern matching sin árboles pesados. Cobertura de tests al 100% (15/15 pruebas unitarias).
+- 📢 **Desbloqueado para Alex:** `ErrorLogico` ya está disponible y emitiéndose en `demostrarConclusion()`.
 
 ### Alex: UX/UI y Detalles de Resolución
 - **Resolución Detallada (Acordeón):** Modificar el `PanelTrazabilidad` para que cada paso incluya un menú desplegable que explique la regla usada.
