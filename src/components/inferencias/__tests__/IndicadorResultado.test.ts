@@ -7,8 +7,6 @@ describe('IndicadorResultado', () => {
     const wrapper = mount(IndicadorResultado, {
       props: { resultado: 'pendiente' }
     })
-    // Transition wraps Card. Component should be empty or just comment nodes.
-    // .find('div') should return false if nothing rendered inside Card
     expect(wrapper.find('div.flex').exists()).toBe(false)
   })
 
@@ -20,12 +18,23 @@ describe('IndicadorResultado', () => {
     expect(wrapper.text()).toContain('La conclusión se deduce correctamente')
   })
 
-  it('renderiza caso inválido', () => {
+  it('renderiza caso inválido genérico', () => {
     const wrapper = mount(IndicadorResultado, {
       props: { resultado: 'invalida' }
     })
     expect(wrapper.text()).toContain('Inferencia inválida')
     expect(wrapper.text()).toContain('La conclusión no se deduce')
+  })
+
+  it('renderiza caso inválido con diagnóstico de falacia personalizado', () => {
+    const wrapper = mount(IndicadorResultado, {
+      props: {
+        resultado: 'invalida',
+        mensaje: 'Posible falacia de Afirmación del Consecuente'
+      }
+    })
+    expect(wrapper.text()).toContain('Inferencia inválida')
+    expect(wrapper.text()).toContain('Posible falacia de Afirmación del Consecuente')
   })
 
   it('renderiza caso error con mensaje personalizado', () => {

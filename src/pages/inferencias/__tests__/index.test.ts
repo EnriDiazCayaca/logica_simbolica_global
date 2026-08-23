@@ -69,9 +69,27 @@ describe('Integración: Página Inferencias', () => {
     expect(wrapper.text()).toContain('Q') // Expresion simbólica de la conclusión del paso
   })
 
-  it('muestra el mensaje de error cuando ocurre una excepción', async () => {
-    // No necesitamos mockear el solver para este caso porque el error ocurrirá en el parser real
+  it('permite cambiar entre pestañas de Simbología y Lenguaje Natural', async () => {
+    const wrapper = mount(IndexView, {
+      global: {
+        stubs: {
+          'router-link': true
+        }
+      }
+    })
 
+    // Botones de pestañas
+    const botones = wrapper.findAll('button')
+    const tabLenguaje = botones.find((b) => b.text().includes('Lenguaje Natural'))
+    expect(tabLenguaje).toBeDefined()
+
+    // Cambiar a pestaña de lenguaje natural
+    await tabLenguaje!.trigger('click')
+    expect(wrapper.text()).toContain('Interpretación en Lenguaje Natural')
+    expect(wrapper.text()).toContain('Significado de las Variables')
+  })
+
+  it('muestra el mensaje de error cuando ocurre una excepción', async () => {
     const wrapper = mount(IndexView, {
       global: {
         stubs: {

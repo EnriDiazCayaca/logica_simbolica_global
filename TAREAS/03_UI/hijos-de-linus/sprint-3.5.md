@@ -7,10 +7,10 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 
 ## 👥 Asignación de Tareas
 
-### Mio: Traducción y Lenguaje Natural
-- **Interfaz de Variables:** Crear un componente (ej. `TraductorLenguajeNatural.vue`) que detecte automáticamente las variables usadas y permita asignarles una proposición en texto.
-- **Traducción Final:** Generar y mostrar las premisas y la conclusión en lenguaje natural.
-- ⚠️ **Restricción de UI (Layout):** Para evitar la regresión visual y no romper el balance de las 2 columnas, el traductor DEBE integrarse en la columna izquierda mediante un sistema de **Pestañas (Tabs)** (ej. "Símbolos" | "Lenguaje Natural") o un Acordeón.
+### Mio: Traducción y Lenguaje Natural (✅ COMPLETADO)
+- **Interfaz de Variables:** Creado `TraductorLenguajeNatural.vue`, detectando variables en tiempo real.
+- **Traducción Final:** Renderiza premisas y conclusión traducidas en texto fluido continuo.
+- **Restricción de UI (Layout):** Integrado mediante sistema de Pestañas (`Simbología Formal` | `Lenguaje Natural`) en la columna izquierda, manteniendo el layout balanceado.
 
 ### Morocho: Motor Lógico Exhaustivo (✅ COMPLETADO)
 - **Revisión del Solver:** Auditar y corregir exhaustivamente las reglas de inferencia (`solver.ts`).
@@ -18,9 +18,9 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 - ⚠️ **Restricción Algorítmica:** Respetada con Forward Chaining + pattern matching sin árboles pesados. Cobertura de tests al 100% (15/15 pruebas unitarias).
 - 📢 **Desbloqueado para Alex:** `ErrorLogico` ya está disponible y emitiéndose en `demostrarConclusion()`.
 
-### Alex: UX/UI y Detalles de Resolución
-- **Resolución Detallada (Acordeón):** Modificar el `PanelTrazabilidad` para que cada paso incluya un menú desplegable que explique la regla usada.
-- **Estado Invalidez Detallado:** Renderizar los motivos de fallo/error proveídos por Morocho.
+### Alex: UX/UI y Detalles de Resolución (✅ COMPLETADO)
+- **Resolución Detallada (Acordeón):** Implementado en `PanelTrazabilidad.vue` con botón de acordeón (`¿Por qué esta regla?` / `Ocultar explicación`) para desplegar la explicación didáctica y formal de cada paso.
+- **Estado Invalidez Detallado:** Renderizado reactivo de los motivos de fallo y falacias en `IndicadorResultado.vue`.
 
 ---
 

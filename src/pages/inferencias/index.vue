@@ -6,14 +6,28 @@ import { demostrarConclusion } from '@/lib/solver/solver'
 import { construirTrazabilidad } from '@/lib/trazabilidad/historial'
 
 import FormularioInferencia from '@/components/inferencias/FormularioInferencia.vue'
+import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
+
+// Pestaña activa en la columna izquierda
+const activeTab = ref<'simbolos' | 'lenguaje'>('simbolos')
+
+// Estado de fórmulas sincronizado entre pestañas
+const formulaData = ref<{ premisas: string[]; conclusion: string }>({
+  premisas: [],
+  conclusion: ''
+})
 
 // Estado global de la UI
 const isLoading = ref(false)
 const resultado = ref<ResultadoInferencia>('pendiente')
 const error = ref<string | undefined>(undefined)
 const pasos = ref<PasoInferencia[]>([])
+
+const handleFormUpdate = (data: { premisas: string[]; conclusion: string }) => {
+  formulaData.value = data
+}
 
 const procesarInferencia = async (payload: InferenciaRequest) => {
   isLoading.value = true
@@ -27,7 +41,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     const conclusionNodo = parsearExpresion(payload.conclusion)
 
     // 2. Pequeña pausa para feedback visual de carga en la UI
-    await new Promise((resolve) => setTimeout(resolve, 450))
+    await new Promise((resolve) => setTimeout(resolve, 350))
 
     // 3. Ejecutar motor (solver)
     const resultadoDemostracion = demostrarConclusion(premisasNodos, conclusionNodo)
@@ -45,7 +59,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         paso: p.numeroPaso,
         premisas: premisasMapeadas,
         conclusion: p.expresionSimbolica,
-        regla: p.alias || p.operacion
+        regla: p.alias || p.operacion,
+        explicacion: p.explicacion
       }
     })
 
@@ -79,19 +94,59 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           Demostrador de Inferencias Lógicas
         </h1>
         <p class="text-sm text-neutral-600 mt-1.5">
-          Escribe tus premisas con simbología formal y valida la deducción lógica paso a paso.
+          Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.
         </p>
       </div>
 
       <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <!-- Columna Izquierda: Formulario y Teclado Simbólico -->
-        <div class="lg:col-span-6 space-y-6">
-          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
-            <FormularioInferencia
-              :isLoading="isLoading"
-              @submit="procesarInferencia"
+        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural) -->
+        <div class="lg:col-span-6 space-y-4">
+          <!-- Switcher de Pestañas -->
+          <div class="flex items-center gap-1.5 p-1 bg-neutral-200/70 rounded-xl border border-neutral-200 w-fit">
+            <button
+              type="button"
+              @click="activeTab = 'simbolos'"
+              :class="[
+                'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer',
+                activeTab === 'simbolos'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-neutral-600 hover:text-neutral-900'
+              ]"
+            >
+              <span>⌨️</span> Simbología Formal
+            </button>
+            <button
+              type="button"
+              @click="activeTab = 'lenguaje'"
+              :class="[
+                'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer',
+                activeTab === 'lenguaje'
+                  ? 'bg-white text-blue-700 shadow-xs'
+                  : 'text-neutral-600 hover:text-neutral-900'
+              ]"
+            >
+              <span>📖</span> Lenguaje Natural
+            </button>
+          </div>
+
+          <!-- Contenido de Pestaña 1: Formulario Simbólico -->
+          <div v-show="activeTab === 'simbolos'">
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+              <FormularioInferencia
+                :isLoading="isLoading"
+                @submit="procesarInferencia"
+                @update:modelValue="handleFormUpdate"
+              />
+            </section>
+          </div>
+
+          <!-- Contenido de Pestaña 2: Traductor a Lenguaje Natural -->
+          <div v-show="activeTab === 'lenguaje'">
+            <TraductorLenguajeNatural
+              :premisas="formulaData.premisas"
+              :conclusion="formulaData.conclusion"
             />
-          </section>
+          </div>
         </div>
 
         <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad (Abajo) -->
@@ -113,7 +168,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
                 </span>
-                Calculando...
+                Calculando deducción...
               </span>
             </div>
 

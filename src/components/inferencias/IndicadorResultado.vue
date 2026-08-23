@@ -40,7 +40,7 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
   error: {
     icono: AlertTriangle,
     titulo: 'Error en la inferencia',
-    descripcion: '',
+    descripcion: 'Ocurrió un problema al evaluar la inferencia.',
     clasesIcono: 'bg-red-600',
     clasesTitulo: 'text-red-600',
     clasesBorde: 'border-l-red-600'
@@ -54,8 +54,8 @@ const estado = computed<EstadoVisual | null>(() => {
 
 const descripcion = computed<string>(() => {
   if (!estado.value) return ''
-  if (props.resultado === 'error') {
-    return props.mensaje?.trim() || 'Ocurrió un problema al evaluar la inferencia.'
+  if (props.mensaje && props.mensaje.trim() !== '') {
+    return props.mensaje.trim()
   }
   return estado.value.descripcion
 })
@@ -85,7 +85,7 @@ const descripcion = computed<string>(() => {
           <p :class="['text-2xl font-bold md:text-4xl', estado.clasesTitulo]">
             {{ estado.titulo }}
           </p>
-          <p v-if="descripcion" class="mt-1 text-sm text-neutral-600 sm:text-base">
+          <p v-if="descripcion" class="mt-1 text-sm text-neutral-600 sm:text-base leading-snug">
             {{ descripcion }}
           </p>
         </div>
