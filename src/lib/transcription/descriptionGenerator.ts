@@ -90,6 +90,18 @@ export function generarDetalleParticionado(
       conclusionDeducida = `'${resultadoTexto}' es la única opción válida restante.`;
       break;
     }
+    case 'SILOGISMO_DISYUNTIVO_EXCLUSIVO': {
+      const xor = expresiones.find((e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'O_EXCLUSIVA') || expresiones[0];
+      const otra = expresiones.find((e) => e !== xor) || expresiones[1];
+      premisasBase = [
+        { linea: xor?.linea, expresion: xor?.texto, rol: 'Disyunción fuerte / exclusiva (P ⊕ Q)' },
+        { linea: otra?.linea, expresion: otra?.texto, rol: 'Proposición evaluada' },
+      ];
+      reglaJustificacion =
+        'En una disyunción exclusiva (P ⊕ Q) solo una proposición puede ser verdadera. Si una se cumple la otra es falsa, y si una no se cumple la otra debe ser forzosamente verdadera.';
+      conclusionDeducida = `'${resultadoTexto}' se deduce por exclusión mutua directa.`;
+      break;
+    }
     case 'SILOGISMO_HIPOTETICO': {
       const [i1, i2] = expresiones;
       premisasBase = [

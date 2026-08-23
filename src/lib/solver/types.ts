@@ -11,16 +11,17 @@ export type Operador =
 
 // Reglas de Inferencia (Principales)
 export type Inferencia =
-  | 'MODUS_PONENDO_PONENS'         // Alias: MPP, Afirmando afirmo
-  | 'MODUS_TOLLENDO_TOLLENS'       // Alias: MTT, Negando niego
-  | 'SILOGISMO_DISYUNTIVO'         // Alias: Modus Tollendo Ponens, MTP, Negando afirmo
-  | 'SILOGISMO_HIPOTETICO'         // Alias: SH, Transitividad
-  | 'ADICION'                      // Alias: AD
-  | 'SIMPLIFICACION'               // Alias: SIMP
-  | 'CONJUNCION'                   // Alias: CONJ
-  | 'DILEMA_CONSTRUCTIVO'          // P->Q, R->S, P v R |- Q v S
-  | 'ELIMINACION_BICONDICIONAL'    // P <-> Q |- P -> Q, Q -> P
-  | 'MODUS_PONENS_BICONDICIONAL';  // P <-> Q, P |- Q
+  | 'MODUS_PONENDO_PONENS'            // Alias: MPP, Afirmando afirmo
+  | 'MODUS_TOLLENDO_TOLLENS'          // Alias: MTT, Negando niego
+  | 'SILOGISMO_DISYUNTIVO'            // Alias: Modus Tollendo Ponens, MTP, Negando afirmo
+  | 'SILOGISMO_DISYUNTIVO_EXCLUSIVO'  // Alias: SDE, Disyunción Fuerte (P ⊕ Q, P |- ¬Q o P ⊕ Q, ¬P |- Q)
+  | 'SILOGISMO_HIPOTETICO'            // Alias: SH, Transitividad
+  | 'ADICION'                         // Alias: AD
+  | 'SIMPLIFICACION'                  // Alias: SIMP
+  | 'CONJUNCION'                      // Alias: CONJ
+  | 'DILEMA_CONSTRUCTIVO'             // P->Q, R->S, P v R |- Q v S
+  | 'ELIMINACION_BICONDICIONAL'       // P <-> Q |- P -> Q, Q -> P
+  | 'MODUS_PONENS_BICONDICIONAL';     // P <-> Q, P |- Q
 
 // Equivalencias Lógicas (Principales)
 export type Equivalencia =

@@ -3,6 +3,7 @@ import {
   aplicarModusPonendoPonens,
   aplicarModusTollendoTollens,
   aplicarSilogismoDisyuntivo,
+  aplicarSilogismoDisyuntivoExclusivo,
   aplicarSilogismoHipotetico,
   aplicarModusPonensBicondicional,
   demostrarConclusion,
@@ -48,6 +49,13 @@ describe('Motor Lógico (Solver)', () => {
     derecho: nodoQ
   };
 
+  const xorPQ: NodoExpresion = {
+    tipo: 'operacion',
+    operador: 'O_EXCLUSIVA',
+    izquierdo: nodoP,
+    derecho: nodoQ
+  };
+
   describe('sonNodosIguales', () => {
     it('debe identificar variables iguales (case-insensitive)', () => {
       expect(sonNodosIguales(nodoP, { tipo: 'variable', nombre: 'P' })).toBe(true);
@@ -79,6 +87,26 @@ describe('Motor Lógico (Solver)', () => {
       expect(resultado.errorLogico).toBeDefined();
       expect(resultado.errorLogico?.contraejemplo).toBeDefined();
       expect(resultado.errorLogico?.titulo).toContain('Dilema Inverso');
+    });
+  });
+
+  describe('Reglas de Disyunción Exclusiva / Fuerte (⊕)', () => {
+    it('debe aplicar Silogismo Disyuntivo Exclusivo (P ⊕ Q y P |- ¬Q)', () => {
+      const resultado = aplicarSilogismoDisyuntivoExclusivo(xorPQ, nodoP);
+      expect(resultado).not.toBeNull();
+      expect(sonNodosIguales(resultado!, nodoNoQ)).toBe(true);
+    });
+
+    it('debe aplicar Silogismo Disyuntivo Exclusivo (P ⊕ Q y ¬P |- Q)', () => {
+      const resultado = aplicarSilogismoDisyuntivoExclusivo(xorPQ, nodoNoP);
+      expect(resultado).not.toBeNull();
+      expect(sonNodosIguales(resultado!, nodoQ)).toBe(true);
+    });
+
+    it('debe resolver una demostración completa con disyunción exclusiva', () => {
+      const resultado = demostrarConclusion([xorPQ, nodoP], nodoNoQ);
+      expect(resultado.esValido).toBe(true);
+      expect(resultado.pasos.length).toBeGreaterThanOrEqual(1);
     });
   });
 

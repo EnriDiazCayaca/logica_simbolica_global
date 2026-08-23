@@ -304,6 +304,36 @@ export function aplicarSilogismoDisyuntivo(
 }
 
 /**
+ * Evalúa si es posible aplicar Silogismo Disyuntivo Exclusivo / Disyunción Fuerte:
+ * (A ⊕ B, A |- ¬B), (A ⊕ B, B |- ¬A), (A ⊕ B, ¬A |- B), (A ⊕ B, ¬B |- A)
+ */
+export function aplicarSilogismoDisyuntivoExclusivo(
+  xor: NodoExpresion,
+  premisa: NodoExpresion
+): NodoExpresion | null {
+  if (
+    xor.tipo === 'operacion' &&
+    xor.operador === 'O_EXCLUSIVA' &&
+    xor.izquierdo &&
+    xor.derecho
+  ) {
+    if (sonNodosIguales(xor.izquierdo, premisa)) {
+      return negarNodo(xor.derecho);
+    }
+    if (sonNodosIguales(xor.derecho, premisa)) {
+      return negarNodo(xor.izquierdo);
+    }
+    if (sonOpuestos(xor.izquierdo, premisa)) {
+      return xor.derecho;
+    }
+    if (sonOpuestos(xor.derecho, premisa)) {
+      return xor.izquierdo;
+    }
+  }
+  return null;
+}
+
+/**
  * Evalúa si es posible aplicar Silogismo Hipotético (A -> B, B -> C |- A -> C).
  */
 export function aplicarSilogismoHipotetico(
@@ -507,7 +537,6 @@ export function detectarErrorLogico(
   }
 
   // 4. Falacia de Afirmación del Consecuente Disyuntiva (Dilema Inverso)
-  // Ej: (P -> Q) ^ (R -> S), Q v S |- P v R  o  P -> Q, R -> S, Q v S |- P v R
   if (
     conclusion.tipo === 'operacion' &&
     conclusion.operador === 'O' &&
@@ -713,7 +742,15 @@ export function demostrarConclusion(
           }
         }
 
-        // 5. Silogismo Hipotético (A -> B, B -> C |- A -> C)
+        // 5. Silogismo Disyuntivo Exclusivo (A ⊕ B, A |- ¬B o A ⊕ B, ¬A |- B)
+        const resSDE = aplicarSilogismoDisyuntivoExclusivo(f1.nodo, f2.nodo);
+        if (resSDE) {
+          if (agregarPaso('SILOGISMO_DISYUNTIVO_EXCLUSIVO', [f1.linea, f2.linea], resSDE)) {
+            return { esValido: true, pasos };
+          }
+        }
+
+        // 6. Silogismo Hipotético (A -> B, B -> C |- A -> C)
         const resSH = aplicarSilogismoHipotetico(f1.nodo, f2.nodo);
         if (resSH) {
           if (agregarPaso('SILOGISMO_HIPOTETICO', [f1.linea, f2.linea], resSH)) {
@@ -721,7 +758,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 6. Conjunción objetivo: Si la conclusión es (A Y B) y tenemos A y B
+        // 7. Conjunción objetivo: Si la conclusión es (A Y B) y tenemos A y B
         if (
           conclusion.tipo === 'operacion' &&
           conclusion.operador === 'Y' &&

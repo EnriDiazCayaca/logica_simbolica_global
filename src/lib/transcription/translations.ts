@@ -26,6 +26,12 @@ export const REGLAS: Record<ReglaLogica, InfoRegla> = {
     descripcion:
       "en una disyunción (P ∨ Q) al menos una proposición es verdadera; al saber que una es falsa, la otra opción es forzosamente verdadera",
   },
+  SILOGISMO_DISYUNTIVO_EXCLUSIVO: {
+    nombre: "Silogismo Disyuntivo Exclusivo",
+    alias: "SDE, Disyunción Fuerte",
+    descripcion:
+      "en una disyunción exclusiva (P ⊕ Q) exactamente una proposición es verdadera; afirmar una niega la otra, y negar una afirma la otra",
+  },
   SILOGISMO_HIPOTETICO: {
     nombre: "Silogismo Hipotético",
     alias: "SH, Transitividad",

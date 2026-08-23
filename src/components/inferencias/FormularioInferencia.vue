@@ -88,10 +88,12 @@ const advertenciasSintaxis = computed<string[]>(() => {
 })
 
 /**
- * Lista de conectivos y variables
+ * Conectivos agrupados simétricamente
  */
-const CONECTIVOS = ['¬', '∧', '∨', '→', '↔', '(', ')']
-const VARIABLES = ['P', 'Q', 'R', 'S', 'A', 'B', 'C', 'D']
+const GRUPO_CONECTIVOS_1 = ['¬', '∧', '∨', '⊕']
+const GRUPO_CONECTIVOS_2 = ['→', '↔', '(', ')']
+const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
+const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
 /**
  * Inserta un símbolo con regla determinista de espaciado:
@@ -218,42 +220,85 @@ const handleSubmit = () => {
       </ul>
     </div>
 
-    <!-- Teclado Simbólico Minimalista (Ubicado en la parte inferior de la conclusión) -->
-    <div class="p-3 bg-neutral-100/70 rounded-xl border border-neutral-200/80 space-y-2">
-      <!-- Fila 1: Conectivos y Paréntesis -->
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <button
-          v-for="op in CONECTIVOS"
-          :key="op"
-          type="button"
-          @click="insertarSimbolo(op, true)"
-          class="h-8 min-w-[34px] px-2.5 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
-        >
-          {{ op }}
-        </button>
+    <!-- Teclado Simbólico Minimalista y Simétrico -->
+    <div class="p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2.5">
+      <!-- Fila 1: Conectivos y Paréntesis (Organizados simétricamente en 2 bloques de 4 para evitar saltos asimétricos) -->
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- Bloque A: ¬, ∧, ∨, ⊕ -->
+          <div class="flex items-center gap-1.5">
+            <button
+              v-for="op in GRUPO_CONECTIVOS_1"
+              :key="op"
+              type="button"
+              @click="insertarSimbolo(op, true)"
+              class="h-8 min-w-[34px] px-2.5 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
+            >
+              {{ op }}
+            </button>
+          </div>
 
+          <!-- Bloque B: →, ↔, (, ) -->
+          <div class="flex items-center gap-1.5">
+            <button
+              v-for="op in GRUPO_CONECTIVOS_2"
+              :key="op"
+              type="button"
+              @click="insertarSimbolo(op, true)"
+              class="h-8 min-w-[34px] px-2.5 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
+            >
+              {{ op }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón Salto de Línea Contextual -->
         <button
           v-if="lastFocusedField === 'premisas'"
           type="button"
           @click="insertarSimbolo('\n', false)"
           title="Salto de línea"
-          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer ml-auto"
+          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer"
         >
           ↵ Salto
         </button>
       </div>
 
-      <!-- Fila 2: Variables Proposicionales (P, Q, R, S, A, B, C, D) -->
-      <div class="flex items-center gap-1.5 flex-wrap pt-1.5 border-t border-neutral-200">
-        <button
-          v-for="v in VARIABLES"
-          :key="v"
-          type="button"
-          @click="insertarSimbolo(v, false)"
-          class="h-7 min-w-[30px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer"
-        >
-          {{ v }}
-        </button>
+      <!-- Fila 2: Variables Divididas en (P, Q, R, S) - (A, B, C, D) + Texto descriptivo -->
+      <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-neutral-200/80">
+        <div class="flex items-center gap-2 flex-wrap">
+          <!-- Grupo 1: P, Q, R, S -->
+          <div class="flex items-center gap-1">
+            <button
+              v-for="v in GRUPO_VARS_1"
+              :key="v"
+              type="button"
+              @click="insertarSimbolo(v, false)"
+              class="h-7 min-w-[28px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer"
+            >
+              {{ v }}
+            </button>
+          </div>
+
+          <span class="text-neutral-300 select-none hidden sm:inline">|</span>
+
+          <!-- Grupo 2: A, B, C, D -->
+          <div class="flex items-center gap-1">
+            <button
+              v-for="v in GRUPO_VARS_2"
+              :key="v"
+              type="button"
+              @click="insertarSimbolo(v, false)"
+              class="h-7 min-w-[28px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer"
+            >
+              {{ v }}
+            </button>
+          </div>
+        </div>
+
+        <span class="text-[11px] text-neutral-400 italic">
+          (o escribe más variables con tu teclado)
+        </span>
       </div>
     </div>
 
