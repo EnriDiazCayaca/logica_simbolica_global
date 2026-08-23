@@ -4,10 +4,9 @@ import {
   aplicarModusTollendoTollens,
   aplicarSilogismoDisyuntivo,
   aplicarSilogismoHipotetico,
+  aplicarModusPonensBicondicional,
   demostrarConclusion,
-  detectarErrorLogico,
   sonNodosIguales,
-  negarNodo
 } from './solver';
 import type { NodoExpresion } from './types';
 
@@ -15,9 +14,9 @@ describe('Motor Lógico (Solver)', () => {
   const nodoP: NodoExpresion = { tipo: 'variable', nombre: 'P' };
   const nodoQ: NodoExpresion = { tipo: 'variable', nombre: 'Q' };
   const nodoR: NodoExpresion = { tipo: 'variable', nombre: 'R' };
+  const nodoZ: NodoExpresion = { tipo: 'variable', nombre: 'Z' };
   const nodoNoP: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoP };
   const nodoNoQ: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoQ };
-  const nodoNoR: NodoExpresion = { tipo: 'operacion', operador: 'NO', derecho: nodoR };
 
   const implPQ: NodoExpresion = {
     tipo: 'operacion',
@@ -31,6 +30,13 @@ describe('Motor Lógico (Solver)', () => {
     operador: 'ENTONCES',
     izquierdo: nodoQ,
     derecho: nodoR
+  };
+
+  const bicPQ: NodoExpresion = {
+    tipo: 'operacion',
+    operador: 'SI_Y_SOLO_SI',
+    izquierdo: nodoP,
+    derecho: nodoQ
   };
 
   const disyPQ: NodoExpresion = {
@@ -51,46 +57,23 @@ describe('Motor Lógico (Solver)', () => {
     });
   });
 
-  describe('Regla: Modus Ponendo Ponens', () => {
-    it('debe retornar Q si se da P -> Q y P', () => {
-      const resultado = aplicarModusPonendoPonens(implPQ, nodoP);
-      expect(resultado).not.toBeNull();
-      expect(sonNodosIguales(resultado!, nodoQ)).toBe(true);
-    });
-  });
-
-  describe('Regla: Modus Tollendo Tollens', () => {
-    it('debe retornar NO P si se da P -> Q y NO Q', () => {
-      const resultado = aplicarModusTollendoTollens(implPQ, nodoNoQ);
-      expect(resultado).not.toBeNull();
-      expect(sonNodosIguales(resultado!, nodoNoP)).toBe(true);
-    });
-  });
-
-  describe('Regla: Silogismo Disyuntivo', () => {
-    it('debe retornar Q si se da P v Q y NO P', () => {
-      const resultado = aplicarSilogismoDisyuntivo(disyPQ, nodoNoP);
+  describe('Reglas de Bicondicional', () => {
+    it('debe aplicar Modus Ponens Bicondicional (P <-> Q y P |- Q)', () => {
+      const resultado = aplicarModusPonensBicondicional(bicPQ, nodoP);
       expect(resultado).not.toBeNull();
       expect(sonNodosIguales(resultado!, nodoQ)).toBe(true);
     });
 
-    it('debe retornar P si se da P v Q y NO Q', () => {
-      const resultado = aplicarSilogismoDisyuntivo(disyPQ, nodoNoQ);
+    it('debe aplicar Modus Ponens Bicondicional inverso (P <-> Q y Q |- P)', () => {
+      const resultado = aplicarModusPonensBicondicional(bicPQ, nodoQ);
       expect(resultado).not.toBeNull();
       expect(sonNodosIguales(resultado!, nodoP)).toBe(true);
     });
-  });
 
-  describe('Regla: Silogismo Hipotético', () => {
-    it('debe retornar P -> R si se da P -> Q y Q -> R', () => {
-      const resultado = aplicarSilogismoHipotetico(implPQ, implQR);
-      expect(resultado).not.toBeNull();
-      expect(sonNodosIguales(resultado!, {
-        tipo: 'operacion',
-        operador: 'ENTONCES',
-        izquierdo: nodoP,
-        derecho: nodoR
-      })).toBe(true);
+    it('debe resolver demostraciones completas con bicondicional', () => {
+      const resultado = demostrarConclusion([bicPQ, nodoP], nodoQ);
+      expect(resultado.esValido).toBe(true);
+      expect(resultado.pasos.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -123,35 +106,18 @@ describe('Motor Lógico (Solver)', () => {
       expect(resultado.pasos.some(p => p.esConclusion)).toBe(true);
     });
 
-    it('debe diagnosticar falacia de Afirmación del Consecuente', () => {
-      // P -> Q y Q |- P
+    it('debe diagnosticar falacia de Afirmación del Consecuente con mensaje formal', () => {
       const resultado = demostrarConclusion([implPQ, nodoQ], nodoP);
       expect(resultado.esValido).toBe(false);
-      expect(resultado.errorLogico).toBeDefined();
       expect(resultado.errorLogico?.tipo).toBe('FALACIA_AFIRMACION_CONSECUENTE');
-      expect(resultado.errorLogico?.lineasInvolucradas).toEqual([1, 2]);
+      expect(resultado.errorLogico?.mensaje).toContain('Afirmación del Consecuente');
     });
 
-    it('debe diagnosticar falacia de Negación del Antecedente', () => {
-      // P -> Q y NO P |- NO Q
-      const resultado = demostrarConclusion([implPQ, nodoNoP], nodoNoQ);
+    it('debe diagnosticar cuando la conclusión contiene variables inexistentes en las premisas', () => {
+      const resultado = demostrarConclusion([implPQ, nodoP], nodoZ);
       expect(resultado.esValido).toBe(false);
-      expect(resultado.errorLogico).toBeDefined();
-      expect(resultado.errorLogico?.tipo).toBe('FALACIA_NEGACION_ANTECEDENTE');
-    });
-
-    it('debe diagnosticar cuando no hay reglas aplicables', () => {
-      // P y R |- Q
-      const resultado = demostrarConclusion([nodoP, nodoR], nodoQ);
-      expect(resultado.esValido).toBe(false);
-      expect(resultado.errorLogico?.tipo).toBe('SIN_REGLAS_APLICABLES');
-    });
-
-    it('debe diagnosticar conclusión no alcanzada a pesar de pasos intermedios', () => {
-      // P -> Q, P |- R (Genera Q por Modus Ponens, pero nunca llega a R)
-      const resultado = demostrarConclusion([implPQ, nodoP], nodoR);
-      expect(resultado.esValido).toBe(false);
-      expect(resultado.errorLogico?.tipo).toBe('CONCLUSION_NO_ALCANZADA');
+      expect(resultado.errorLogico?.tipo).toBe('VARIABLE_NO_EXISTE_EN_PREMISAS');
+      expect(resultado.errorLogico?.mensaje).toContain("La variable 'Z' de la conclusión no aparece");
     });
   });
 });

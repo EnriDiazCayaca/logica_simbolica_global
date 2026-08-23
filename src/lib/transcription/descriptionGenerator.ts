@@ -1,20 +1,3 @@
-/**
- * descriptionGenerator.ts
- * ------------------------
- * Paso 2 de Mio: Generador de Descripciones.
- *
- * Recibe un PasoDemostracion real (con su idPaso, lineasInvolucradas y
- * expresionResultante) más el contexto necesario para resolver a qué
- * expresión concreta apunta cada número de línea, y arma el texto final
- * en español.
- *
- * Convención de numeración de líneas (coherente con solver.test.ts, donde
- * las premisas 1 y 2 son las líneas [1, 2]):
- *   - Líneas 1..N   -> las N premisas originales, en orden.
- *   - Línea N+i     -> el resultado del i-ésimo paso ya demostrado
- *                      (pasos[i-1].expresionResultante).
- */
-
 import { REGLAS } from "./translations";
 import { renderizarNodo } from "./astRenderer";
 import type { NodoExpresion, PasoDemostracion } from "../solver/types";
@@ -46,8 +29,8 @@ export function resolverLinea(
 }
 
 /**
- * Genera la descripción en español de un único paso, dado el contexto
- * completo (premisas originales + pasos ya demostrados antes que este).
+ * Genera la descripción explicativa y pedagógica en español de un único paso,
+ * detallando la justificación de verdad y la regla lógica aplicada.
  */
 export function generarDescripcionPaso(
   paso: PasoDemostracion,
@@ -64,25 +47,102 @@ export function generarDescripcionPaso(
 
   const expresionesInvolucradas = paso.lineasInvolucradas.map((numeroLinea) => {
     const expresion = resolverLinea(numeroLinea, premisas, pasosPrevios);
-    return `línea ${numeroLinea} (${renderizarNodo(expresion)})`;
+    return {
+      linea: numeroLinea,
+      nodo: expresion,
+      texto: renderizarNodo(expresion),
+    };
   });
 
-  const listaLineas =
-    expresionesInvolucradas.length > 1
-      ? expresionesInvolucradas.slice(0, -1).join(", ") +
-        " y " +
-        expresionesInvolucradas[expresionesInvolucradas.length - 1]
-      : expresionesInvolucradas[0] ?? "ninguna línea previa";
-
   const resultadoTexto = renderizarNodo(paso.expresionResultante);
-  const aliasTexto = info.alias ? ` (${info.alias})` : "";
+  let descripcion = '';
 
-  let descripcion =
-    `A partir de ${listaLineas}, aplicando ${info.nombre}${aliasTexto} ` +
-    `—${info.descripcion}—, se obtiene: ${resultadoTexto}.`;
+  switch (paso.idPaso) {
+    case 'MODUS_PONENDO_PONENS': {
+      const impl =
+        expresionesInvolucradas.find(
+          (e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'ENTONCES'
+        ) || expresionesInvolucradas[0];
+      const ant =
+        expresionesInvolucradas.find((e) => e !== impl) ||
+        expresionesInvolucradas[1];
+      descripcion = `Como el condicional '${impl?.texto}' es verdadero (Línea ${impl?.linea}) y su antecedente '${ant?.texto}' también se cumple (Línea ${ant?.linea}), por Modus Ponendo Ponens (MPP) se concluye necesariamente que el consecuente '${resultadoTexto}' es verdadero.`;
+      break;
+    }
+    case 'MODUS_TOLLENDO_TOLLENS': {
+      const impl =
+        expresionesInvolucradas.find(
+          (e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'ENTONCES'
+        ) || expresionesInvolucradas[0];
+      const consNeg =
+        expresionesInvolucradas.find((e) => e !== impl) ||
+        expresionesInvolucradas[1];
+      descripcion = `Como el condicional '${impl?.texto}' es verdadero (Línea ${impl?.linea}) pero su consecuente está negado en '${consNeg?.texto}' (Línea ${consNeg?.linea}), por Modus Tollendo Tollens (MTT) el antecedente debe ser falso, concluyendo '${resultadoTexto}'.`;
+      break;
+    }
+    case 'SILOGISMO_DISYUNTIVO': {
+      const disy =
+        expresionesInvolucradas.find(
+          (e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'O'
+        ) || expresionesInvolucradas[0];
+      const neg =
+        expresionesInvolucradas.find((e) => e !== disy) ||
+        expresionesInvolucradas[1];
+      descripcion = `En la disyunción '${disy?.texto}' (Línea ${disy?.linea}), al menos una opción es verdadera. Como se descarta una mediante '${neg?.texto}' (Línea ${neg?.linea}), por Silogismo Disyuntivo la otra opción '${resultadoTexto}' tiene que ser verdadera.`;
+      break;
+    }
+    case 'SILOGISMO_HIPOTETICO': {
+      const [i1, i2] = expresionesInvolucradas;
+      descripcion = `Dado que '${i1?.texto}' (Línea ${i1?.linea}) y '${i2?.texto}' (Línea ${i2?.linea}) son verdaderos, por transitividad lógica (Silogismo Hipotético) se deduce directamente que '${resultadoTexto}'.`;
+      break;
+    }
+    case 'SIMPLIFICACION': {
+      const conj = expresionesInvolucradas[0];
+      descripcion = `Como la conjunción '${conj?.texto}' es verdadera (Línea ${conj?.linea}), ambas partes son ciertas por separado; por Simplificación se extrae legítimamente '${resultadoTexto}'.`;
+      break;
+    }
+    case 'DOBLE_NEGACION': {
+      const base = expresionesInvolucradas[0];
+      descripcion = `Al negar dos veces '${base?.texto}' (Línea ${base?.linea}), por Doble Negación se cancelan ambas negaciones y se recupera la afirmación original '${resultadoTexto}'.`;
+      break;
+    }
+    case 'CONJUNCION': {
+      const [p1, p2] = expresionesInvolucradas;
+      descripcion = `Teniendo demostradas '${p1?.texto}' (Línea ${p1?.linea}) y '${p2?.texto}' (Línea ${p2?.linea}) de manera independiente, la regla de Conjunción permite unirlas válidamente en '${resultadoTexto}'.`;
+      break;
+    }
+    case 'DILEMA_CONSTRUCTIVO': {
+      const [c1, c2, d] = expresionesInvolucradas;
+      descripcion = `Teniendo los condicionales '${c1?.texto}' y '${c2?.texto}', y la disyunción '${d?.texto}', por Dilema Constructivo se concluye que al menos uno de los consecuentes debe cumplirse: '${resultadoTexto}'.`;
+      break;
+    }
+    case 'ELIMINACION_BICONDICIONAL':
+    case 'MODUS_PONENS_BICONDICIONAL': {
+      const bic =
+        expresionesInvolucradas.find(
+          (e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'SI_Y_SOLO_SI'
+        ) || expresionesInvolucradas[0];
+      const otra = expresionesInvolucradas.find((e) => e !== bic);
+      if (otra) {
+        descripcion = `Como el bicondicional '${bic?.texto}' es verdadero (Línea ${bic?.linea}), ambas proposiciones comparten el mismo valor de verdad. Al saber que '${otra?.texto}' es verdadero (Línea ${otra?.linea}), se deduce '${resultadoTexto}'.`;
+      } else {
+        descripcion = `Al ser el bicondicional '${bic?.texto}' verdadero (Línea ${bic?.linea}), se descompone válidamente en la implicación '${resultadoTexto}'.`;
+      }
+      break;
+    }
+    default: {
+      const lineasStr = expresionesInvolucradas
+        .map((e) => `Línea ${e.linea} ('${e.texto}')`)
+        .join(', ');
+      descripcion = `A partir de ${lineasStr}, aplicando ${info.nombre}${
+        info.alias ? ` (${info.alias})` : ''
+      } (${info.descripcion}), se deduce: '${resultadoTexto}'.`;
+      break;
+    }
+  }
 
   if (paso.esConclusion) {
-    descripcion += " Con esto se alcanza la conclusión buscada.";
+    descripcion += ' ✅ Con este paso queda formalmente demostrada la conclusión.';
   }
 
   return descripcion;
@@ -90,8 +150,7 @@ export function generarDescripcionPaso(
 
 /**
  * Versión enriquecida: además del texto, expone el nombre de la regla
- * y la expresión resultante ya renderizada, por si la UI quiere mostrarlos
- * por separado (ej. en columnas de una tabla de demostración).
+ * y la expresión resultante ya renderizada.
  */
 export function generarPasoEnriquecido(
   paso: PasoDemostracion,

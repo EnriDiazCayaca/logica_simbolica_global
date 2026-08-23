@@ -11,14 +11,16 @@ export type Operador =
 
 // Reglas de Inferencia (Principales)
 export type Inferencia =
-  | 'MODUS_PONENDO_PONENS'     // Alias: MPP, Afirmando afirmo
-  | 'MODUS_TOLLENDO_TOLLENS'   // Alias: MTT, Negando niego
-  | 'SILOGISMO_DISYUNTIVO'     // Alias: Modus Tollendo Ponens, MTP, Negando afirmo
-  | 'SILOGISMO_HIPOTETICO'     // Alias: SH, Transitividad
-  | 'ADICION'                  // Alias: AD
-  | 'SIMPLIFICACION'           // Alias: SIMP
-  | 'CONJUNCION'               // Alias: CONJ
-  | 'DILEMA_CONSTRUCTIVO';     // P->Q, R->S, P v R |- Q v S
+  | 'MODUS_PONENDO_PONENS'         // Alias: MPP, Afirmando afirmo
+  | 'MODUS_TOLLENDO_TOLLENS'       // Alias: MTT, Negando niego
+  | 'SILOGISMO_DISYUNTIVO'         // Alias: Modus Tollendo Ponens, MTP, Negando afirmo
+  | 'SILOGISMO_HIPOTETICO'         // Alias: SH, Transitividad
+  | 'ADICION'                      // Alias: AD
+  | 'SIMPLIFICACION'               // Alias: SIMP
+  | 'CONJUNCION'                   // Alias: CONJ
+  | 'DILEMA_CONSTRUCTIVO'          // P->Q, R->S, P v R |- Q v S
+  | 'ELIMINACION_BICONDICIONAL'    // P <-> Q |- P -> Q, Q -> P
+  | 'MODUS_PONENS_BICONDICIONAL';  // P <-> Q, P |- Q
 
 // Equivalencias Lógicas (Principales)
 export type Equivalencia =
@@ -29,7 +31,8 @@ export type Equivalencia =
   | 'DISTRIBUTIVA'
   | 'IMPLICACION_MATERIAL'     // Alias: Condicional a Disyunción (P -> Q = ~P v Q)
   | 'CONTRAPOSICION'           // Alias: Transposición (P -> Q = ~Q -> ~P)
-  | 'EXPORTACION';             // (P ^ Q) -> R  equivale a  P -> (Q -> R)
+  | 'EXPORTACION'              // (P ^ Q) -> R  equivale a  P -> (Q -> R)
+  | 'EQUIVALENCIA_MATERIAL';   // P <-> Q equivale a (P -> Q) ^ (Q -> P)
 
 export type ReglaLogica = Inferencia | Equivalencia;
 
@@ -64,6 +67,7 @@ export interface PasoDemostracion {
 export type MotivoInvalidez =
   | 'FALACIA_AFIRMACION_CONSECUENTE'
   | 'FALACIA_NEGACION_ANTECEDENTE'
+  | 'VARIABLE_NO_EXISTE_EN_PREMISAS'
   | 'SIN_REGLAS_APLICABLES'
   | 'CONCLUSION_NO_ALCANZADA';
 

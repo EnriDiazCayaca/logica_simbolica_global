@@ -7,6 +7,19 @@ import type {
 } from './types';
 
 /**
+ * Extrae todas las variables proposicionales únicas de un nodo AST.
+ */
+export function extraerVariablesDeNodo(nodo: NodoExpresion): string[] {
+  if (nodo.tipo === 'variable') {
+    return [nodo.nombre.toUpperCase()];
+  }
+  const vars: string[] = [];
+  if (nodo.izquierdo) vars.push(...extraerVariablesDeNodo(nodo.izquierdo));
+  if (nodo.derecho) vars.push(...extraerVariablesDeNodo(nodo.derecho));
+  return Array.from(new Set(vars));
+}
+
+/**
  * Verifica si dos nodos del AST son estructuralmente idénticos.
  */
 export function sonNodosIguales(a: NodoExpresion, b: NodoExpresion): boolean {
@@ -97,6 +110,67 @@ export function aplicarModusTollendoTollens(
     if (sonOpuestos(impl.derecho, premisa)) {
       return negarNodo(impl.izquierdo);
     }
+  }
+  return null;
+}
+
+/**
+ * Evalúa si es posible aplicar Modus Ponens Bicondicional:
+ * (A <-> B, A |- B) o (A <-> B, B |- A)
+ * (A <-> B, NO A |- NO B) o (A <-> B, NO B |- NO A)
+ */
+export function aplicarModusPonensBicondicional(
+  bic: NodoExpresion,
+  premisa: NodoExpresion
+): NodoExpresion | null {
+  if (
+    bic.tipo === 'operacion' &&
+    bic.operador === 'SI_Y_SOLO_SI' &&
+    bic.izquierdo &&
+    bic.derecho
+  ) {
+    if (sonNodosIguales(bic.izquierdo, premisa)) {
+      return bic.derecho;
+    }
+    if (sonNodosIguales(bic.derecho, premisa)) {
+      return bic.izquierdo;
+    }
+    if (sonOpuestos(bic.izquierdo, premisa)) {
+      return negarNodo(bic.derecho);
+    }
+    if (sonOpuestos(bic.derecho, premisa)) {
+      return negarNodo(bic.izquierdo);
+    }
+  }
+  return null;
+}
+
+/**
+ * Descompone un bicondicional en sus dos implicaciones (A <-> B |- A -> B, B -> A).
+ */
+export function aplicarEliminacionBicondicional(
+  bic: NodoExpresion
+): [NodoExpresion, NodoExpresion] | null {
+  if (
+    bic.tipo === 'operacion' &&
+    bic.operador === 'SI_Y_SOLO_SI' &&
+    bic.izquierdo &&
+    bic.derecho
+  ) {
+    return [
+      {
+        tipo: 'operacion',
+        operador: 'ENTONCES',
+        izquierdo: bic.izquierdo,
+        derecho: bic.derecho,
+      },
+      {
+        tipo: 'operacion',
+        operador: 'ENTONCES',
+        izquierdo: bic.derecho,
+        derecho: bic.izquierdo,
+      },
+    ];
   }
   return null;
 }
@@ -234,15 +308,29 @@ interface RegistroFormula {
 }
 
 /**
- * Realiza un pattern matching superficial sobre las premisas para diagnosticar
- * el motivo de fallo lógico (falacias formales o falta de reglas aplicables).
+ * Realiza un pattern matching profundo para diagnosticar de forma muy específica
+ * el motivo de fallo lógico en inferencias inválidas.
  */
 export function detectarErrorLogico(
   premisas: NodoExpresion[],
   conclusion: NodoExpresion,
   totalPasosInferidos: number
 ): ErrorLogico {
-  // 1. Falacia de Afirmación del Consecuente: A -> B y B  |- A
+  // 1. Validar si la conclusión contiene variables completamente ausentes en las premisas
+  const varsConclusion = extraerVariablesDeNodo(conclusion);
+  const varsPremisas = Array.from(
+    new Set(premisas.flatMap((p) => extraerVariablesDeNodo(p)))
+  );
+  const varsFaltantes = varsConclusion.filter((v) => !varsPremisas.includes(v));
+
+  if (varsFaltantes.length > 0) {
+    return {
+      tipo: 'VARIABLE_NO_EXISTE_EN_PREMISAS',
+      mensaje: `La variable '${varsFaltantes.join(', ')}' de la conclusión no aparece en ninguna de las premisas dadas. Es lógicamente imposible deducir conclusiones sobre variables ausentes en el argumento.`,
+    };
+  }
+
+  // 2. Falacia de Afirmación del Consecuente: A -> B y B  |- A
   for (let i = 0; i < premisas.length; i++) {
     const p1 = premisas[i];
     if (
@@ -261,15 +349,14 @@ export function detectarErrorLogico(
           return {
             tipo: 'FALACIA_AFIRMACION_CONSECUENTE',
             lineasInvolucradas: [i + 1, j + 1],
-            mensaje:
-              'Posible falacia de Afirmación del Consecuente: tener el condicional y su consecuente no permite deducir el antecedente.',
+            mensaje: `Falacia formal de Afirmación del Consecuente (entre Líneas ${i + 1} y ${j + 1}): Conocer el condicional y afirmar su consecuente no garantiza el antecedente. El consecuente podría ser verdadero por otras causas independientes.`,
           };
         }
       }
     }
   }
 
-  // 2. Falacia de Negación del Antecedente: A -> B y ¬A  |- ¬B
+  // 3. Falacia de Negación del Antecedente: A -> B y ¬A  |- ¬B
   for (let i = 0; i < premisas.length; i++) {
     const p1 = premisas[i];
     if (
@@ -288,28 +375,27 @@ export function detectarErrorLogico(
           return {
             tipo: 'FALACIA_NEGACION_ANTECEDENTE',
             lineasInvolucradas: [i + 1, j + 1],
-            mensaje:
-              'Posible falacia de Negación del Antecedente: negar el antecedente de un condicional no permite negar su consecuente.',
+            mensaje: `Falacia formal de Negación del Antecedente (entre Líneas ${i + 1} y ${j + 1}): Conocer el condicional y negar su antecedente no permite deducir la negación del consecuente. Aunque el antecedente no ocurra, el consecuente aún podría cumplirse por otras razones.`,
           };
         }
       }
     }
   }
 
-  // 3. Sin reglas aplicables
+  // 4. Sin reglas aplicables (premisas desconectadas)
   if (totalPasosInferidos === 0) {
     return {
       tipo: 'SIN_REGLAS_APLICABLES',
       mensaje:
-        'No se encontraron reglas de inferencia aplicables para conectar las premisas con la conclusión.',
+        'No se encontraron reglas de inferencia aplicables con las premisas dadas. Las premisas no comparten conectivos ni variables intermedias compatibles para construir una deducción.',
     };
   }
 
-  // 4. Conclusión no alcanzada
+  // 5. Conclusión no alcanzada (cadena deductiva incompleta)
   return {
     tipo: 'CONCLUSION_NO_ALCANZADA',
     mensaje:
-      'Se generaron inferencias intermedias, pero no fue posible deducir la conclusión objetivo con las reglas evaluadas.',
+      'Se lograron derivar inferencias intermedias, pero no existen suficientes premisas puente para conectar los pasos demostrados con la conclusión deseada.',
   };
 }
 
@@ -403,6 +489,17 @@ export function demostrarConclusion(
           return { esValido: true, pasos };
         }
       }
+
+      // Eliminación del Bicondicional (A <-> B |- A -> B, B -> A)
+      const elimBic = aplicarEliminacionBicondicional(f.nodo);
+      if (elimBic) {
+        if (agregarPaso('ELIMINACION_BICONDICIONAL', [f.linea], elimBic[0])) {
+          return { esValido: true, pasos };
+        }
+        if (agregarPaso('ELIMINACION_BICONDICIONAL', [f.linea], elimBic[1])) {
+          return { esValido: true, pasos };
+        }
+      }
     }
 
     // --- REGLAS BINARIAS (Pares de fórmulas) ---
@@ -420,7 +517,15 @@ export function demostrarConclusion(
           }
         }
 
-        // 2. Modus Tollendo Tollens (A -> B, NO B |- NO A)
+        // 2. Modus Ponens Bicondicional (A <-> B, A |- B o A <-> B, B |- A)
+        const resMPB = aplicarModusPonensBicondicional(f1.nodo, f2.nodo);
+        if (resMPB) {
+          if (agregarPaso('MODUS_PONENS_BICONDICIONAL', [f1.linea, f2.linea], resMPB)) {
+            return { esValido: true, pasos };
+          }
+        }
+
+        // 3. Modus Tollendo Tollens (A -> B, NO B |- NO A)
         const resMTT = aplicarModusTollendoTollens(f1.nodo, f2.nodo);
         if (resMTT) {
           if (agregarPaso('MODUS_TOLLENDO_TOLLENS', [f1.linea, f2.linea], resMTT)) {
@@ -428,7 +533,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 3. Silogismo Disyuntivo (A v B, NO A |- B)
+        // 4. Silogismo Disyuntivo (A v B, NO A |- B)
         const resSD = aplicarSilogismoDisyuntivo(f1.nodo, f2.nodo);
         if (resSD) {
           if (agregarPaso('SILOGISMO_DISYUNTIVO', [f1.linea, f2.linea], resSD)) {
@@ -436,7 +541,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 4. Silogismo Hipotético (A -> B, B -> C |- A -> C)
+        // 5. Silogismo Hipotético (A -> B, B -> C |- A -> C)
         const resSH = aplicarSilogismoHipotetico(f1.nodo, f2.nodo);
         if (resSH) {
           if (agregarPaso('SILOGISMO_HIPOTETICO', [f1.linea, f2.linea], resSH)) {
@@ -444,7 +549,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 5. Conjunción objetivo: Si la conclusión es (A Y B) y tenemos A y B
+        // 6. Conjunción objetivo: Si la conclusión es (A Y B) y tenemos A y B
         if (
           conclusion.tipo === 'operacion' &&
           conclusion.operador === 'Y' &&
