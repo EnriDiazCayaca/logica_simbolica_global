@@ -2,9 +2,12 @@
 import { ref, computed, nextTick, watch } from 'vue'
 import type { InferenciaRequest } from '@/types/inferencias'
 import Button from '@/components/ui/Button.vue'
+import { AlertCircle, Sparkles } from '@lucide/vue'
 
 const props = defineProps<{
   isLoading: boolean
+  premisasIniciales?: string[]
+  conclusionInicial?: string
 }>()
 
 const emit = defineEmits<{
@@ -12,11 +15,25 @@ const emit = defineEmits<{
   (e: 'update:modelValue', payload: { premisas: string[]; conclusion: string }): void
 }>()
 
-const premisasText = ref('')
-const conclusionText = ref('')
+const premisasText = ref(props.premisasIniciales?.join('\n') || '')
+const conclusionText = ref(props.conclusionInicial || '')
 const premisasRef = ref<HTMLTextAreaElement | null>(null)
 const conclusionRef = ref<HTMLInputElement | null>(null)
 const lastFocusedField = ref<'premisas' | 'conclusion'>('premisas')
+
+// Si cambian las props externas, sincronizar
+watch(
+  () => props.premisasIniciales,
+  (nuevas) => {
+    if (nuevas) premisasText.value = nuevas.join('\n')
+  }
+)
+watch(
+  () => props.conclusionInicial,
+  (nueva) => {
+    if (nueva !== undefined) conclusionText.value = nueva
+  }
+)
 
 const isFormEmpty = computed(() => {
   return premisasText.value.trim() === '' || conclusionText.value.trim() === ''
@@ -46,6 +63,70 @@ const normalizarSintaxis = (linea: string): string => {
 }
 
 /**
+ * Validador en tiempo real (Linter básico para paréntesis y conectivos)
+ */
+const advertenciasSintaxis = computed<string[]>(() => {
+  const advertencias: string[] = []
+  const lineas = premisasText.value.split('\n').filter((l) => l.trim() !== '')
+
+  // Verificar balanceo de paréntesis en premisas
+  lineas.forEach((linea, idx) => {
+    const izq = (linea.match(/\(/g) || []).length
+    const der = (linea.match(/\)/g) || []).length
+    if (izq !== der) {
+      advertencias.push(`Premisa ${idx + 1}: paréntesis sin cerrar (${izq} abiertos vs ${der} cerrados).`)
+    }
+  })
+
+  // Verificar balanceo de paréntesis en conclusión
+  if (conclusionText.value.trim()) {
+    const izqC = (conclusionText.value.match(/\(/g) || []).length
+    const derC = (conclusionText.value.match(/\)/g) || []).length
+    if (izqC !== derC) {
+      advertencias.push(`Conclusión: paréntesis sin cerrar (${izqC} abiertos vs ${derC} cerrados).`)
+    }
+  }
+
+  return advertencias
+})
+
+/**
+ * Cargar ejemplos académicos predefinidos
+ */
+const EJEMPLOS_PREDEFINIDOS = [
+  {
+    nombre: 'Modus Ponens (Válido)',
+    premisas: 'P → Q\nP',
+    conclusion: 'Q'
+  },
+  {
+    nombre: 'Silogismo Hipotético (Multi-paso)',
+    premisas: 'P → Q\nQ → R\nP',
+    conclusion: 'R'
+  },
+  {
+    nombre: 'Bicondicional (Válido)',
+    premisas: 'P ↔ Q\nP',
+    conclusion: 'Q'
+  },
+  {
+    nombre: 'Afirmación del Consecuente (Falacia)',
+    premisas: 'P → Q\nQ',
+    conclusion: 'P'
+  },
+  {
+    nombre: 'Dilema Inverso (Falacia Disyuntiva)',
+    premisas: '(P → Q) ∧ (R → S)\nQ ∨ S',
+    conclusion: 'P ∨ R'
+  }
+]
+
+const cargarEjemplo = (ejemplo: { premisas: string; conclusion: string }) => {
+  premisasText.value = ejemplo.premisas
+  conclusionText.value = ejemplo.conclusion
+}
+
+/**
  * Inserta un símbolo matemático en la posición actual del cursor del campo activo.
  */
 const insertarSimbolo = (simbolo: string) => {
@@ -59,10 +140,21 @@ const insertarSimbolo = (simbolo: string) => {
       const before = premisasText.value.substring(0, start)
       const after = premisasText.value.substring(end)
 
-      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && !before.endsWith('\n') && simbolo !== ')' && simbolo !== '\n'
-      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && !after.startsWith('\n') && simbolo !== '(' && simbolo !== '\n'
+      const needsSpaceBefore =
+        before.length > 0 &&
+        !before.endsWith(' ') &&
+        !before.endsWith('\n') &&
+        simbolo !== ')' &&
+        simbolo !== '\n'
+      const needsSpaceAfter =
+        after.length > 0 &&
+        !after.startsWith(' ') &&
+        !after.startsWith('\n') &&
+        simbolo !== '(' &&
+        simbolo !== '\n'
 
-      const toInsert = (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
+      const toInsert =
+        (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
       premisasText.value = before + toInsert + after
 
       nextTick(() => {
@@ -82,10 +174,13 @@ const insertarSimbolo = (simbolo: string) => {
       const before = conclusionText.value.substring(0, start)
       const after = conclusionText.value.substring(end)
 
-      const needsSpaceBefore = before.length > 0 && !before.endsWith(' ') && simbolo !== ')'
-      const needsSpaceAfter = after.length > 0 && !after.startsWith(' ') && simbolo !== '('
+      const needsSpaceBefore =
+        before.length > 0 && !before.endsWith(' ') && simbolo !== ')'
+      const needsSpaceAfter =
+        after.length > 0 && !after.startsWith(' ') && simbolo !== '('
 
-      const toInsert = (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
+      const toInsert =
+        (needsSpaceBefore ? ' ' : '') + simbolo + (needsSpaceAfter ? ' ' : '')
       conclusionText.value = before + toInsert + after
 
       nextTick(() => {
@@ -121,6 +216,24 @@ const handleSubmit = () => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-5">
+    <!-- Barra de Ejemplos Rápidos -->
+    <div class="flex items-center justify-between flex-wrap gap-2 pb-2 border-b border-neutral-100">
+      <span class="text-xs font-bold text-neutral-600 flex items-center gap-1">
+        <Sparkles :size="14" class="text-amber-500" /> Ejemplos Académicos:
+      </span>
+      <div class="flex flex-wrap gap-1.5">
+        <button
+          v-for="(ej, idx) in EJEMPLOS_PREDEFINIDOS"
+          :key="idx"
+          type="button"
+          @click="cargarEjemplo(ej)"
+          class="px-2 py-1 text-[11px] font-semibold bg-neutral-100 hover:bg-blue-50 text-neutral-700 hover:text-blue-700 rounded-md border border-neutral-200 transition-colors cursor-pointer"
+        >
+          {{ ej.nombre }}
+        </button>
+      </div>
+    </div>
+
     <!-- Panel de Botonera: Conectivos y Variables Claramente Separados -->
     <div class="space-y-3 p-4 bg-neutral-50 rounded-xl border border-neutral-200">
       <div class="flex items-center justify-between text-xs font-semibold text-neutral-600">
@@ -213,7 +326,7 @@ const handleSubmit = () => {
             Variables de ejemplo:
           </span>
           <button
-            v-for="v in ['P', 'Q', 'R']"
+            v-for="v in ['P', 'Q', 'R', 'S']"
             :key="v"
             type="button"
             @click="insertarSimbolo(v)"
@@ -270,6 +383,19 @@ const handleSubmit = () => {
         placeholder="Ej: Q"
         class="w-full font-mono text-sm rounded-xl border border-neutral-200 px-4 py-3 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs"
       />
+    </div>
+
+    <!-- Alertas del Linter de Sintaxis en Tiempo Real -->
+    <div v-if="advertenciasSintaxis.length > 0" class="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 space-y-1">
+      <div class="flex items-center gap-1.5 font-bold text-amber-900">
+        <AlertCircle :size="14" />
+        <span>Aviso de sintaxis detectado:</span>
+      </div>
+      <ul class="list-disc list-inside space-y-0.5 text-[11px]">
+        <li v-for="(adv, aIdx) in advertenciasSintaxis" :key="aIdx">
+          {{ adv }}
+        </li>
+      </ul>
     </div>
 
     <!-- Botón de Envío -->

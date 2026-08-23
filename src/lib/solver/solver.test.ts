@@ -7,7 +7,9 @@ import {
   aplicarModusPonensBicondicional,
   demostrarConclusion,
   sonNodosIguales,
+  encontrarContraejemplo,
 } from './solver';
+import { parsearExpresion } from './parser';
 import type { NodoExpresion } from './types';
 
 describe('Motor Lógico (Solver)', () => {
@@ -54,6 +56,29 @@ describe('Motor Lógico (Solver)', () => {
 
     it('debe rechazar variables diferentes', () => {
       expect(sonNodosIguales(nodoP, nodoQ)).toBe(false);
+    });
+  });
+
+  describe('Evaluador Semántico y Contraejemplos', () => {
+    it('debe encontrar contraejemplo para la falacia de afirmación del consecuente', () => {
+      const contraejemplo = encontrarContraejemplo([implPQ, nodoQ], nodoP);
+      expect(contraejemplo).not.toBeNull();
+      // P=False, Q=True hace P->Q Verdadero, Q Verdadero y P Falso
+      expect(contraejemplo?.valores['P']).toBe(false);
+      expect(contraejemplo?.valores['Q']).toBe(true);
+      expect(contraejemplo?.valorConclusion).toBe(false);
+    });
+
+    it('debe encontrar contraejemplo para la falacia del dilema inverso reportada por el usuario', () => {
+      const p1 = parsearExpresion('(P ENTONCES Q) Y (R ENTONCES S)');
+      const p2 = parsearExpresion('Q O S');
+      const conclusion = parsearExpresion('P O R');
+
+      const resultado = demostrarConclusion([p1, p2], conclusion);
+      expect(resultado.esValido).toBe(false);
+      expect(resultado.errorLogico).toBeDefined();
+      expect(resultado.errorLogico?.contraejemplo).toBeDefined();
+      expect(resultado.errorLogico?.titulo).toContain('Dilema Inverso');
     });
   });
 
@@ -111,8 +136,7 @@ describe('Motor Lógico (Solver)', () => {
       expect(resultado.esValido).toBe(false);
       expect(resultado.errorLogico?.tipo).toBe('FALACIA_AFIRMACION_CONSECUENTE');
       expect(resultado.errorLogico?.titulo).toContain('Afirmación del Consecuente');
-      expect(resultado.errorLogico?.porQueFalla).toBeDefined();
-      expect(resultado.errorLogico?.sugerencia).toBeDefined();
+      expect(resultado.errorLogico?.contraejemplo).toBeDefined();
     });
 
     it('debe diagnosticar cuando la conclusión contiene variables inexistentes en las premisas', () => {

@@ -63,13 +63,22 @@ export interface PasoDemostracion {
   esConclusion: boolean; // Verdadero si este paso alcanzó la conclusión final
 }
 
-// Motivos de Invalidez y Diagnóstico Estructurado
+// Estructura de Contraejemplo Semántico
+export interface Contraejemplo {
+  valores: Record<string, boolean>; // Asignación de verdad V/F (ej. { P: false, Q: true, R: false, S: false })
+  valoresPremisas: boolean[];       // [true, true]
+  valorConclusion: boolean;         // false
+}
+
+// Motivos de Invalidez y Diagnóstico Formal Riguroso
 export type MotivoInvalidez =
   | 'FALACIA_AFIRMACION_CONSECUENTE'
   | 'FALACIA_NEGACION_ANTECEDENTE'
+  | 'FALACIA_AFIRMACION_CONSECUENTE_DISYUNTIVA'
+  | 'ARGUMENTO_INVALIDO_CON_CONTRAEJEMPLO'
   | 'VARIABLE_NO_EXISTE_EN_PREMISAS'
-  | 'SIN_REGLAS_APLICABLES'
-  | 'CONCLUSION_NO_ALCANZADA';
+  | 'PREMISAS_INCONSISTENTES'
+  | 'DEMOSTRACION_INCOMPLETA';
 
 export interface ErrorLogico {
   tipo: MotivoInvalidez;
@@ -78,6 +87,7 @@ export interface ErrorLogico {
   mensaje: string;
   porQueFalla: string;
   sugerencia: string;
+  contraejemplo?: Contraejemplo;
 }
 
 // Resultado completo de la verificación

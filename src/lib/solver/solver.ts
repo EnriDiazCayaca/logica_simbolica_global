@@ -4,6 +4,7 @@ import type {
   PasoDemostracion,
   ReglaLogica,
   ErrorLogico,
+  Contraejemplo,
 } from './types';
 
 /**
@@ -17,6 +18,111 @@ export function extraerVariablesDeNodo(nodo: NodoExpresion): string[] {
   if (nodo.izquierdo) vars.push(...extraerVariablesDeNodo(nodo.izquierdo));
   if (nodo.derecho) vars.push(...extraerVariablesDeNodo(nodo.derecho));
   return Array.from(new Set(vars));
+}
+
+/**
+ * Evalúa semánticamente un nodo del AST dado un mapa de valores de verdad { P: true, Q: false }.
+ */
+export function evaluarNodo(
+  nodo: NodoExpresion,
+  asignacion: Record<string, boolean>
+): boolean {
+  if (nodo.tipo === 'variable') {
+    const v = nodo.nombre.toUpperCase();
+    return Boolean(asignacion[v]);
+  }
+  if (nodo.tipo === 'operacion') {
+    if (nodo.operador === 'NO' && nodo.derecho) {
+      return !evaluarNodo(nodo.derecho, asignacion);
+    }
+    if (nodo.izquierdo && nodo.derecho) {
+      const izq = evaluarNodo(nodo.izquierdo, asignacion);
+      const der = evaluarNodo(nodo.derecho, asignacion);
+      switch (nodo.operador) {
+        case 'Y':
+          return izq && der;
+        case 'O':
+          return izq || der;
+        case 'O_EXCLUSIVA':
+          return izq !== der;
+        case 'ENTONCES':
+          return !izq || der;
+        case 'SI_Y_SOLO_SI':
+          return izq === der;
+        case 'NI':
+          return !(izq || der);
+        case 'INCOMPATIBLE':
+          return !(izq && der);
+        default:
+          return false;
+      }
+    }
+  }
+  return false;
+}
+
+/**
+ * Busca exhaustivamente un contraejemplo sobre las 2^N combinaciones de verdad.
+ * Un contraejemplo es una asignación donde TODAS las premisas son VERDADERAS y la conclusión es FALSA.
+ */
+export function encontrarContraejemplo(
+  premisas: NodoExpresion[],
+  conclusion: NodoExpresion
+): Contraejemplo | null {
+  const todasLasVariables = Array.from(
+    new Set([
+      ...premisas.flatMap((p) => extraerVariablesDeNodo(p)),
+      ...extraerVariablesDeNodo(conclusion),
+    ])
+  );
+
+  const numVars = todasLasVariables.length;
+  if (numVars === 0) return null;
+  const totalCombinaciones = 1 << numVars; // 2^n
+
+  for (let i = 0; i < totalCombinaciones; i++) {
+    const asignacion: Record<string, boolean> = {};
+    for (let j = 0; j < numVars; j++) {
+      asignacion[todasLasVariables[j]] = Boolean((i >> j) & 1);
+    }
+
+    const premisasValores = premisas.map((p) => evaluarNodo(p, asignacion));
+    const todasPremisasVerdaderas = premisasValores.every((v) => v === true);
+    const conclusionValor = evaluarNodo(conclusion, asignacion);
+
+    if (todasPremisasVerdaderas && !conclusionValor) {
+      return {
+        valores: asignacion,
+        valoresPremisas: premisasValores,
+        valorConclusion: conclusionValor,
+      };
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Determina si el conjunto de premisas es contradictorio / insatisfactible.
+ */
+export function sonPremisasInconsistentes(premisas: NodoExpresion[]): boolean {
+  const todasLasVariables = Array.from(
+    new Set(premisas.flatMap((p) => extraerVariablesDeNodo(p)))
+  );
+  if (todasLasVariables.length === 0) return false;
+  const totalCombinaciones = 1 << todasLasVariables.length;
+
+  for (let i = 0; i < totalCombinaciones; i++) {
+    const asignacion: Record<string, boolean> = {};
+    for (let j = 0; j < todasLasVariables.length; j++) {
+      asignacion[todasLasVariables[j]] = Boolean((i >> j) & 1);
+    }
+    const todasVerdaderas = premisas.every((p) => evaluarNodo(p, asignacion));
+    if (todasVerdaderas) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
@@ -62,7 +168,6 @@ export function negarNodo(nodo: NodoExpresion): NodoExpresion {
 
 /**
  * Determina si dos fórmulas son opuestas/contradictorias (es decir, una es la negación de la otra).
- * Ej: P y NO P, o NO Q y Q, o NO (P Y Q) y (P Y Q).
  */
 export function sonOpuestos(a: NodoExpresion, b: NodoExpresion): boolean {
   if (a.tipo === 'operacion' && a.operador === 'NO' && a.derecho) {
@@ -308,15 +413,21 @@ interface RegistroFormula {
 }
 
 /**
- * Realiza un pattern matching profundo para diagnosticar de forma muy específica
- * el motivo de fallo lógico en inferencias inválidas.
+ * Realiza un diagnóstico lógico riguroso distinguiendo:
+ * 1. Falacias formales concretas (Afirmación del consecuente, negación del antecedente, dilema inverso).
+ * 2. Invalidez semántica general con contraejemplo matemático (V/F).
+ * 3. Inconsistencia / contradicción en premisas.
+ * 4. Demostración incompleta (cuando el argumento es válido pero requiere reglas avanzadas).
  */
 export function detectarErrorLogico(
   premisas: NodoExpresion[],
   conclusion: NodoExpresion,
-  totalPasosInferidos: number
+  _totalPasosInferidos: number
 ): ErrorLogico {
-  // 1. Validar si la conclusión contiene variables completamente ausentes en las premisas
+  // A. Buscamos contraejemplo semántico formal (Verdad matemática de lógica proposicional)
+  const contraejemplo = encontrarContraejemplo(premisas, conclusion);
+
+  // 1. Variable ausente en las premisas
   const varsConclusion = extraerVariablesDeNodo(conclusion);
   const varsPremisas = Array.from(
     new Set(premisas.flatMap((p) => extraerVariablesDeNodo(p)))
@@ -331,10 +442,11 @@ export function detectarErrorLogico(
       mensaje: `La variable '${faltantesStr}' de la conclusión no aparece en ninguna de las premisas dadas.`,
       porQueFalla: `No es posible deducir conclusiones sobre una proposición ('${faltantesStr}') que jamás fue declarada ni relacionada en el argumento inicial.`,
       sugerencia: `Verifica que no haya un error tipográfico en la conclusión o añade las premisas que involucren a '${faltantesStr}'.`,
+      contraejemplo: contraejemplo ?? undefined,
     };
   }
 
-  // 2. Falacia de Afirmación del Consecuente: A -> B y B  |- A
+  // 2. Falacia de Afirmación del Consecuente: A -> B y B |- A
   for (let i = 0; i < premisas.length; i++) {
     const p1 = premisas[i];
     if (
@@ -357,13 +469,14 @@ export function detectarErrorLogico(
             mensaje: `Se intentó deducir el antecedente a partir del condicional (Línea ${i + 1}) y su consecuente (Línea ${j + 1}).`,
             porQueFalla: `Tener 'P → Q' y afirmar 'Q' no garantiza que 'P' sea verdadero. El condicional garantiza qué ocurre si 'P' es cierto, pero 'Q' podría ocurrir por otras causas independientes.`,
             sugerencia: `Para deducir válidamente, necesitarías afirmar el antecedente 'P' para obtener 'Q' (Modus Ponens) o contar con el condicional inverso 'Q → P'.`,
+            contraejemplo: contraejemplo ?? undefined,
           };
         }
       }
     }
   }
 
-  // 3. Falacia de Negación del Antecedente: A -> B y ¬A  |- ¬B
+  // 3. Falacia de Negación del Antecedente: A -> B y ¬A |- ¬B
   for (let i = 0; i < premisas.length; i++) {
     const p1 = premisas[i];
     if (
@@ -386,30 +499,75 @@ export function detectarErrorLogico(
             mensaje: `Se intentó negar el consecuente a partir del condicional (Línea ${i + 1}) y la negación del antecedente (Línea ${j + 1}).`,
             porQueFalla: `Tener 'P → Q' y negar '¬P' no permite concluir '¬Q'. Aunque la condición inicial 'P' no se cumpla, el consecuente 'Q' aún podría ser verdadero por otras razones.`,
             sugerencia: `Para deducir una negación válida con un condicional, debes negar el consecuente '¬Q' para obtener '¬P' (Modus Tollens).`,
+            contraejemplo: contraejemplo ?? undefined,
           };
         }
       }
     }
   }
 
-  // 4. Sin reglas aplicables (premisas desconectadas)
-  if (totalPasosInferidos === 0) {
+  // 4. Falacia de Afirmación del Consecuente Disyuntiva (Dilema Inverso)
+  // Ej: (P -> Q) ^ (R -> S), Q v S |- P v R  o  P -> Q, R -> S, Q v S |- P v R
+  if (
+    conclusion.tipo === 'operacion' &&
+    conclusion.operador === 'O' &&
+    contraejemplo
+  ) {
+    const hayDisyuncionEnPremisas = premisas.some((p) => {
+      if (p.tipo === 'operacion' && p.operador === 'O') return true;
+      if (
+        p.tipo === 'operacion' &&
+        p.operador === 'Y' &&
+        ((p.izquierdo?.tipo === 'operacion' && p.izquierdo.operador === 'ENTONCES') ||
+          (p.derecho?.tipo === 'operacion' && p.derecho.operador === 'ENTONCES'))
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    if (hayDisyuncionEnPremisas) {
+      return {
+        tipo: 'FALACIA_AFIRMACION_CONSECUENTE_DISYUNTIVA',
+        titulo: 'Falacia de Afirmación del Consecuente Disyuntiva (Dilema Inverso)',
+        mensaje: 'Se intentó invertir la dirección del Dilema Constructivo deduciendo antecedentes disyuntivos a partir de consecuentes disyuntivos.',
+        porQueFalla: 'Saber que ocurre (Q ∨ S) bajo las implicaciones (P → Q) y (R → S) no garantiza (P ∨ R). Los consecuentes Q o S pueden ser verdaderos sin que P ni R hayan sucedido.',
+        sugerencia: 'La regla formal válida (Dilema Constructivo) exige afirmar los antecedentes (P ∨ R) para derivar los consecuentes (Q ∨ S), no al revés.',
+        contraejemplo,
+      };
+    }
+  }
+
+  // 5. Argumento Formalmente Inválido General (Refutado con Contraejemplo)
+  if (contraejemplo) {
     return {
-      tipo: 'SIN_REGLAS_APLICABLES',
-      titulo: 'Premisas desconectadas / Sin reglas aplicables',
-      mensaje: 'Ninguna regla de inferencia estándar pudo combinar las premisas proporcionadas.',
-      porQueFalla: 'Las premisas no comparten conectivos ni proposiciones puente en la posición requerida para aplicar reglas de deducción (como Modus Ponens, Silogismo Disyuntivo o Silogismo Hipotético).',
-      sugerencia: 'Revisa que las premisas compartan variables comunes que permitan encadenar una demostración hacia la conclusión.',
+      tipo: 'ARGUMENTO_INVALIDO_CON_CONTRAEJEMPLO',
+      titulo: 'Argumento Formalmente Inválido (Refutado por Contraejemplo)',
+      mensaje: 'La conclusión no se sigue lógicamente de las premisas dadas.',
+      porQueFalla: 'Se encontró una asignación de verdad concreta donde TODAS las premisas son verdaderas pero la conclusión es falsa, demostrando formalmente que el argumento carece de validez deductiva.',
+      sugerencia: 'El argumento presenta un salto deductivo no garantizado por las premisas. Revisa las relaciones condicionales entre las proposiciones.',
+      contraejemplo,
     };
   }
 
-  // 5. Conclusión no alcanzada (cadena deductiva incompleta)
+  // 6. Inconsistencia en las premisas (Contradicción)
+  if (sonPremisasInconsistentes(premisas)) {
+    return {
+      tipo: 'PREMISAS_INCONSISTENTES',
+      titulo: 'Inconsistencia en el conjunto de premisas',
+      mensaje: 'Las premisas ingresadas son contradictorias entre sí.',
+      porQueFalla: 'No existe ninguna combinación de valores de verdad donde todas las premisas sean verdaderas al mismo tiempo (conjunto insatisfactible).',
+      sugerencia: 'Revisa las premisas para eliminar contradicciones mutuas (ej. afirmar simultáneamente una proposición y su negación).',
+    };
+  }
+
+  // 7. Demostración Incompleta (Semánticamente válido pero requiere métodos avanzados)
   return {
-    tipo: 'CONCLUSION_NO_ALCANZADA',
-    titulo: 'Cadena deductiva incompleta',
-    mensaje: 'Se realizaron deducciones intermedias pero no fue posible alcanzar la conclusión objetivo.',
-    porQueFalla: 'El conjunto de premisas permite deducir nuevos hechos intermedios, pero ninguno de los caminos lógicos evaluados conecta con la conclusión solicitada.',
-    sugerencia: 'Verifica si hace falta una premisa intermedia que conecte los pasos inferidos con la conclusión final.',
+    tipo: 'DEMOSTRACION_INCOMPLETA',
+    titulo: 'Demostración incompleta (Requiere reglas avanzadas)',
+    mensaje: 'La conclusión es una consecuencia lógica pero no pudo derivarse mediante encadenamiento directo hacia adelante.',
+    porQueFalla: 'El argumento es semánticamente válido pero requiere métodos de prueba indirecta como Reducción al Absurdo (RAA) o Prueba Condicional (PC).',
+    sugerencia: 'Verifica los pasos intermedios o descompón el problema en sub-derivaciones.',
   };
 }
 

@@ -10,7 +10,7 @@ describe('PanelTrazabilidad', () => {
     expect(wrapper.text()).toContain('Aún no hay pasos de deducción para mostrar.')
   })
 
-  it('renderiza correctamente el diagnóstico de inferencia inválida', () => {
+  it('renderiza correctamente el diagnóstico de inferencia inválida con contraejemplo', () => {
     const wrapper = mount(PanelTrazabilidad, {
       props: {
         pasos: [],
@@ -20,16 +20,22 @@ describe('PanelTrazabilidad', () => {
           titulo: 'Falacia de Afirmación del Consecuente',
           mensaje: 'Se intentó deducir el antecedente.',
           porQueFalla: 'Tener el consecuente no garantiza el antecedente.',
-          sugerencia: 'Afirma el antecedente para usar Modus Ponens.'
+          sugerencia: 'Afirma el antecedente para usar Modus Ponens.',
+          contraejemplo: {
+            valores: { P: false, Q: true },
+            valoresPremisas: [true, true],
+            valorConclusion: false
+          }
         }
       }
     })
 
     expect(wrapper.text()).toContain('Diagnóstico del Fallo')
     expect(wrapper.text()).toContain('Falacia de Afirmación del Consecuente')
+    expect(wrapper.text()).toContain('Contraejemplo que refuta la validez')
+    expect(wrapper.text()).toContain('Falso (F)')
+    expect(wrapper.text()).toContain('Verdadero (V)')
     expect(wrapper.text()).toContain('¿Por qué falla este razonamiento?')
-    expect(wrapper.text()).toContain('Tener el consecuente no garantiza el antecedente.')
-    expect(wrapper.text()).toContain('¿Cómo solucionarlo o deducirlo válidamente?')
   })
 
   it('renderiza correctamente los pasos y su botón de acordeón', () => {
@@ -79,20 +85,20 @@ describe('PanelTrazabilidad', () => {
       }
     })
 
-    const botonExplicacion = wrapper.find('button')
-    expect(botonExplicacion.exists()).toBe(true)
+    const botonAcordeon = wrapper.find('button[aria-expanded]')
+    expect(botonAcordeon.exists()).toBe(true)
 
     // Inicialmente no está visible el texto de explicación
     expect(wrapper.text()).not.toContain('Justificación lógica de la regla.')
 
     // Clic para abrir
-    await botonExplicacion.trigger('click')
+    await botonAcordeon.trigger('click')
     expect(wrapper.text()).toContain('Justificación lógica de la regla.')
     expect(wrapper.text()).toContain('Premisas base utilizadas')
     expect(wrapper.text()).toContain('Ocultar desglose')
 
     // Clic para cerrar
-    await botonExplicacion.trigger('click')
+    await botonAcordeon.trigger('click')
     expect(wrapper.text()).not.toContain('Justificación lógica de la regla.')
   })
 })

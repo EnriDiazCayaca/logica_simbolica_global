@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type {
   InferenciaRequest,
   ResultadoInferencia,
@@ -14,6 +14,15 @@ import FormularioInferencia from '@/components/inferencias/FormularioInferencia.
 import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
+import { History, Trash2 } from '@lucide/vue'
+
+interface ItemHistorial {
+  id: string
+  fecha: string
+  premisas: string[]
+  conclusion: string
+  esValido: boolean
+}
 
 // Pestaña activa en la columna izquierda
 const activeTab = ref<'simbolos' | 'lenguaje'>('simbolos')
@@ -30,6 +39,58 @@ const resultado = ref<ResultadoInferencia>('pendiente')
 const error = ref<string | undefined>(undefined)
 const errorLogicoActual = ref<ErrorLogico | undefined>(undefined)
 const pasos = ref<PasoInferencia[]>([])
+const historialLocal = ref<ItemHistorial[]>([])
+const mostrarHistorial = ref(false)
+
+const STORAGE_KEY = 'lhdl_historial_inferencias'
+
+onMounted(() => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) {
+      historialLocal.value = JSON.parse(raw)
+    }
+  } catch (err) {
+    console.error('Error cargando historial de localStorage:', err)
+  }
+})
+
+const guardarEnHistorial = (premisas: string[], conclusion: string, esValido: boolean) => {
+  try {
+    const nuevo: ItemHistorial = {
+      id: Date.now().toString(),
+      fecha: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      premisas,
+      conclusion,
+      esValido
+    }
+    // Mantener solo los últimos 6
+    const filtrado = [nuevo, ...historialLocal.value.filter(
+      (h) => h.premisas.join(';') !== premisas.join(';') || h.conclusion !== conclusion
+    )].slice(0, 6)
+
+    historialLocal.value = filtrado
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtrado))
+  } catch (err) {
+    console.error('Error guardando en localStorage:', err)
+  }
+}
+
+const limpiarHistorial = () => {
+  historialLocal.value = []
+  localStorage.removeItem(STORAGE_KEY)
+}
+
+const restaurarDesdeHistorial = (item: ItemHistorial) => {
+  formulaData.value = {
+    premisas: item.premisas,
+    conclusion: item.conclusion
+  }
+  procesarInferencia({
+    premisas: item.premisas,
+    conclusion: item.conclusion
+  })
+}
 
 const handleFormUpdate = (data: { premisas: string[]; conclusion: string }) => {
   formulaData.value = data
@@ -43,11 +104,11 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
   pasos.value = []
 
   try {
-    // 1. Parsear premisas y conclusión (el payload ya viene sanitizado/normalizado)
+    // 1. Parsear premisas y conclusión
     const premisasNodos = payload.premisas.map((p) => parsearExpresion(p))
     const conclusionNodo = parsearExpresion(payload.conclusion)
 
-    // 2. Pequeña pausa para feedback visual de carga en la UI
+    // 2. Pequeña pausa para feedback visual
     await new Promise((resolve) => setTimeout(resolve, 350))
 
     // 3. Ejecutar motor (solver)
@@ -73,6 +134,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
       }
     })
 
+    guardarEnHistorial(payload.premisas, payload.conclusion, trazabilidad.esValido)
+
     if (!trazabilidad.esValido) {
       error.value =
         resultadoDemostracion.errorLogico?.mensaje ||
@@ -92,19 +155,70 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
   <div class="min-h-screen bg-neutral-50 p-6 md:p-10 text-neutral-900 font-sans">
     <div class="max-w-6xl mx-auto space-y-8">
       <!-- Navegación & Encabezado -->
-      <div>
-        <router-link
-          to="/"
-          class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
+      <div class="flex items-start justify-between flex-wrap gap-4">
+        <div>
+          <router-link
+            to="/"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
+          >
+            &larr; Volver al Inicio
+          </router-link>
+          <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+            Demostrador de Inferencias Lógicas
+          </h1>
+          <p class="text-sm text-neutral-600 mt-1.5">
+            Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.
+          </p>
+        </div>
+
+        <!-- Botón de Historial Local -->
+        <button
+          v-if="historialLocal.length > 0"
+          type="button"
+          @click="mostrarHistorial = !mostrarHistorial"
+          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-100 text-xs font-semibold text-neutral-700 rounded-xl border border-neutral-300 shadow-xs cursor-pointer transition-colors"
         >
-          &larr; Volver al Inicio
-        </router-link>
-        <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
-          Demostrador de Inferencias Lógicas
-        </h1>
-        <p class="text-sm text-neutral-600 mt-1.5">
-          Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.
-        </p>
+          <History :size="14" class="text-blue-600" />
+          <span>{{ mostrarHistorial ? 'Ocultar Historial' : `Historial Reciente (${historialLocal.length})` }}</span>
+        </button>
+      </div>
+
+      <!-- Panel Desplegable de Historial Local -->
+      <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-4 bg-white rounded-xl border border-neutral-200 shadow-sm space-y-3">
+        <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
+          <span class="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
+            <History :size="14" /> Ejercicios Demostrados Recientemente
+          </span>
+          <button
+            type="button"
+            @click="limpiarHistorial"
+            class="text-[11px] font-semibold text-red-600 hover:text-red-800 flex items-center gap-1 cursor-pointer"
+          >
+            <Trash2 :size="12" /> Limpiar Historial
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+          <div
+            v-for="item in historialLocal"
+            :key="item.id"
+            @click="restaurarDesdeHistorial(item)"
+            class="p-3 bg-neutral-50 hover:bg-blue-50/70 border border-neutral-200/80 hover:border-blue-300 rounded-lg cursor-pointer transition-all space-y-1.5 shadow-2xs group"
+          >
+            <div class="flex items-center justify-between text-[10px]">
+              <span class="font-bold uppercase px-1.5 py-0.5 rounded" :class="item.esValido ? 'bg-emerald-100 text-emerald-800' : 'bg-orange-100 text-orange-800'">
+                {{ item.esValido ? 'Válida' : 'Inválida' }}
+              </span>
+              <span class="text-neutral-400">{{ item.fecha }}</span>
+            </div>
+            <div class="font-mono text-xs text-neutral-800 truncate font-semibold">
+              {{ item.premisas.join('; ') }}
+            </div>
+            <div class="text-[11px] text-blue-700 font-mono font-bold flex items-center gap-1">
+              <span>&there4;</span> {{ item.conclusion }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -143,6 +257,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
               <FormularioInferencia
                 :isLoading="isLoading"
+                :premisasIniciales="formulaData.premisas"
+                :conclusionInicial="formulaData.conclusion"
                 @submit="procesarInferencia"
                 @update:modelValue="handleFormUpdate"
               />
@@ -158,9 +274,9 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           </div>
         </div>
 
-        <!-- Columna Derecha: Indicador de Resultado (Arriba) & Trazabilidad / Diagnóstico (Abajo) -->
+        <!-- Columna Derecha: Indicador de Resultado & Trazabilidad con Contraejemplos / Exportación -->
         <div class="lg:col-span-6 space-y-6">
-          <!-- Indicador de Resultado (Posicionado arriba de la trazabilidad) -->
+          <!-- Indicador de Resultado -->
           <IndicadorResultado
             :resultado="resultado"
             :mensaje="error"
@@ -184,6 +300,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
             <PanelTrazabilidad
               :pasos="pasos"
+              :premisasOriginales="formulaData.premisas"
+              :conclusionOriginal="formulaData.conclusion"
               :errorLogico="errorLogicoActual"
               :esInvalido="resultado === 'invalida'"
             />
