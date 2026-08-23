@@ -120,6 +120,8 @@ npm run type-check
 | Fecha | Quién | Qué hizo | PR |
 |---|---|---|---|
 | 21/08/2026 | Enri | Corrigió nombres de equipos (Linus = equipo 4), creó estructura TAREAS/, branding (Button.vue, Card.vue, Badge.vue), deploy GitHub Pages, actualizó docs | — |
-| — | — | — | — |
+| 23/08/2026 | Linus (Jordy) | Entregable 2: Motor lógico de conjuntos (operations.ts + tests) | #9 ✅ |
+| 23/08/2026 | Linus (Jordy) | Entregable 3: UI interactiva con diagrama Venn SVG | #10 ✅ |
+| 23/08/2026 | Linus (Jordy) | Entregable 4: Tests comprehensivos (15) + documentación de uso | #11 ✅ |
 
 > **Instrucción para equipos:** Cuando envíen un PR para cualquier entregable, actualizar esta tabla con la fecha, quién hizo el cambio, qué hizo y el número del PR.
