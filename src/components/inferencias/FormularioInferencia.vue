@@ -219,69 +219,64 @@ const handleSubmit = () => {
       </ul>
     </div>
 
-    <!-- Teclado Simbólico Minimalista -->
-    <div class="p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2.5">
-      <!-- Fila 1: Conectivos y Salto alineados a la derecha -->
-      <div class="flex items-center justify-between gap-1.5 flex-wrap">
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <button
-            v-for="op in CONECTIVOS"
-            :key="op"
-            type="button"
-            @click="insertarSimbolo(op, true)"
-            class="h-8 min-w-[32px] px-2 bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
-          >
-            {{ op }}
-          </button>
-        </div>
-
-        <!-- Botón Salto a la derecha sin crear una fila separada -->
+    <!-- Teclado Simbólico Estructurado (Exactamente 2 filas sin saltos residuales) -->
+    <div class="p-2.5 sm:p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2">
+      <!-- Fila 1: Grid estricto de 8 columnas simétricas (Nunca salta a otra línea) -->
+      <div class="grid grid-cols-8 gap-1 sm:gap-1.5">
         <button
-          v-if="lastFocusedField === 'premisas'"
+          v-for="op in CONECTIVOS"
+          :key="op"
           type="button"
-          @click="insertarSimbolo('\n', false)"
-          title="Salto de línea"
-          class="h-8 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+          @click="insertarSimbolo(op, true)"
+          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer"
         >
-          ↵ Salto
+          {{ op }}
         </button>
       </div>
 
-      <!-- Fila 2: Variables Divididas en (P, Q, R, S) - (A, B, C, D) + Texto descriptivo -->
-      <div class="flex items-center justify-between flex-wrap gap-2 pt-2 border-t border-neutral-200/80">
-        <div class="flex items-center gap-2 flex-wrap">
-          <!-- Grupo 1: P, Q, R, S -->
-          <div class="flex items-center gap-1">
-            <button
-              v-for="v in GRUPO_VARS_1"
-              :key="v"
-              type="button"
-              @click="insertarSimbolo(v, false)"
-              class="h-7 min-w-[28px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer"
-            >
-              {{ v }}
-            </button>
-          </div>
+      <!-- Fila 2: Variables a la izquierda y Botón Salto + Texto a la derecha -->
+      <div class="flex items-center justify-between gap-1.5 pt-1.5 border-t border-neutral-200/80">
+        <!-- Grupo de Variables: P, Q, R, S | A, B, C, D -->
+        <div class="flex items-center gap-1 overflow-x-auto">
+          <button
+            v-for="v in GRUPO_VARS_1"
+            :key="v"
+            type="button"
+            @click="insertarSimbolo(v, false)"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0"
+          >
+            {{ v }}
+          </button>
 
-          <span class="text-neutral-300 select-none hidden sm:inline">|</span>
+          <span class="text-neutral-300 select-none px-0.5">|</span>
 
-          <!-- Grupo 2: A, B, C, D -->
-          <div class="flex items-center gap-1">
-            <button
-              v-for="v in GRUPO_VARS_2"
-              :key="v"
-              type="button"
-              @click="insertarSimbolo(v, false)"
-              class="h-7 min-w-[28px] px-2 bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer"
-            >
-              {{ v }}
-            </button>
-          </div>
+          <button
+            v-for="v in GRUPO_VARS_2"
+            :key="v"
+            type="button"
+            @click="insertarSimbolo(v, false)"
+            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0"
+          >
+            {{ v }}
+          </button>
         </div>
 
-        <span class="text-[11px] text-neutral-400 italic">
-          (o escribe más variables con tu teclado)
-        </span>
+        <!-- Botón Salto a la derecha de la fila 2 -->
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+          <span class="text-[10px] text-neutral-400 italic hidden md:inline">
+            (escribe más con tu teclado)
+          </span>
+
+          <button
+            v-if="lastFocusedField === 'premisas'"
+            type="button"
+            @click="insertarSimbolo('\n', false)"
+            title="Salto de línea"
+            class="h-7 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-md shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+          >
+            ↵ Salto
+          </button>
+        </div>
       </div>
     </div>
 
