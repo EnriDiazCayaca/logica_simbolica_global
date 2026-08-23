@@ -11,3 +11,4 @@ export interface PasoInferencia {
 }
 
 export type ResultadoInferencia = 'valida' | 'invalida' | 'error' | 'pendiente';
+export * from '../lib/solver/types';

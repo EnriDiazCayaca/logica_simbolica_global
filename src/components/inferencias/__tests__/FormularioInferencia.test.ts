@@ -1,10 +1,10 @@
-import { describe, it, expect } from 'vitest'
+﻿import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
 import FormularioInferencia from '../FormularioInferencia.vue'
 import Button from '@/components/ui/Button.vue'
 
 describe('FormularioInferencia', () => {
-  it('deshabilita el botón de Demostrar si las entradas están vacías', () => {
+  it('deshabilita el botÃ³n de Demostrar si las entradas estÃ¡n vacÃ­as', () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: false },
       global: { components: { Button } }
@@ -14,7 +14,7 @@ describe('FormularioInferencia', () => {
     expect(btn.props('disabled')).toBe(true)
   })
 
-  it('habilita el botón si hay premisas y conclusión', async () => {
+  it('habilita el botÃ³n si hay premisas y conclusiÃ³n', async () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: false },
       global: { components: { Button } }
@@ -27,7 +27,7 @@ describe('FormularioInferencia', () => {
     expect(btn.props('disabled')).toBe(false)
   })
 
-  it('deshabilita el botón si isLoading es true, incluso con entradas llenas', async () => {
+  it('deshabilita el botÃ³n si isLoading es true, incluso con entradas llenas', async () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: true },
       global: { components: { Button } }
@@ -41,7 +41,7 @@ describe('FormularioInferencia', () => {
     expect(wrapper.text()).toContain('Procesando')
   })
 
-  it('emite submit normalizando símbolos a palabras clave del motor', async () => {
+  it('emite submit normalizando sÃ­mbolos a palabras clave del motor', async () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: false },
       global: { components: { Button } }
@@ -60,14 +60,14 @@ describe('FormularioInferencia', () => {
     })
   })
 
-  it('inserta tokens al presionar los botones del teclado lógico', async () => {
+  it('inserta tokens al presionar los botones del teclado lÃ³gico', async () => {
     const wrapper = mount(FormularioInferencia, {
       props: { isLoading: false },
       global: { components: { Button } }
     })
 
-    // Hacer clic en botón 'P'
-    const btnP = wrapper.findAll('button').find(b => b.text() === 'P')
+    // Hacer clic en botÃ³n 'P'
+    const btnP = wrapper.findAll('button').find((b: any) => b.text() === 'P')
     expect(btnP).toBeDefined()
     await btnP!.trigger('click')
 

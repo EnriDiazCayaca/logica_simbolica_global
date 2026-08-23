@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   NodoExpresion,
   ResultadoDemostracion,
   PasoDemostracion,
@@ -6,7 +6,7 @@ import type {
 } from './types';
 
 /**
- * Verifica si dos nodos del AST son estructuralmente idénticos.
+ * Verifica si dos nodos del AST son estructuralmente idÃ©nticos.
  */
 export function sonNodosIguales(a: NodoExpresion, b: NodoExpresion): boolean {
   if (a.tipo !== b.tipo) return false;
@@ -33,7 +33,7 @@ export function sonNodosIguales(a: NodoExpresion, b: NodoExpresion): boolean {
 
 /**
  * Niega un nodo del AST.
- * Si ya era una negación (NO X), aplica simplificación de doble negación y devuelve X.
+ * Si ya era una negaciÃ³n (NO X), aplica simplificaciÃ³n de doble negaciÃ³n y devuelve X.
  */
 export function negarNodo(nodo: NodoExpresion): NodoExpresion {
   if (nodo.tipo === 'operacion' && nodo.operador === 'NO' && nodo.derecho) {
@@ -47,7 +47,7 @@ export function negarNodo(nodo: NodoExpresion): NodoExpresion {
 }
 
 /**
- * Determina si dos fórmulas son opuestas/contradictorias (es decir, una es la negación de la otra).
+ * Determina si dos fÃ³rmulas son opuestas/contradictorias (es decir, una es la negaciÃ³n de la otra).
  * Ej: P y NO P, o NO Q y Q, o NO (P Y Q) y (P Y Q).
  */
 export function sonOpuestos(a: NodoExpresion, b: NodoExpresion): boolean {
@@ -61,7 +61,7 @@ export function sonOpuestos(a: NodoExpresion, b: NodoExpresion): boolean {
 }
 
 /**
- * Evalúa si es posible aplicar Modus Ponendo Ponens (A -> B, A |- B).
+ * EvalÃºa si es posible aplicar Modus Ponendo Ponens (A -> B, A |- B).
  */
 export function aplicarModusPonendoPonens(
   impl: NodoExpresion,
@@ -81,7 +81,7 @@ export function aplicarModusPonendoPonens(
 }
 
 /**
- * Evalúa si es posible aplicar Modus Tollendo Tollens (A -> B, NO B |- NO A).
+ * EvalÃºa si es posible aplicar Modus Tollendo Tollens (A -> B, NO B |- NO A).
  */
 export function aplicarModusTollendoTollens(
   impl: NodoExpresion,
@@ -101,7 +101,7 @@ export function aplicarModusTollendoTollens(
 }
 
 /**
- * Evalúa si es posible aplicar Silogismo Disyuntivo (A v B, NO A |- B) o (A v B, NO B |- A).
+ * EvalÃºa si es posible aplicar Silogismo Disyuntivo (A v B, NO A |- B) o (A v B, NO B |- A).
  */
 export function aplicarSilogismoDisyuntivo(
   disy: NodoExpresion,
@@ -124,7 +124,7 @@ export function aplicarSilogismoDisyuntivo(
 }
 
 /**
- * Evalúa si es posible aplicar Silogismo Hipotético (A -> B, B -> C |- A -> C).
+ * EvalÃºa si es posible aplicar Silogismo HipotÃ©tico (A -> B, B -> C |- A -> C).
  */
 export function aplicarSilogismoHipotetico(
   impl1: NodoExpresion,
@@ -153,7 +153,7 @@ export function aplicarSilogismoHipotetico(
 }
 
 /**
- * Evalúa si es posible aplicar Simplificación (A Y B |- A) o (A Y B |- B).
+ * EvalÃºa si es posible aplicar SimplificaciÃ³n (A Y B |- A) o (A Y B |- B).
  */
 export function aplicarSimplificacion(
   conj: NodoExpresion
@@ -170,7 +170,7 @@ export function aplicarSimplificacion(
 }
 
 /**
- * Evalúa si es posible aplicar Doble Negación (NO NO A |- A).
+ * EvalÃºa si es posible aplicar Doble NegaciÃ³n (NO NO A |- A).
  */
 export function aplicarDobleNegacion(nodo: NodoExpresion): NodoExpresion | null {
   if (
@@ -187,7 +187,7 @@ export function aplicarDobleNegacion(nodo: NodoExpresion): NodoExpresion | null 
 }
 
 /**
- * Evalúa si es posible aplicar Dilema Constructivo (A -> B, C -> D, A v C |- B v D).
+ * EvalÃºa si es posible aplicar Dilema Constructivo (A -> B, C -> D, A v C |- B v D).
  */
 export function aplicarDilemaConstructivo(
   impl1: NodoExpresion,
@@ -233,9 +233,9 @@ interface RegistroFormula {
 }
 
 /**
- * Motor central de resolución e inferencia deductiva (Forward Chaining Search).
- * Aplica recursivamente las reglas lógicas sobre el conjunto de premisas conocidas
- * hasta alcanzar la conclusión deseada o agotar las inferencias posibles.
+ * Motor central de resoluciÃ³n e inferencia deductiva (Forward Chaining Search).
+ * Aplica recursivamente las reglas lÃ³gicas sobre el conjunto de premisas conocidas
+ * hasta alcanzar la conclusiÃ³n deseada o agotar las inferencias posibles.
  */
 export function demostrarConclusion(
   premisas: NodoExpresion[],
@@ -243,7 +243,7 @@ export function demostrarConclusion(
 ): ResultadoDemostracion {
   const pasos: PasoDemostracion[] = [];
 
-  // 1. Caso trivial: La conclusión ya está directamente en las premisas
+  // 1. Caso trivial: La conclusiÃ³n ya estÃ¡ directamente en las premisas
   for (let i = 0; i < premisas.length; i++) {
     if (sonNodosIguales(premisas[i], conclusion)) {
       return {
@@ -260,7 +260,7 @@ export function demostrarConclusion(
     }
   }
 
-  // Registro acumulativo de fórmulas conocidas con su número de línea
+  // Registro acumulativo de fÃ³rmulas conocidas con su nÃºmero de lÃ­nea
   const formulasConocidas: RegistroFormula[] = premisas.map((p, index) => ({
     nodo: p,
     linea: index + 1,
@@ -304,7 +304,7 @@ export function demostrarConclusion(
     for (let i = 0; i < formulasConocidas.length; i++) {
       const f = formulasConocidas[i];
 
-      // Simplificación (A Y B |- A, B)
+      // SimplificaciÃ³n (A Y B |- A, B)
       const simplificados = aplicarSimplificacion(f.nodo);
       if (simplificados) {
         if (agregarPaso('SIMPLIFICACION', [f.linea], simplificados[0])) {
@@ -315,7 +315,7 @@ export function demostrarConclusion(
         }
       }
 
-      // Doble Negación (NO NO A |- A)
+      // Doble NegaciÃ³n (NO NO A |- A)
       const sinDobleNeg = aplicarDobleNegacion(f.nodo);
       if (sinDobleNeg) {
         if (agregarPaso('DOBLE_NEGACION', [f.linea], sinDobleNeg)) {
@@ -324,7 +324,7 @@ export function demostrarConclusion(
       }
     }
 
-    // --- REGLAS BINARIAS (Pares de fórmulas) ---
+    // --- REGLAS BINARIAS (Pares de fÃ³rmulas) ---
     for (let i = 0; i < formulasConocidas.length; i++) {
       for (let j = 0; j < formulasConocidas.length; j++) {
         if (i === j) continue;
@@ -355,7 +355,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 4. Silogismo Hipotético (A -> B, B -> C |- A -> C)
+        // 4. Silogismo HipotÃ©tico (A -> B, B -> C |- A -> C)
         const resSH = aplicarSilogismoHipotetico(f1.nodo, f2.nodo);
         if (resSH) {
           if (agregarPaso('SILOGISMO_HIPOTETICO', [f1.linea, f2.linea], resSH)) {
@@ -363,7 +363,7 @@ export function demostrarConclusion(
           }
         }
 
-        // 5. Conjunción objetivo: Si la conclusión es (A Y B) y tenemos A y B
+        // 5. ConjunciÃ³n objetivo: Si la conclusiÃ³n es (A Y B) y tenemos A y B
         if (
           conclusion.tipo === 'operacion' &&
           conclusion.operador === 'Y' &&
@@ -388,7 +388,7 @@ export function demostrarConclusion(
       }
     }
 
-    // --- REGLAS TERNARIAS (Tríos de fórmulas) ---
+    // --- REGLAS TERNARIAS (TrÃ­os de fÃ³rmulas) ---
     for (let i = 0; i < formulasConocidas.length; i++) {
       for (let j = 0; j < formulasConocidas.length; j++) {
         for (let k = 0; k < formulasConocidas.length; k++) {
@@ -414,7 +414,7 @@ export function demostrarConclusion(
       }
     }
 
-    // Si en toda la pasada no se infirió ninguna nueva fórmula, no es demostrable con estas reglas
+    // Si en toda la pasada no se infiriÃ³ ninguna nueva fÃ³rmula, no es demostrable con estas reglas
     if (formulasConocidas.length === longitudInicial) {
       break;
     }
@@ -422,3 +422,4 @@ export function demostrarConclusion(
 
   return { esValido: false, pasos };
 }
+

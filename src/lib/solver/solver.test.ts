@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+﻿import { describe, it, expect } from 'vitest';
 import {
   aplicarModusPonendoPonens,
   aplicarModusTollendoTollens,
@@ -10,7 +10,7 @@ import {
 } from './solver';
 import type { NodoExpresion } from './types';
 
-describe('Motor Lógico (Solver)', () => {
+describe('Motor LÃ³gico (Solver)', () => {
   const nodoP: NodoExpresion = { tipo: 'variable', nombre: 'P' };
   const nodoQ: NodoExpresion = { tipo: 'variable', nombre: 'Q' };
   const nodoR: NodoExpresion = { tipo: 'variable', nombre: 'R' };
@@ -79,7 +79,7 @@ describe('Motor Lógico (Solver)', () => {
     });
   });
 
-  describe('Regla: Silogismo Hipotético', () => {
+  describe('Regla: Silogismo HipotÃ©tico', () => {
     it('debe retornar P -> R si se da P -> Q y Q -> R', () => {
       const resultado = aplicarSilogismoHipotetico(implPQ, implQR);
       expect(resultado).not.toBeNull();
@@ -121,9 +121,11 @@ describe('Motor Lógico (Solver)', () => {
     });
 
     it('debe rechazar inferencias falaces', () => {
-      // P -> Q y Q |- P (Afirmación del consecuente = falacia)
+      // P -> Q y Q |- P (AfirmaciÃ³n del consecuente = falacia)
       const resultado = demostrarConclusion([implPQ, nodoQ], nodoP);
       expect(resultado.esValido).toBe(false);
     });
   });
 });
+
+
