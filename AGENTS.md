@@ -18,8 +18,7 @@
 1. **TypeScript Estricto:** Evitar el uso de `any`. Definir siempre interfaces y tipos claros en `src/types/` o archivos de módulo correspondientes.
 2. **Vue 3 Composition API:** Usar siempre `<script setup lang="ts">`. No usar Options API.
 3. **Verificación de Errores:** Al crear o modificar código, verificar que no existan errores de tipos ejecutando `npm run type-check`.
-4. **Arquitectura Modular (Sprint 2 - Hijos de Linus):**
-   - **Solver / Inferencia:** Lógica matemática pura y desacoplada de la UI.
-   - **Trazabilidad:** Generación estructurada de pasos explicativos en texto plano.
-   - **Validación y Tests:** Sanitización previa de inputs y cobertura exhaustiva de casos borde con Vitest.
-
+4. **Arquitectura Modular:** Mantener los componentes UI totalmente desacoplados de los motores lógicos subyacentes.
+5. **No Duplicación y Respeto de Roles:** NINGÚN agente de IA debe implementar, simular o duplicar componentes o módulos asignados a otro integrante. Si se necesita un componente ajeno, se debe esperar o usar los tipos compartidos (`src/types/`) sin crear versiones paralelas.
+6. **Commits Atómicos:** Todo cambio generado debe estar encapsulado en commits pequeños, atómicos y descriptivos (ej. `feat: create Layout`).
+7. **Verificación Manual Obligatoria (QA Humano):** Todo agente de IA que asista en UI debe proporcionar al desarrollador un "Checklist de Verificación Manual" al final de su código, listando pruebas físicas irreplicables por la IA (ej. navegación mediante 'Tab', comprobación de contrastes en monitor, lectores de pantalla, o redimensionamiento manual).

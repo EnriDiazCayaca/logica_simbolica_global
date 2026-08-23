@@ -1,16 +1,3 @@
-/**
- * historial.ts
- * ------------
- * Paso 2 (Morocho/Alex): Contenedor del historial de trazabilidad.
- *
- * Proporciona funciones para construir y gestionar un array de pasos
- * de trazabilidad a partir de la salida del solver y del módulo de
- * transcripción (Mio/Arom).
- *
- * El contenedor es un array plano que se llena con `.push()` a medida
- * que el motor avanza. Todo es texto plano (sin HTML).
- */
-
 import type {
   PasoTrazabilidad,
   ResultadoTrazabilidad,
@@ -25,15 +12,13 @@ import { renderizarNodo } from "../transcription/astRenderer";
 
 /**
  * Crea un array vacío de pasos de trazabilidad.
- * Este es el contenedor que se irá llenando con `.push()` a medida
- * que el solver avanza en la demostración.
  */
 export function crearHistorial(): PasoTrazabilidad[] {
   return [];
 }
 
 /**
- * Registra un paso individual en el historial.
+ * Registra un paso individual en el historial con detalle particionado.
  *
  * @param historial  - Array acumulador de pasos (se muta con .push()).
  * @param paso       - Paso raw del solver (PasoDemostracion).
@@ -62,6 +47,7 @@ export function registrarPaso(
     regla: paso.idPaso,
     alias: enriquecido.alias,
     explicacion: enriquecido.descripcion,
+    detalle: enriquecido.detalle,
     expresionSimbolica: enriquecido.expresionResultante,
     lineasBase: paso.lineasInvolucradas,
     esConclusion: paso.esConclusion,
@@ -102,6 +88,7 @@ export function construirTrazabilidad(
 
   return {
     esValido: resultado.esValido,
+    errorLogico: resultado.errorLogico,
     pasos: historial,
     conclusion,
     totalPasos: historial.length,
