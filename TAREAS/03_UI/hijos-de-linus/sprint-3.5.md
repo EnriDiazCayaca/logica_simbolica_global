@@ -26,13 +26,16 @@ Perfeccionar el Motor de Inferencias agregando interpretación en lenguaje natur
 ## 🔄 Flujo de Trabajo y Dependencias
 Para evitar bloqueos y reescrituras, el orden de ejecución y dependencias es el siguiente:
 
-1. **Morocho (Motor Lógico) ➔ Alex (UI de Errores):**
-   - Alex **no puede** diseñar los motivos de invalidez hasta que Morocho haya modificado los tipos (`src/types/`) y retorne dichos motivos.
-2. **Mio (Lenguaje Natural) y Morocho (Reglas) pueden trabajar en paralelo.**
-3. **Alex (Resolución Detallada):**
+1. **Commit Temprano de Tipos (Morocho):**
+   - Antes de desarrollar la lógica completa, Morocho DEBE subir a `src/types/` un commit con las interfaces (ej. `MotivoInvalidez`). Esto permite a Alex trabajar de inmediato usando *mocks*.
+2. **Morocho (Motor Lógico) ➔ Alex (UI de Errores):**
+   - Alex usa los tipos tempranos para diseñar, y espera el motor final de Morocho para integrarlos. Alex debe mantener sus 4 estados de colores actuales (`orange` = inválido, `red` = error crítico) según el Glosario.
+3. **Mio (Lenguaje Natural):**
+   - Trabaja en paralelo. ⚠️ **Contrato de Sincronización:** Es **UNIDIRECCIONAL (Solo Lectura/Interpretación)**. Las fórmulas matemáticas son la única fuente de la verdad. El usuario solo asigna texto a las variables (ej. P = "Llueve"); el componente *no* modifica las fórmulas originales.
+4. **Alex (Resolución Detallada):**
    - Puede avanzar con los menús desplegables mientras los demás trabajan.
-4. **Testing Obligatorio (Responsabilidad Compartida):**
-   - Dado que Rennato no participa en este Sprint, **cada agente es responsable de escribir y actualizar los tests unitarios (`.test.ts`)** de los componentes o lógica que modifique/cree. No dejen caer la cobertura.
+5. **Testing Obligatorio (Responsabilidad Compartida):**
+   - Cada agente es responsable de escribir y actualizar los tests unitarios (`.test.ts`) de los componentes o lógica que modifique/cree. No dejen caer la cobertura.
 
 ---
 

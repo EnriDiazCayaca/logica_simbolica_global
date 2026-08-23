@@ -2,14 +2,20 @@
 
 Este glosario define los tokens visuales y directrices de UI que todo el equipo debe seguir.
 
-## 🎨 Paleta de Colores e Iconografía
-*(Nota: Los emojis en esta documentación son meramente ilustrativos. En el código fuente de UI están estrictamente prohibidos los emojis planos).*
-- **Fondo General:** `neutral-50`.
-- **Fondo de Tarjetas:** `white`.
-- **Acento Primario:** `blue-600`.
-- **Éxito (Válido):** `green-600`.
-- **Error (Inválido):** `red-600`.
-- **Texto Principal:** `neutral-900`.
+## 🎨 1. Colores y Semántica
+Mantenemos una paleta estricta usando las utilidades base de Tailwind v4:
+
+- **Fondo Principal:** `bg-slate-50` (o neutral muy claro).
+- **Tarjetas y Paneles:** `bg-white` con bordes sutiles `border-slate-200` y sombras suaves `shadow-sm`.
+- **Texto Principal:** `text-slate-900`.
+- **Texto Secundario (Mutado):** `text-slate-500`.
+
+### Estados Semánticos (Indicadores y Trazabilidad)
+Basados en la implementación de 4 estados:
+- **Pendiente / Neutro:** Oculto o tonos `slate-400`.
+- **Éxito (Inferencia Válida):** `text-green-600` / `bg-green-50`.
+- **Advertencia (Inferencia Inválida):** `text-orange-600` / `bg-orange-50` (Ej. La lógica falló pero la sintaxis está bien).
+- **Error Crítico (Error de Sintaxis):** `text-red-600` / `bg-red-50` (Ej. El motor no puede parsear la entrada)..
 - **Texto Secundario:** `neutral-600`.
 - **Iconos (Solo SVG):** Usar la librería `lucide-vue-next`.
 
