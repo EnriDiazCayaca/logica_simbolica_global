@@ -65,27 +65,40 @@ const generarMarkdownAcademico = computed(() => {
   return lineas.join('\n')
 })
 
-/**
- * Genera el texto en formato LaTeX estándar para informes/papers
- */
-const generarLatexAcademico = computed(() => {
-  if (!props.pasos || props.pasos.length === 0) return ''
+  /**
+   * Helper para convertir símbolos lógicos a comandos LaTeX
+   */
+  const formatearALatex = (texto: string): string => {
+    return texto
+      .replace(/\bENTONCES\b|->|→/g, '\\rightarrow')
+      .replace(/\bSI_Y_SOLO_SI\b|<->|↔/g, '\\leftrightarrow')
+      .replace(/\bY\b|\^|∧/g, '\\land')
+      .replace(/\bO\b|v|∨/g, '\\lor')
+      .replace(/\bO_EXCLUSIVA\b|\(\+\)|⊻|△/g, '\\oplus')
+      .replace(/\bNO\b|~|¬/g, '\\lnot')
+  }
 
-  const lineas: string[] = ['\\begin{aligned}']
-  props.premisasOriginales.forEach((p, i) => {
-    lineas.push(`  (${i + 1}) &\\quad ${p} && \\text{(Premisa ${i + 1})} \\\\`)
+  /**
+   * Genera el texto en formato LaTeX estándar para informes/papers
+   */
+  const generarLatexAcademico = computed(() => {
+    if (!props.pasos || props.pasos.length === 0) return ''
+  
+    const lineas: string[] = ['\\begin{aligned}']
+    props.premisasOriginales.forEach((p, i) => {
+      lineas.push(`  (${i + 1}) &\\quad ${formatearALatex(p)} && \\text{(Premisa ${i + 1})} \\\\`)
+    })
+  
+    props.pasos.forEach((p) => {
+      const numLinea = props.premisasOriginales.length + p.paso
+      const refs = p.premisas.map((pr) => pr.replace('Línea ', '')).join(', ')
+      const reglaStr = refs ? `${p.regla} \\text{ (${refs})}` : p.regla
+      lineas.push(`  \\therefore (${numLinea}) &\\quad ${formatearALatex(p.conclusion)} && [${reglaStr}] \\\\`)
+    })
+  
+    lineas.push('\\end{aligned}')
+    return lineas.join('\n')
   })
-
-  props.pasos.forEach((p) => {
-    const numLinea = props.premisasOriginales.length + p.paso
-    const refs = p.premisas.map((pr) => pr.replace('Línea ', '')).join(', ')
-    const reglaStr = refs ? `${p.regla} \\text{ (${refs})}` : p.regla
-    lineas.push(`  \\therefore (${numLinea}) &\\quad ${p.conclusion} && [${reglaStr}] \\\\`)
-  })
-
-  lineas.push('\\end{aligned}')
-  return lineas.join('\n')
-})
 
 const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
   const texto = tipo === 'markdown' ? generarMarkdownAcademico.value : generarLatexAcademico.value
