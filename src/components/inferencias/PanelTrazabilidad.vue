@@ -86,6 +86,7 @@ const MAPA_SIMBOLOS_LATEX: Record<string, string> = {
   '⟶': '\\rightarrow ',
   '⊕': '\\oplus ',
   '⊻': '\\oplus ',
+  '△': '\\oplus ',
   '↓': '\\downarrow ',
   '⊽': '\\downarrow ',
   '↑': '\\uparrow ',
@@ -111,9 +112,11 @@ const aCodigoLatex = (expresion: string): string =>
   aNotacionSimbolica(expresion)
     .replace(/<-->|<=>|<->/g, '\\leftrightarrow ')
     .replace(/-->|->|=>/g, '\\rightarrow ')
+    .replace(/\(\+\)/g, '\\oplus ')
     .replace(/\|\|/g, '\\lor ')
     .replace(/\|/g, '\\lor ')
-    .replace(/[↔⇔→⇒⟶⊕⊻↓⊽↑⊼&∧·^*∨+¬~!]/g, (s) => MAPA_SIMBOLOS_LATEX[s] ?? s)
+    .replace(/\bv\b/g, '\\lor ')
+    .replace(/[↔⇔→⇒⟶⊕⊻△↓⊽↑⊼&∧·^*∨+¬~!]/g, (s) => MAPA_SIMBOLOS_LATEX[s] ?? s)
     .replace(/\s+/g, ' ')
     .trim()
 
