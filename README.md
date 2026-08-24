@@ -1,93 +1,35 @@
-<p align="center">
-  <img src="public/assets/banner.jpg" alt="Banner Logica Simbolica">
-</p>
+# LogiLearn — Página de Inicio
 
-# 🧠 Lógica Simbólica Global - Proyecto de Aula 2026
+Landing page de LogiLearn convertida desde el diseño de Figma, construida con **Vue 3 + TypeScript + Vite** usando Single File Components (.vue).
 
-Bienvenidos al repositorio central del proyecto **Lógica Simbólica Global**.
-El **Objetivo Único (Norte)** de este proyecto es construir, de manera colaborativa, una plataforma web completa e interactiva para que cualquier persona en el mundo aprenda y aplique Lógica Simbólica.
+## Estructura de componentes
 
----
+```
+src/
+├── App.vue                  # Componente raíz, compone la página
+├── main.ts                  # Punto de entrada
+├── assets/
+│   ├── main.css              # Tokens de diseño (colores, tipografías, spacing)
+│   └── hero-illustration.png # Ilustración del hero
+└── components/
+    ├── NavBar.vue             # Barra de navegación superior
+    ├── HeroSection.vue        # Sección principal (título, CTA, badges, ilustración)
+    ├── FeaturesSection.vue    # Sección "Todo lo que necesitas..."
+    └── FeatureCard.vue        # Card reutilizable (usada 4 veces con distintas props)
+```
 
-## 🚀 La Métrica de Éxito
-Lograr que el 100% de los temas del sílabo estén implementados funcionalmente antes de nuestra **Fecha Inamovible: 30 de Agosto de 2026**.
+## Cómo correrlo
 
-## ⚡ Stack Tecnológico Oficial
-- **Framework Web:** Vue 3 (Single File Components `.vue`) + Vite
-- **Enrutamiento:** Vue Router
-- **Estilos:** Tailwind CSS v4
-- **Lenguaje:** TypeScript
+```bash
+npm install
+npm run dev       # servidor de desarrollo
+npm run build     # build de producción
+npm run preview   # previsualizar el build
+```
 
----
+## Notas de fidelidad al diseño
 
-## 👥 Organización de los Equipos (Distribución del Sílabo - 4 Equipos)
-Cada estudiante es un desarrollador dentro de uno de los 4 Equipos de Dominio. Cada equipo tiene un **Sublíder** responsable de consolidar y comunicarse con GitHub para subir los avances.
-
-| # | Nombre | Sublíder | Integrantes | Tema | Carpeta |
-|---|---|---|---|---|---|
-| 1 | Sinergia | Alexa | Aldair, Smith, Miguel Velarde, Jesús Núñez | Fundamentos, Conectivos y Tablas de Verdad | `/src/pages/tablas` |
-| 2 | Los hijos de Linus | Arom | Centurión, Morocho, Altamirano, Mio | Inferencias Lógicas y Validaciones | `/src/pages/inferencias` |
-| 3 | Modus Innova | Cristian | Danuska, Marlon, Guillermo, Noemí | Cuantificadores y Lógica de Predicados | `/src/pages/cuantificadores` |
-| 4 | Linus | Jordy | Nio, Mike, Sergio, Fer, Alejandro | Teoría de Conjuntos y Diagramas | `/src/pages/conjuntos` |
-
----
-
-## 🏆 ¿Cómo ganarás tu nota en este proyecto?
-El trabajo se evalúa directamente sobre tu aporte a la plataforma. La rúbrica es la siguiente:
-
-- **🧠 Lógica Matemática (40%):** El algoritmo o función matemática que programaste evalúa correctamente las fórmulas (ej. la tabla de verdad no miente, el Modus Ponens es exacto).
-- **🎨 Estética y UI (30%):** Tu componente se ve profesional. Has usado bien Tailwind CSS para que el usuario entienda qué hacer.
-- **🤝 Trabajo en Equipo y Git (30%):** Has seguido los lineamientos de tu sublíder, entregado a tiempo en los sprints (PRs los Viernes 4-6 PM) y aportado ideas limpias.
-
-> [!WARNING]
-> **REGLA DE EVALUACIÓN OFICIAL:** 
-> En este repositorio **SOLO** se evalúa el producto que entregan (el código, la lógica y la interfaz). Si el profesor del curso realiza preguntas teóricas para validar sus conocimientos sobre el tema, esa es una evaluación completamente independiente que depende enteramente de su estudio personal.
-
----
-
-## 👩‍💻👨‍💻 Flujo de Trabajo (¡Si eres miembro, lee esto!)
-
-Aunque **solo los sublíderes tienen acceso a subir código directamente a GitHub**, **TÚ** eres el motor del equipo. Así es como todos participan:
-
-1. **Tu Backlog Personal (Notas):** Como miembro, llevarás un registro en tus notas personales de las ideas, diseños matemáticos o bocetos de código que vayas creando localmente asistido por **Antigravity**.
-2. **Refinamiento:** Cuando tienes un algoritmo o un diseño "refinado" y probado, se lo entregas a tu sublíder.
-3. **El Pull Request (PR):** Tu sublíder tomará tus aportes refinados y los unirá en un "Pull Request" (una propuesta de cambio) en GitHub.
-4. **El Horario de Revisión:** Nuestro líder de proyecto (Enri) se sentará a revisar y aprobar PRs **todos los Viernes de 4:00 PM a 6:00 PM**. ¡Asegúrate de que tu sublíder envíe tu código antes de esa hora!
-5. **Reconocimiento Público:** Cuando el proyecto esté terminado, la plataforma web tendrá una sección interactiva de **"Colaboradores"** donde aparecerá tu nombre y foto por haber aportado código real. ¡Podrás poner este enlace en tu currículum como experiencia de desarrollo de software!
-
----
-
-## 📌 Enlaces Rápidos
-- 📅 **Fechas y Sprints:** `CRONOGRAMA.md`
-- 🗺️ **Índice del Repositorio:** `MAPA.md`
-- 📖 **Tutoriales y Ayuda:** `GUIA_ESTUDIANTE.md`
-- 📋 **Instrucciones de la tarea actual:** `TAREAS/01_Propuesta.md`
-- 📊 **Estado de los Equipos:** `TAREAS/ESTADO_EQUIPOS.md`
-
----
-
-## 🗺️ Mapa del Repositorio
-
-| Archivo | Para qué sirve |
-|---|---|
-| `README.md` | Presentación, equipos, reglas, rúbrica |
-| `CRONOGRAMA.md` | Fechas de los 4 sprints |
-| `GUIA_ESTUDIANTE.md` | Manual de herramientas y tutoriales |
-| `CONTRIBUTING.md` | Reglas para hacer Pull Requests |
-| `MAPA.md` | Índice completo del repositorio |
-| `TAREAS/ESTADO_EQUIPOS.md` | Estado actual de cada equipo (log) |
-| `TAREAS/01_Propuesta.md` | Instrucciones Entregable 1 |
-| `TAREAS/02_Motor.md` | Instrucciones Entregable 2 |
-| `TAREAS/03_UI.md` | Instrucciones Entregable 3 |
-| `TAREAS/04_Deploy.md` | Instrucciones Entregable 4 |
-
-### 📁 Estructura de Código
-
-| Carpeta | Equipo | Tema |
-|---|---|---|
-| `src/pages/tablas/` | Sinergia | Tablas de Verdad |
-| `src/pages/inferencias/` | Hijos de Linus | Inferencias Lógicas |
-| `src/pages/cuantificadores/` | Modus Innova | Cuantificadores |
-| `src/pages/conjuntos/` | Linus | Conjuntos y Venn |
-| `src/lib/` | Compartido | Motor lógico, parser, validator |
-| `src/components/ui/` | Compartido | Componentes Button, Card, Badge |
+- Colores extraídos por muestreo de píxeles directamente de la captura del diseño (navy `#0F2D8D`, azul botón `#3558CE`, badges `#C4DFFC`, etc.), definidos como CSS variables en `assets/main.css`.
+- Tipografía: `Poppins` para títulos (peso 700/800) e `Inter` para texto de cuerpo, cargadas desde Google Fonts — la fuente exacta usada en el diseño de Figma no pudo confirmarse sin acceso al archivo, así que se eligió el par tipográfico visualmente más cercano.
+- Layout responsive: el grid de 4 columnas del hero de features colapsa a 2 columnas en tablet y 1 en móvil; el hero pasa a una sola columna en pantallas angostas.
+- Ícono del logo y de las 4 feature cards son SVG inline (no se usó la imagen original) para que sean editables y ligeros.

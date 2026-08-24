@@ -1,36 +1,23 @@
 {
-  "name": "logica_simbolica_global",
-  "version": "0.1.0",
+  "name": "logilearn-app",
   "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@lucide/vue": "^1.16.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.6.0",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "^3.5.40",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
-    "@tailwindcss/vite": "^4.0.0",
-    "@testing-library/vue": "^8.1.0",
-    "@types/node": "^22.0.0",
-    "@vitejs/plugin-vue": "^5.2.1",
-    "@vue/language-server": "^3.3.10",
-    "@vue/test-utils": "^2.4.11",
-    "happy-dom": "^20.11.6",
-    "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.0",
-    "typescript-language-server": "^5.3.0",
-    "vite": "^6.1.0",
-    "vitest": "^4.1.10",
-    "vue-tsc": "^3.3.10"
+    "@types/node": "^24.13.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/tsconfig": "^0.9.1",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.0",
+    "vue-tsc": "^3.3.8"
   }
 }
