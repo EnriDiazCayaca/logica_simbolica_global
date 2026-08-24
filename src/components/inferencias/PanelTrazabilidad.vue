@@ -491,7 +491,7 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
                     <span class="font-bold text-blue-800 uppercase tracking-wider text-[10px] block">
                       ⚙️ Regla aplicada: {{ paso.detalle.reglaNombre }} {{ paso.detalle.reglaAlias ? `(${paso.detalle.reglaAlias})` : '' }}
                     </span>
-                    <p class="text-neutral-700 text-xs leading-relaxed">
+                    <p class="text-neutral-700 text-xs leading-relaxed whitespace-pre-line">
                       {{ paso.detalle.reglaJustificacion }}
                     </p>
                   </div>

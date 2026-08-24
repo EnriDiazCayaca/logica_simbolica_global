@@ -2,12 +2,22 @@
  * astRenderer.ts
  * --------------
  * Convierte un NodoExpresion (el AST real de Arom) a una cadena de texto
- * legible en español, para usarla dentro de las explicaciones que arma
- * descriptionGenerator.ts. No es "lenguaje natural narrado", es notación
- * simbólica legible, ej: "(P ENTONCES Q)", "(NO P)".
+ * con símbolos matemáticos legibles y estándar (¬, →, ↔, ∧, ∨, △), para
+ * usarla dentro de las explicaciones y trazabilidad pedagógica.
  */
 
 import type { NodoExpresion } from "../solver/types";
+
+const SIMBOLO_OPERADOR: Record<string, string> = {
+  ENTONCES: '→',
+  SI_Y_SOLO_SI: '↔',
+  O_EXCLUSIVA: '△',
+  Y: '∧',
+  O: '∨',
+  NO: '¬',
+  NI: '↓',
+  INCOMPATIBLE: '↑',
+};
 
 export function renderizarNodo(nodo: NodoExpresion): string {
   if (nodo.tipo === "variable") {
@@ -16,17 +26,21 @@ export function renderizarNodo(nodo: NodoExpresion): string {
 
   // nodo.tipo === 'operacion'
   const { operador, izquierdo, derecho } = nodo;
+  const simb = SIMBOLO_OPERADOR[operador] ?? operador;
 
-  // Caso unario: solo 'NO' se usa así en el AST de Arom (solo 'derecho' presente)
+  // Caso unario: solo 'NO'
   if (!izquierdo && derecho) {
-    return `(${operador} ${renderizarNodo(derecho)})`;
+    if (derecho.tipo === 'variable') {
+      return `¬${derecho.nombre}`;
+    }
+    return `¬(${renderizarNodo(derecho)})`;
   }
 
   // Caso binario
   if (izquierdo && derecho) {
-    return `(${renderizarNodo(izquierdo)} ${operador} ${renderizarNodo(derecho)})`;
+    return `(${renderizarNodo(izquierdo)} ${simb} ${renderizarNodo(derecho)})`;
   }
 
-  // Caso degenerado (no debería pasar con un AST bien formado)
+  // Caso degenerado
   return `[${operador}: expresión incompleta]`;
 }
