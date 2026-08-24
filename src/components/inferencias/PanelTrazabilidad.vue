@@ -43,47 +43,178 @@ const togglePaso = (numeroPaso: number) => {
 }
 
 /**
- * Genera el texto en formato Markdown de la demostración académica completa
+ * Mapa de traducción: operadores en español del motor → comandos LaTeX de
+ * notación simbólica estándar (para que las fórmulas entre $...$ se rendericen).
+ */
+const SIMBOLOS_MATEMATICOS: Record<string, string> = {
+  SI_Y_SOLO_SI: '\\leftrightarrow',
+  O_EXCLUSIVA: '\\oplus',
+  INCOMPATIBLE: '\\uparrow',
+  ENTONCES: '\\rightarrow',
+  NI: '\\downarrow',
+  NO: '\\neg ',
+  Y: '\\land ',
+  O: '\\lor '
+}
+
+/**
+ * Convierte una expresión serializada por el motor (ej. "( P ENTONCES Q )")
+ * a notación simbólica apta para LaTeX/MathJax (ej. "(P \\rightarrow Q)").
+ * Es idempotente: si la entrada ya usa símbolos, sale intacta.
+ */
+const aNotacionSimbolica = (expresion: string): string =>
+  expresion
+    .replace(
+      /\b(SI_Y_SOLO_SI|O_EXCLUSIVA|INCOMPATIBLE|ENTONCES|NO|NI|Y|O)\b/g,
+      (op) => SIMBOLOS_MATEMATICOS[op]
+    )
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/**
+ * Mapa de símbolos Unicode/ASCII (los que puede traer el texto crudo del
+ * usuario) a su comando LaTeX equivalente. Espeja el mapeo del validador
+ * (src/lib/validator/validator.ts) para mantener la semántica del motor.
+ */
+const MAPA_SIMBOLOS_LATEX: Record<string, string> = {
+  '↔': '\\leftrightarrow ',
+  '⇔': '\\leftrightarrow ',
+  '→': '\\rightarrow ',
+  '⇒': '\\rightarrow ',
+  '⟶': '\\rightarrow ',
+  '⊕': '\\oplus ',
+  '⊻': '\\oplus ',
+  '↓': '\\downarrow ',
+  '⊽': '\\downarrow ',
+  '↑': '\\uparrow ',
+  '⊼': '\\uparrow ',
+  '&': '\\land ',
+  '∧': '\\land ',
+  '·': '\\land ',
+  '^': '\\land ',
+  '*': '\\land ',
+  '∨': '\\lor ',
+  '+': '\\lor ',
+  '¬': '\\neg ',
+  '~': '\\neg ',
+  '!': '\\neg '
+}
+
+/**
+ * Pasa adicional SOLO para la exportación LaTeX: pdfLaTeX no compila símbolos
+ * Unicode en modo matemático (ej. "p → q" lanza "Unicode character → not set
+ * up"), así que todo símbolo se convierte a su comando (ej. "p \rightarrow q").
+ */
+const aCodigoLatex = (expresion: string): string =>
+  aNotacionSimbolica(expresion)
+    .replace(/<-->|<=>|<->/g, '\\leftrightarrow ')
+    .replace(/-->|->|=>/g, '\\rightarrow ')
+    .replace(/\|\|/g, '\\lor ')
+    .replace(/\|/g, '\\lor ')
+    .replace(/[↔⇔→⇒⟶⊕⊻↓⊽↑⊼&∧·^*∨+¬~!]/g, (s) => MAPA_SIMBOLOS_LATEX[s] ?? s)
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/**
+ * Genera el texto en formato Markdown de la demostración académica completa.
+ * Usa listas numeradas globales (premisas + pasos comparten numeración) para
+ * que cada línea ocupe su propio bloque al pegarlo en un archivo .md.
  */
 const generarMarkdownAcademico = computed(() => {
   if (!props.pasos || props.pasos.length === 0) return ''
 
-  const lineas: string[] = ['### Demostración Formal de Inferencia Lógica\n']
-  lineas.push('**Premisas:**')
+  const totalPremisas = props.premisasOriginales.length
+  const lineas: string[] = ['### Demostración Formal de Inferencia Lógica', '']
+
+  lineas.push('**Premisas:**', '')
   props.premisasOriginales.forEach((p, i) => {
-    lineas.push(`(${i + 1}) $${p}$`)
+    lineas.push(`${i + 1}. $${aNotacionSimbolica(p)}$`)
   })
-  lineas.push(`\n**Conclusión objetivo:** $\\therefore ${props.conclusionOriginal}$\n`)
-  lineas.push('**Deducción formal paso a paso:**')
+
+  lineas.push('')
+  lineas.push(`**Conclusión:** $\\therefore ${aNotacionSimbolica(props.conclusionOriginal)}$`, '')
+  lineas.push('**Deducción formal paso a paso:**', '')
 
   props.pasos.forEach((p) => {
-    const numLinea = props.premisasOriginales.length + p.paso
-    const justif = p.premisas.length ? ` [${p.regla} (${p.premisas.join(', ')})]` : ` [${p.regla}]`
-    lineas.push(`(${numLinea}) $\\therefore ${p.conclusion}$ ${justif}`)
+    const numLinea = totalPremisas + p.paso
+    const refs = p.premisas.length ? ` (${p.premisas.join(', ')})` : ''
+    lineas.push(`${numLinea}. $${aNotacionSimbolica(p.conclusion)}$ *[${p.regla}${refs}]*`)
   })
 
   return lineas.join('\n')
 })
 
 /**
- * Genera el texto en formato LaTeX estándar para informes/papers
+ * Genera un documento LaTeX completo y autocompilable (pdfLaTeX/XeLaTeX/
+ * LuaLaTeX, listo para Overleaf): preámbulo mínimo estándar, planteamiento
+ * del argumento y demostración en entorno align* con numeración global.
  */
 const generarLatexAcademico = computed(() => {
   if (!props.pasos || props.pasos.length === 0) return ''
 
-  const lineas: string[] = ['\\begin{aligned}']
+  const totalPremisas = props.premisasOriginales.length
+
+  // Filas de la demostración (numeración global: premisas + pasos deducidos)
+  const filas: string[] = []
   props.premisasOriginales.forEach((p, i) => {
-    lineas.push(`  (${i + 1}) &\\quad ${p} && \\text{(Premisa ${i + 1})} \\\\`)
+    filas.push(`(${i + 1}) \\quad & ${aCodigoLatex(p)} && \\text{Premisa}`)
   })
 
   props.pasos.forEach((p) => {
-    const numLinea = props.premisasOriginales.length + p.paso
+    const numLinea = totalPremisas + p.paso
     const refs = p.premisas.map((pr) => pr.replace('Línea ', '')).join(', ')
-    const reglaStr = refs ? `${p.regla} \\text{ (${refs})}` : p.regla
-    lineas.push(`  \\therefore (${numLinea}) &\\quad ${p.conclusion} && [${reglaStr}] \\\\`)
+    const justif = refs ? `${p.regla} (${refs})` : p.regla
+    filas.push(`\\therefore (${numLinea}) \\quad & ${aCodigoLatex(p.conclusion)} && \\text{[${justif}]}`)
   })
 
-  lineas.push('\\end{aligned}')
+  const lineas: string[] = [
+    '% Demostración Formal de Inferencia Lógica',
+    '% Documento autocompilable: pegar en un archivo .tex vacío y compilar.',
+    '\\documentclass[11pt]{article}',
+    '',
+    '\\usepackage[utf8]{inputenc}',
+    '\\usepackage[T1]{fontenc}',
+    '\\usepackage[spanish,es-noshorthands]{babel}',
+    '\\usepackage{amsmath}',
+    '\\usepackage{amssymb}',
+    '\\usepackage[a4paper,margin=2.5cm]{geometry}',
+    '',
+    '\\title{Demostración Formal de Inferencia Lógica}',
+    '\\author{}',
+    '\\date{}',
+    '',
+    '\\begin{document}',
+    '',
+    '\\maketitle',
+    ''
+  ]
+
+  if (totalPremisas > 0) {
+    lineas.push('\\section*{Argumento}', '', '\\begin{enumerate}')
+    props.premisasOriginales.forEach((p) => {
+      lineas.push(`  \\item $${aCodigoLatex(p)}$`)
+    })
+    lineas.push('\\end{enumerate}', '')
+  }
+
+  if (props.conclusionOriginal) {
+    lineas.push(
+      'De las premisas anteriores se busca demostrar formalmente que:',
+      '',
+      `\\[ \\therefore ${aCodigoLatex(props.conclusionOriginal)} \\]`,
+      ''
+    )
+  }
+
+  lineas.push('\\section*{Demostración formal}', '', '\\begin{align*}')
+  filas.forEach((fila, idx) => {
+    // Sin \\ al final de la última fila (evita fila vacía antes de \end)
+    lineas.push(idx < filas.length - 1 ? `${fila} \\\\` : fila)
+  })
+  lineas.push('\\end{align*}', '', '\\end{document}')
+
   return lineas.join('\n')
 })
 
