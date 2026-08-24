@@ -62,7 +62,7 @@ export function generarDetalleParticionado(
         { linea: ant?.linea, expresion: ant?.texto, rol: 'Antecedente afirmado / cumplido' },
       ];
       reglaJustificacion =
-        'Si un condicional (P → Q) es verdadero y su antecedente (P) ocurre, el consecuente (Q) es necesariamente verdadero.';
+        `Dado que el condicional '${impl?.texto}' es verdadero y su antecedente '${ant?.texto}' se cumple, el consecuente '${resultadoTexto}' es necesariamente verdadero.`;
       conclusionDeducida = `'${resultadoTexto}' se deduce forzosamente al cumplirse la condición previa.`;
       break;
     }
@@ -74,7 +74,7 @@ export function generarDetalleParticionado(
         { linea: consNeg?.linea, expresion: consNeg?.texto, rol: 'Consecuente negado / no cumplido' },
       ];
       reglaJustificacion =
-        'Si el consecuente de un condicional es falso (¬Q), la condición inicial (antecedente) tampoco pudo haber ocurrido.';
+        `Dado que '${impl?.texto}' es verdadero y su consecuente está negado en '${consNeg?.texto}', el antecedente no pudo haber ocurrido, concluyéndose '${resultadoTexto}'.`;
       conclusionDeducida = `'${resultadoTexto}' se concluye como negación necesaria del antecedente.`;
       break;
     }
@@ -86,7 +86,7 @@ export function generarDetalleParticionado(
         { linea: neg?.linea, expresion: neg?.texto, rol: 'Opción descartada / negada' },
       ];
       reglaJustificacion =
-        'En una opción dual (P ∨ Q), al comprobarse que una de ellas es falsa, la otra opción es forzosamente la verdadera.';
+        `En la disyunción '${disy?.texto}', al descartarse una opción mediante '${neg?.texto}', la otra opción '${resultadoTexto}' es forzosamente la verdadera.`;
       conclusionDeducida = `'${resultadoTexto}' es la única opción válida restante.`;
       break;
     }
@@ -94,11 +94,11 @@ export function generarDetalleParticionado(
       const xor = expresiones.find((e) => e.nodo.tipo === 'operacion' && e.nodo.operador === 'O_EXCLUSIVA') || expresiones[0];
       const otra = expresiones.find((e) => e !== xor) || expresiones[1];
       premisasBase = [
-        { linea: xor?.linea, expresion: xor?.texto, rol: 'Disyunción fuerte / exclusiva (P △ Q)' },
+        { linea: xor?.linea, expresion: xor?.texto, rol: 'Disyunción fuerte / exclusiva' },
         { linea: otra?.linea, expresion: otra?.texto, rol: 'Proposición evaluada' },
       ];
       reglaJustificacion =
-        'En una disyunción exclusiva (P △ Q) solo una proposición puede ser verdadera. Si una se cumple la otra es falsa, y si una no se cumple la otra debe ser forzosamente verdadera.';
+        `En la disyunción exclusiva '${xor?.texto}' solo una proposición puede ser verdadera. Al evaluarse con '${otra?.texto}', se concluye por exclusión mutua directa que '${resultadoTexto}'.`;
       conclusionDeducida = `'${resultadoTexto}' se deduce por exclusión mutua directa.`;
       break;
     }
@@ -109,8 +109,8 @@ export function generarDetalleParticionado(
         { linea: i2?.linea, expresion: i2?.texto, rol: 'Segundo eslabón condicional' },
       ];
       reglaJustificacion =
-        'Por propiedad de transitividad: si P implica a Q, y Q a su vez implica a R, entonces P implica directamente a R.';
-      conclusionDeducida = `'${resultadoTexto}' conecta directamente el inicio con el final de la cadena.`;
+        `Por propiedad de transitividad entre '${i1?.texto}' y '${i2?.texto}', se conecta directamente el inicio con el final en '${resultadoTexto}'. (Nota: este paso equivale a encadenar dos veces Modus Ponens o Modus Tollens sobre las premisas intermedias).`;
+      conclusionDeducida = `'${resultadoTexto}' conecta directamente el inicio con el final de la cadena transitiva.`;
       break;
     }
     case 'SIMPLIFICACION': {
@@ -119,7 +119,7 @@ export function generarDetalleParticionado(
         { linea: conj?.linea, expresion: conj?.texto, rol: 'Conjunción verdadera' },
       ];
       reglaJustificacion =
-        'Al ser verdadera la conjunción (P ∧ Q), ambas partes son verdaderas por separado y pueden extraerse de forma independiente.';
+        `Al ser verdadera la conjunción '${conj?.texto}', ambas partes son verdaderas por separado y se extrae válidamente '${resultadoTexto}'.`;
       conclusionDeducida = `Se extrae la proposición '${resultadoTexto}'.`;
       break;
     }
@@ -129,7 +129,7 @@ export function generarDetalleParticionado(
         { linea: base?.linea, expresion: base?.texto, rol: 'Proposición con doble negación' },
       ];
       reglaJustificacion =
-        'Negar dos veces una proposición ¬(¬P) equivale a afirmar positivamente su valor original P.';
+        `Negar dos veces '${base?.texto}' equivale a afirmar positivamente su valor original '${resultadoTexto}'.`;
       conclusionDeducida = `Se simplifica a la afirmación directa '${resultadoTexto}'.`;
       break;
     }
@@ -143,14 +143,14 @@ export function generarDetalleParticionado(
           { linea: otra?.linea, expresion: otra?.texto, rol: 'Lado conocido / afirmado' },
         ];
         reglaJustificacion =
-          'En un bicondicional (P ↔ Q), ambos lados comparten siempre el mismo valor de verdad; saber uno determina el otro.';
+          `En el bicondicional '${bic?.texto}', ambos lados comparten el mismo valor de verdad. Al conocerse '${otra?.texto}', se determina que '${resultadoTexto}'.`;
         conclusionDeducida = `'${resultadoTexto}' se deduce por equivalencia directa.`;
       } else {
         premisasBase = [
           { linea: bic?.linea, expresion: bic?.texto, rol: 'Bicondicional base' },
         ];
         reglaJustificacion =
-          'Un bicondicional (P ↔ Q) equivale conjuntamente a las dos implicaciones (P → Q) y (Q → P).';
+          `El bicondicional '${bic?.texto}' equivale conjuntamente a las dos implicaciones directas, obteniéndose '${resultadoTexto}'.`;
         conclusionDeducida = `Se descompone en '${resultadoTexto}'.`;
       }
       break;
@@ -162,8 +162,20 @@ export function generarDetalleParticionado(
         { linea: p2?.linea, expresion: p2?.texto, rol: 'Segunda proposición demostrada' },
       ];
       reglaJustificacion =
-        'Si dos proposiciones están probadas por separado, su conjunción (P ∧ Q) es igualmente verdadera.';
+        `Al estar demostradas '${p1?.texto}' y '${p2?.texto}' por separado, su conjunción '${resultadoTexto}' es igualmente verdadera.`;
       conclusionDeducida = `Se unen válidamente en '${resultadoTexto}'.`;
+      break;
+    }
+    case 'DILEMA_CONSTRUCTIVO': {
+      const [i1, i2, disy] = expresiones;
+      premisasBase = [
+        { linea: i1?.linea, expresion: i1?.texto, rol: 'Primera implicación' },
+        { linea: i2?.linea, expresion: i2?.texto, rol: 'Segunda implicación' },
+        { linea: disy?.linea, expresion: disy?.texto, rol: 'Disyunción de antecedentes' },
+      ];
+      reglaJustificacion =
+        `Al ocurrir necesariamente una de las condiciones en '${disy?.texto}' y estar garantizados sus efectos por '${i1?.texto}' y '${i2?.texto}', se produce forzosamente la disyunción '${resultadoTexto}'.`;
+      conclusionDeducida = `'${resultadoTexto}' se deduce por dilema constructivo.`;
       break;
     }
     default: {

@@ -152,11 +152,11 @@ describe('Motor Lógico (Solver)', () => {
       expect(resultado.pasos[0].idPaso).toBe('SILOGISMO_DISYUNTIVO');
     });
 
-    it('debe demostrar R en 2 pasos a partir de P -> Q, Q -> R y P', () => {
+    it('debe demostrar R en exactamente 2 pasos podando derivaciones redundantes a partir de P -> Q, Q -> R y P', () => {
       const resultado = demostrarConclusion([implPQ, implQR, nodoP], nodoR);
       expect(resultado.esValido).toBe(true);
-      expect(resultado.pasos.length).toBeGreaterThanOrEqual(1);
-      expect(resultado.pasos.some(p => p.esConclusion)).toBe(true);
+      expect(resultado.pasos.length).toBe(2);
+      expect(resultado.pasos[resultado.pasos.length - 1].esConclusion).toBe(true);
     });
 
     it('debe diagnosticar falacia de Afirmación del Consecuente con mensaje formal', () => {

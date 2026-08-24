@@ -130,10 +130,10 @@ describe('PanelTrazabilidad', () => {
     const texto = escribir.mock.calls[0][0] as string
 
     expect(texto).toContain('### Demostración Formal de Inferencia Lógica')
-    expect(texto).toContain('3. $(P \\rightarrow R)$ *[SH, Transitividad (Línea 1, Línea 2)]*')
-    expect(texto).toContain('$P \\rightarrow Q$')
+    expect(texto).toContain('3. (P → R) *[SH, Transitividad (Línea 1, Línea 2)]*')
+    expect(texto).toContain('1. P → Q')
     expect(texto).not.toContain('ENTONCES')
-    expect(texto).not.toContain('( P')
+    expect(texto).not.toContain('\\rightarrow')
   })
 
   it('exporta un documento LaTeX completo y compilable', async () => {

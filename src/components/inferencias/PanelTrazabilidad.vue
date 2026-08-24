@@ -43,6 +43,44 @@ const togglePaso = (numeroPaso: number) => {
 }
 
 /**
+ * Mapa de traducción a símbolos Markdown Unicode limpios.
+ */
+const SIMBOLOS_MARKDOWN: Record<string, string> = {
+  SI_Y_SOLO_SI: '↔',
+  O_EXCLUSIVA: '△',
+  INCOMPATIBLE: '↑',
+  ENTONCES: '→',
+  NI: '↓',
+  NO: '¬',
+  Y: '∧',
+  O: '∨'
+}
+
+/**
+ * Convierte expresiones a notación simbólica limpia para Markdown (símbolos Unicode legibles sin comandos LaTeX).
+ */
+const aNotacionMarkdown = (expresion: string): string =>
+  expresion
+    .replace(
+      /\b(SI_Y_SOLO_SI|O_EXCLUSIVA|INCOMPATIBLE|ENTONCES|NO|NI|Y|O)\b/g,
+      (op) => SIMBOLOS_MARKDOWN[op] ?? op
+    )
+    .replace(/\\leftrightarrow/g, '↔')
+    .replace(/\\rightarrow/g, '→')
+    .replace(/\\oplus/g, '△')
+    .replace(/\\uparrow/g, '↑')
+    .replace(/\\downarrow/g, '↓')
+    .replace(/\\neg\s*/g, '¬')
+    .replace(/\\land/g, '∧')
+    .replace(/\\lor/g, '∨')
+    .replace(/<-->|<=>|<->/g, '↔')
+    .replace(/-->|->|=>/g, '→')
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/**
  * Mapa de traducción: operadores en español del motor → comandos LaTeX de
  * notación simbólica estándar (para que las fórmulas entre $...$ se rendericen).
  */
@@ -121,7 +159,7 @@ const aCodigoLatex = (expresion: string): string =>
     .trim()
 
 /**
- * Genera el texto en formato Markdown de la demostración académica completa.
+ * Genera el texto en formato Markdown de la demostración académica completa con símbolos limpios.
  * Usa listas numeradas globales (premisas + pasos comparten numeración) para
  * que cada línea ocupe su propio bloque al pegarlo en un archivo .md.
  */
@@ -133,17 +171,17 @@ const generarMarkdownAcademico = computed(() => {
 
   lineas.push('**Premisas:**', '')
   props.premisasOriginales.forEach((p, i) => {
-    lineas.push(`${i + 1}. $${aNotacionSimbolica(p)}$`)
+    lineas.push(`${i + 1}. ${aNotacionMarkdown(p)}`)
   })
 
   lineas.push('')
-  lineas.push(`**Conclusión:** $\\therefore ${aNotacionSimbolica(props.conclusionOriginal)}$`, '')
+  lineas.push(`**Conclusión:** ∴ ${aNotacionMarkdown(props.conclusionOriginal)}`, '')
   lineas.push('**Deducción formal paso a paso:**', '')
 
   props.pasos.forEach((p) => {
     const numLinea = totalPremisas + p.paso
     const refs = p.premisas.length ? ` (${p.premisas.join(', ')})` : ''
-    lineas.push(`${numLinea}. $${aNotacionSimbolica(p.conclusion)}$ *[${p.regla}${refs}]*`)
+    lineas.push(`${numLinea}. ${aNotacionMarkdown(p.conclusion)} *[${p.regla}${refs}]*`)
   })
 
   return lineas.join('\n')

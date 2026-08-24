@@ -2,14 +2,14 @@
 
 **Equipo:** Hijos de Linus (Arom Espinoza, Juan Morocho, Arnold Mio, Alex Centurión, Renatto Altamirano)  
 **Módulo:** Demostración Formal de Reglas de Inferencia y Trazabilidad Pedagógica (`/inferencias`)  
-**Fecha de Actualización:** 23 de Agosto de 2026  
+**Fecha de Actualización:** 24 de Agosto de 2026  
 **Estado General:** ✅ **100% de Errores Documentados y Solucionados (111/111 Tests Pasando)**
 
 ---
 
 ## 📑 Resumen Ejecutivo
 
-Durante las fases de integración, pruebas de estrés y validación con usuarios reales, se identificaron y resolvieron **8 incidencias críticas y de experiencia de usuario**. A continuación se detalla cada problema, su causa raíz, la solución implementada y su estado de verificación.
+Durante las fases de integración, pruebas de estrés y validación con usuarios reales, se identificaron y resolvieron **11 incidencias críticas, lógicas y de experiencia de usuario**. A continuación se detalla cada problema, su causa raíz, la solución implementada y su estado de verificación.
 
 ---
 
@@ -107,6 +107,38 @@ Durante las fases de integración, pruebas de estrés y validación con usuarios
 
 ---
 
+## 9. 📄 Inconsistencia de Sintaxis LaTeX en la Exportación a Markdown
+
+* **Síntoma:** Al exportar la demostración a formato `.md`, las premisas se exportaban con símbolos Unicode limpios (`P → R`), pero los pasos deducidos y la conclusión incluían comandos LaTeX crudos como `$(P \rightarrow C)$` o `\therefore`.
+* **Causa Raíz:** La función de exportación a Markdown reutilizaba la función de notación matemática diseñada originalmente para LaTeX.
+* **Solución Implementada:**
+  - Se creó la función `aNotacionMarkdown` que normaliza todos los operadores internos a símbolos Unicode universales limpios (`→`, `∧`, `∨`, `¬`, `↔`, `△`, `∴`) sin envoltorios `$...$` innecesarios.
+* **Estado:** ✅ **SOLUCIONADO** (`PanelTrazabilidad.vue`).
+
+---
+
+## 10. 🔁 Duplicación de Rutas Deductivas en Silogismo Hipotético (SH)
+
+* **Síntoma:** En ejercicios transitivos con premisas como $P \to R$, $R \to C$, $P \vdash C$, el motor derivaba tanto la ruta por SH ($P \to C$) como la ruta por dos Modus Ponens ($R$ y luego $C$), mostrando pasos redundantes simultáneamente.
+* **Causa Raíz:** El motor de *Forward Chaining* acumulaba todas las inferencias alcanzadas en la iteración sin podar las ramas intermedias que no contribuyen al camino final de la conclusión.
+* **Solución Implementada:**
+  - Se priorizó la evaluación de `SILOGISMO_HIPOTETICO` sobre MPP al buscar implicaciones transitivas.
+  - Se implementó el algoritmo `podarPasosRedundantes` que rastrea hacia atrás las dependencias de la conclusión final, eliminando derivaciones huérfanas y remapeando la numeración de líneas.
+  - En la explicación didáctica de SH se agregó la nota pedagógica indicando que este paso equivale al encadenamiento de dos Modus Ponens sucesivos.
+* **Estado:** ✅ **SOLUCIONADO** (`solver.ts`, `descriptionGenerator.ts`).
+
+---
+
+## 11. 🧩 Explicaciones Didácticas con Variables Abstractas Genéricas
+
+* **Síntoma:** Al desplegar el acordeón *"¿Cómo se deduce?"*, la justificación semántica utilizaba letras fijas genéricas $(P \to Q)$ en lugar de las fórmulas y variables reales que el usuario estaba resolviendo (ej. $A \to B$ o $P \to R$).
+* **Causa Raíz:** Las plantillas de explicación en `descriptionGenerator.ts` utilizaban cadenas estáticas con literales $P, Q$.
+* **Solución Implementada:**
+  - Se parametrizaron dinámicamente las justificaciones para inyectar las expresiones exactas de las líneas base (`impl.texto`, `ant.texto`, `consNeg.texto`, etc.).
+* **Estado:** ✅ **SOLUCIONADO** (`descriptionGenerator.ts`).
+
+---
+
 ## 📊 Matriz de Estado Final
 
 | Incidencia / Característica | Módulo Afectado | Detección | Estado | Verificación |
@@ -119,3 +151,6 @@ Durante las fases de integración, pruebas de estrés y validación con usuarios
 | Espacios en paréntesis | UI | QA Humano | ✅ Resuelto | Reglas deterministas en `insertarSimbolo` |
 | Desplazamiento por linter reactivo | UI | QA Humano | ✅ Resuelto | Validación en evento submit |
 | Tamaño dispar de símbolos | UI | Pruebas móviles | ✅ Resuelto | Escala tipográfica normalizada (`text-base`) |
+| Inconsistencia en exportación Markdown | UI / Export | Reporte de usuario | ✅ Resuelto | Función `aNotacionMarkdown` validada |
+| Duplicación de ramas en SH | Motor | Reporte de usuario | ✅ Resuelto | `podarPasosRedundantes` y prioridad SH |
+| Fórmulas reales en explicaciones | Transcripción | Reporte de usuario | ✅ Resuelto | Interpolación contextual en `generarDetalleParticionado` |
