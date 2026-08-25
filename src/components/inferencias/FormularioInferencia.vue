@@ -233,21 +233,21 @@ const handleSubmit = () => {
       </div>
 
       <!-- Fila 2: Variables a la izquierda y Botón Salto a la derecha -->
-      <div class="flex items-center justify-between gap-1.5 pt-1.5 border-t border-neutral-200/80">
-        <!-- Grupo de Variables: P, Q, R, S | A, B, C, D -->
-        <div class="flex items-center gap-1 overflow-x-auto">
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-neutral-200/80">
+        <!-- Grupo de Variables: P, Q, R, S | A, B, C, D con espacio vertical adecuado -->
+        <div class="flex items-center gap-1 overflow-x-auto py-1.5 px-0.5 scrollbar-thin scrollbar-thumb-neutral-300/80 scrollbar-track-transparent [scrollbar-width:thin] min-h-[40px]">
           <button
             v-for="v in GRUPO_VARS_1"
             :key="v"
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
 
-          <span class="text-neutral-300 select-none px-0.5">|</span>
+          <span class="text-neutral-300 select-none px-1 text-xs flex-shrink-0">|</span>
 
           <button
             v-for="v in GRUPO_VARS_2"
@@ -255,7 +255,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-8 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>

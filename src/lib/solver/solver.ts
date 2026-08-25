@@ -710,51 +710,51 @@ export function demostrarConclusion(
         const f1 = formulasConocidas[i];
         const f2 = formulasConocidas[j];
 
-        // 1. Modus Ponendo Ponens (A -> B, A |- B)
-        const resMPP = aplicarModusPonendoPonens(f1.nodo, f2.nodo);
-        if (resMPP) {
-          if (agregarPaso('MODUS_PONENDO_PONENS', [f1.linea, f2.linea], resMPP)) {
-            return { esValido: true, pasos };
-          }
-        }
-
-        // 2. Modus Ponens Bicondicional (A <-> B, A |- B o A <-> B, B |- A)
-        const resMPB = aplicarModusPonensBicondicional(f1.nodo, f2.nodo);
-        if (resMPB) {
-          if (agregarPaso('MODUS_PONENS_BICONDICIONAL', [f1.linea, f2.linea], resMPB)) {
-            return { esValido: true, pasos };
-          }
-        }
-
-        // 3. Modus Tollendo Tollens (A -> B, NO B |- NO A)
-        const resMTT = aplicarModusTollendoTollens(f1.nodo, f2.nodo);
-        if (resMTT) {
-          if (agregarPaso('MODUS_TOLLENDO_TOLLENS', [f1.linea, f2.linea], resMTT)) {
-            return { esValido: true, pasos };
-          }
-        }
-
-        // 4. Silogismo Disyuntivo (A v B, NO A |- B)
-        const resSD = aplicarSilogismoDisyuntivo(f1.nodo, f2.nodo);
-        if (resSD) {
-          if (agregarPaso('SILOGISMO_DISYUNTIVO', [f1.linea, f2.linea], resSD)) {
-            return { esValido: true, pasos };
-          }
-        }
-
-        // 5. Silogismo Disyuntivo Exclusivo (A ⊕ B, A |- ¬B o A ⊕ B, ¬A |- B)
-        const resSDE = aplicarSilogismoDisyuntivoExclusivo(f1.nodo, f2.nodo);
-        if (resSDE) {
-          if (agregarPaso('SILOGISMO_DISYUNTIVO_EXCLUSIVO', [f1.linea, f2.linea], resSDE)) {
-            return { esValido: true, pasos };
-          }
-        }
-
-        // 6. Silogismo Hipotético (A -> B, B -> C |- A -> C)
+        // 1. Silogismo Hipotético (A -> B, B -> C |- A -> C) - Se evalúa prioritariamente
         const resSH = aplicarSilogismoHipotetico(f1.nodo, f2.nodo);
         if (resSH) {
           if (agregarPaso('SILOGISMO_HIPOTETICO', [f1.linea, f2.linea], resSH)) {
-            return { esValido: true, pasos };
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
+          }
+        }
+
+        // 2. Modus Ponendo Ponens (A -> B, A |- B)
+        const resMPP = aplicarModusPonendoPonens(f1.nodo, f2.nodo);
+        if (resMPP) {
+          if (agregarPaso('MODUS_PONENDO_PONENS', [f1.linea, f2.linea], resMPP)) {
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
+          }
+        }
+
+        // 3. Modus Ponens Bicondicional (A <-> B, A |- B o A <-> B, B |- A)
+        const resMPB = aplicarModusPonensBicondicional(f1.nodo, f2.nodo);
+        if (resMPB) {
+          if (agregarPaso('MODUS_PONENS_BICONDICIONAL', [f1.linea, f2.linea], resMPB)) {
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
+          }
+        }
+
+        // 4. Modus Tollendo Tollens (A -> B, NO B |- NO A)
+        const resMTT = aplicarModusTollendoTollens(f1.nodo, f2.nodo);
+        if (resMTT) {
+          if (agregarPaso('MODUS_TOLLENDO_TOLLENS', [f1.linea, f2.linea], resMTT)) {
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
+          }
+        }
+
+        // 5. Silogismo Disyuntivo (A v B, NO A |- B)
+        const resSD = aplicarSilogismoDisyuntivo(f1.nodo, f2.nodo);
+        if (resSD) {
+          if (agregarPaso('SILOGISMO_DISYUNTIVO', [f1.linea, f2.linea], resSD)) {
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
+          }
+        }
+
+        // 6. Silogismo Disyuntivo Exclusivo (A ⊕ B, A |- ¬B o A ⊕ B, ¬A |- B)
+        const resSDE = aplicarSilogismoDisyuntivoExclusivo(f1.nodo, f2.nodo);
+        if (resSDE) {
+          if (agregarPaso('SILOGISMO_DISYUNTIVO_EXCLUSIVO', [f1.linea, f2.linea], resSDE)) {
+            return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
           }
         }
 
@@ -776,7 +776,7 @@ export function demostrarConclusion(
               derecho: f2.nodo,
             };
             if (agregarPaso('CONJUNCION', [f1.linea, f2.linea], resConj)) {
-              return { esValido: true, pasos };
+              return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
             }
           }
         }
@@ -802,7 +802,7 @@ export function demostrarConclusion(
                 resDC
               )
             ) {
-              return { esValido: true, pasos };
+              return { esValido: true, pasos: podarPasosRedundantes(premisas.length, pasos) };
             }
           }
         }
@@ -820,4 +820,59 @@ export function demostrarConclusion(
     pasos,
     errorLogico: detectarErrorLogico(premisas, conclusion, pasos.length),
   };
+}
+
+/**
+ * Poda los pasos intermedios huérfanos que no contribuyeron directamente
+ * al camino de derivación de la conclusión final y remapea las referencias de líneas.
+ */
+function podarPasosRedundantes(
+  premisasCount: number,
+  pasos: PasoDemostracion[]
+): PasoDemostracion[] {
+  if (pasos.length <= 1) return pasos;
+
+  const ultimoPaso = pasos[pasos.length - 1];
+  if (!ultimoPaso.esConclusion) return pasos;
+
+  // Rastrear desde la conclusión hacia atrás
+  const lineasRequeridas = new Set<number>(ultimoPaso.lineasInvolucradas);
+  const pasosRelevantes: PasoDemostracion[] = [ultimoPaso];
+
+  // Recorrer los pasos anteriores en orden inverso
+  for (let i = pasos.length - 2; i >= 0; i--) {
+    const pasoActual = pasos[i];
+    const lineaGenerada = premisasCount + i + 1;
+
+    if (lineasRequeridas.has(lineaGenerada)) {
+      pasosRelevantes.unshift(pasoActual);
+      for (const linea of pasoActual.lineasInvolucradas) {
+        lineasRequeridas.add(linea);
+      }
+    }
+  }
+
+  // Si se podaron pasos, remapear las referencias de líneas
+  if (pasosRelevantes.length < pasos.length) {
+    const mapaLineas = new Map<number, number>();
+    for (let p = 1; p <= premisasCount; p++) {
+      mapaLineas.set(p, p);
+    }
+    pasos.forEach((pOriginal, idxOriginal) => {
+      const lineaVieja = premisasCount + idxOriginal + 1;
+      const idxNuevo = pasosRelevantes.indexOf(pOriginal);
+      if (idxNuevo !== -1) {
+        mapaLineas.set(lineaVieja, premisasCount + idxNuevo + 1);
+      }
+    });
+
+    return pasosRelevantes.map((p) => ({
+      ...p,
+      lineasInvolucradas: p.lineasInvolucradas.map(
+        (l) => mapaLineas.get(l) ?? l
+      ),
+    }));
+  }
+
+  return pasos;
 }
