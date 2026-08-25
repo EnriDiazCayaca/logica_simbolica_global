@@ -8,6 +8,7 @@ import Aprender from '../pages/aprender/index.vue'
 import Cuantificadores from '../pages/cuantificadores/index.vue'
 import Inferencias from '../pages/inferencias/index.vue'
 import Conjuntos from '../pages/conjuntos/index.vue'
+import Progreso from '../pages/progreso/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/conjuntos',
       name: 'conjuntos',
       component: Conjuntos
+    },
+    {
+      path: '/progreso',
+      name: 'progreso',
+      component: Progreso
     }
   ]
 })

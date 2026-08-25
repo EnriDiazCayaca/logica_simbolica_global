@@ -8,9 +8,12 @@ import {
   type TipoCuantificador,
   type ResultadoCuantificador,
 } from '@/lib/cuantificadores/engine'
+import { LEYES_LOGICAS } from '@/data/logicLaws'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
+
+const pestanaActiva = ref<'cuantificadores' | 'leyes'>('cuantificadores')
 
 const tipoCuantificador = ref<TipoCuantificador>('forall')
 const dominioRaw = ref('1, 2, 3, 4, 5')
@@ -80,7 +83,34 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <!-- Tabs -->
+      <div class="flex gap-3">
+        <button
+          :class="[
+            'py-3 px-5 rounded-xl font-bold text-sm transition-all',
+            pestanaActiva === 'cuantificadores'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-blue-50 text-neutral-700 hover:bg-blue-100'
+          ]"
+          @click="pestanaActiva = 'cuantificadores'"
+        >
+          ∀∃ Cuantificadores
+        </button>
+        <button
+          :class="[
+            'py-3 px-5 rounded-xl font-bold text-sm transition-all',
+            pestanaActiva === 'leyes'
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-blue-50 text-neutral-700 hover:bg-blue-100'
+          ]"
+          @click="pestanaActiva = 'leyes'"
+        >
+          ⇔ Distribución y Leyes
+        </button>
+      </div>
+
+      <!-- Contenido: Cuantificadores -->
+      <div v-if="pestanaActiva === 'cuantificadores'" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <!-- Left Panel -->
         <div class="lg:col-span-5 space-y-4">
           <!-- Cuantificador -->
@@ -300,6 +330,22 @@ onMounted(() => {
                 <p class="text-xs font-mono text-neutral-500 mt-1">Antes: {{ paso.antes }}</p>
                 <p class="text-xs font-mono text-amber-700 font-semibold mt-1">Después: {{ paso.despues }}</p>
               </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Contenido: Distribución y Leyes -->
+      <div v-if="pestanaActiva === 'leyes'">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <Card v-for="ley in LEYES_LOGICAS" :key="ley.id">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="bg-blue-600 text-white text-xs font-bold rounded-md px-2 py-0.5">{{ ley.id }}</span>
+              <h3 class="text-sm font-bold text-neutral-900">{{ ley.nombre }}</h3>
+            </div>
+            <p class="text-xs text-neutral-600 leading-relaxed mb-4">{{ ley.descripcion }}</p>
+            <div class="bg-blue-600 text-white rounded-lg p-3 font-mono text-sm font-semibold space-y-1">
+              <p v-for="(formula, idx) in ley.formulas" :key="idx" class="m-0">{{ formula }}</p>
             </div>
           </Card>
         </div>
