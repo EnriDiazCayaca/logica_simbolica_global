@@ -3,19 +3,16 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
   obtenerEjercicioPorId,
-  construirTablaCompleta,
   clasificacionCorrecta,
   etiquetasDificultad,
   puntosDificultad,
   OPCIONES_QUIZ,
+  claveTemaParaEjercicio,
   type Ejercicio,
-  type EjercicioTablaVerdad,
-  type EjercicioLey,
   type EjercicioQuiz,
-  type EjercicioIdentificar,
-  type EjercicioClasificar,
 } from '@/data/exercises'
-import { generarFilas, recolectarVariables, recolectarSubExpresiones, nodoATexto, parsearProposicion } from '@/lib/truth-table/evaluator'
+import { parsearProposicion } from '@/lib/truth-table/evaluator'
+import { registrarRespuesta, marcarEjercicioCompletado, marcarQuizCompletado } from '@/store/progress'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
@@ -46,6 +43,7 @@ onMounted(() => {
 function verificarRespuesta() {
   if (!ejercicio.value) return
   respuestaEnviada.value = true
+  const tema = claveTemaParaEjercicio(ejercicio.value)
 
   if (ejercicio.value.tipo === 'identify') {
     esCorrecta.value = seleccionUsuario.value === ejercicio.value.opcionCorrecta
@@ -57,6 +55,9 @@ function verificarRespuesta() {
   } else if (ejercicio.value.tipo === 'truth-table') {
     esCorrecta.value = true
   }
+
+  registrarRespuesta(tema, esCorrecta.value)
+  marcarEjercicioCompletado(ejercicio.value.id, tema, esCorrecta.value)
 }
 
 function responderQuiz(opcion: string) {
@@ -83,6 +84,8 @@ function responderQuiz(opcion: string) {
     })()
 
     preguntasQuizRespondidas.value[preguntaIdx] = true
+    const tema = claveTemaParaEjercicio(ejercicio.value)
+    registrarRespuesta(tema, resultadoObtenido)
     if (resultadoObtenido) puntuacionQuiz.value++
 
     setTimeout(() => {
@@ -96,6 +99,7 @@ function responderQuiz(opcion: string) {
         esCorrecta.value = ex && ex.tipo === 'quiz'
           ? puntuacionQuiz.value >= Math.ceil(ex.preguntas.length / 2)
           : false
+        if (ex) marcarQuizCompletado(ex.id)
       }
     }, 1000)
   }

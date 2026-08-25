@@ -4,6 +4,7 @@ import { Info as InfoIcon } from '@lucide/vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
+import ToggleSwitch from '@/components/ui/ToggleSwitch.vue'
 import {
   parsearProposicion,
   recolectarVariables,
@@ -174,28 +175,12 @@ generarTabla()
         <Card>
           <h3 class="text-sm font-bold text-neutral-700 mb-4">Variables</h3>
           <div class="space-y-3">
-            <label
+            <ToggleSwitch
               v-for="v in variablesDetectadas"
               :key="v"
-              class="flex items-center justify-between"
-            >
-              <span class="text-sm font-medium text-neutral-600">{{ v }}</span>
-              <button
-                type="button"
-                :class="[
-                  'relative w-10 h-6 rounded-full transition-colors duration-200',
-                  variablesActivas[v] ? 'bg-blue-600' : 'bg-neutral-300'
-                ]"
-                @click="variablesActivas[v] = !variablesActivas[v]"
-              >
-                <span
-                  :class="[
-                    'absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200',
-                    variablesActivas[v] ? 'translate-x-4.5' : 'translate-x-0.5'
-                  ]"
-                />
-              </button>
-            </label>
+              v-model="variablesActivas[v]"
+              :label="v"
+            />
             <p v-if="variablesDetectadas.length === 0" class="text-sm text-neutral-400">
               Escribe una proposición para detectar variables.
             </p>

@@ -4,6 +4,7 @@ import {
   evaluarCuantificador,
   parsearDominio,
   obtenerPredicados,
+  evaluarExpresionPredicado,
   type TipoCuantificador,
   type ResultadoCuantificador,
 } from '@/lib/cuantificadores/engine'
@@ -14,26 +15,47 @@ import Badge from '@/components/ui/Badge.vue'
 const tipoCuantificador = ref<TipoCuantificador>('forall')
 const dominioRaw = ref('1, 2, 3, 4, 5')
 const predicadoSeleccionado = ref('esPar')
+const expresionLibre = ref('x % 2 === 0')
+const usarExpresionLibre = ref(false)
 const resultado = ref<ResultadoCuantificador | null>(null)
 
 const predicados = obtenerPredicados()
 
-const SIMBOLOS = ['∀', '∃', '∈', '→', '∧', '∨', '¬', '≡']
+const SIMBOLOS = ['∀', '∃', '∈', '→', '∧', '∨', '¬', '≡', '∴']
 
 function insertarSimbolo(sym: string) {
-  dominioRaw.value += ` ${sym}`
+  if (usarExpresionLibre.value) {
+    expresionLibre.value += ` ${sym} `
+  } else {
+    dominioRaw.value += ` ${sym}`
+  }
 }
 
 function evaluar() {
   const dominio = parsearDominio(dominioRaw.value)
-  const pred = predicados[predicadoSeleccionado.value] || predicados.esPar
-  resultado.value = evaluarCuantificador(tipoCuantificador.value, dominio, pred.fn, pred.descripcion)
+
+  if (usarExpresionLibre.value) {
+    const fn = (x: string) => evaluarExpresionPredicado(expresionLibre.value, x)
+    resultado.value = evaluarCuantificador(tipoCuantificador.value, dominio, fn, 'expresión libre', expresionLibre.value)
+  } else {
+    const pred = predicados[predicadoSeleccionado.value] || predicados.esPar
+    resultado.value = evaluarCuantificador(tipoCuantificador.value, dominio, pred.fn, pred.descripcion)
+  }
 }
 
 function cargarEjemplo() {
   tipoCuantificador.value = 'forall'
   dominioRaw.value = '2, 4, 6, 8'
+  usarExpresionLibre.value = false
   predicadoSeleccionado.value = 'esPar'
+  evaluar()
+}
+
+function cargarEjemploRango() {
+  tipoCuantificador.value = 'forall'
+  dominioRaw.value = '0 < x < 9'
+  usarExpresionLibre.value = true
+  expresionLibre.value = 'x % 2 === 0'
   evaluar()
 }
 
@@ -59,7 +81,7 @@ onMounted(() => {
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Left Panel: Configuración -->
+        <!-- Left Panel -->
         <div class="lg:col-span-5 space-y-4">
           <!-- Cuantificador -->
           <Card>
@@ -100,14 +122,35 @@ onMounted(() => {
               class="w-full bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500"
             />
             <p class="text-xs text-neutral-400 mt-1">
-              Separados por coma. Ej: <code class="text-neutral-500">1, 2, 3</code> o <code class="text-neutral-500">a, b, c</code>
+              Lista: <code class="text-neutral-500">1, 2, 3</code> · Rango: <code class="text-neutral-500">0 &lt; x &lt; 9</code>
             </p>
           </Card>
 
           <!-- Predicado -->
           <Card>
-            <h3 class="text-sm font-bold text-neutral-700 mb-2">Predicado P(x)</h3>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-bold text-neutral-700">Predicado P(x)</h3>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <span class="text-xs text-neutral-500">Libre</span>
+                <button
+                  type="button"
+                  :class="[
+                    'relative w-8 h-5 rounded-full transition-colors duration-200',
+                    usarExpresionLibre ? 'bg-blue-600' : 'bg-neutral-300'
+                  ]"
+                  @click="usarExpresionLibre = !usarExpresionLibre"
+                >
+                  <span
+                    :class="[
+                      'absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200',
+                      usarExpresionLibre && 'translate-x-3'
+                    ]"
+                  />
+                </button>
+              </label>
+            </div>
             <select
+              v-if="!usarExpresionLibre"
               v-model="predicadoSeleccionado"
               class="w-full bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm text-neutral-900 focus:outline-2 focus:outline-blue-500"
             >
@@ -115,6 +158,16 @@ onMounted(() => {
                 {{ pred.descripcion }}
               </option>
             </select>
+            <input
+              v-else
+              v-model="expresionLibre"
+              type="text"
+              placeholder="x % 2 === 0"
+              class="w-full bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500"
+            />
+            <p v-if="usarExpresionLibre" class="text-xs text-neutral-400 mt-1">
+              Usa <code>x</code> como variable. Operadores: <code>%, ===, !==, &&, ||</code>
+            </p>
           </Card>
 
           <!-- Símbolos -->
@@ -132,16 +185,19 @@ onMounted(() => {
             </div>
           </Card>
 
-          <!-- Botones de acción -->
+          <!-- Botones -->
           <div class="flex flex-col gap-3">
             <Button class="w-full" @click="evaluar">Evaluar Cuantificador</Button>
-            <Button variant="secondary" class="w-full" @click="cargarEjemplo">Cargar Ejemplo Didáctico</Button>
+            <div class="grid grid-cols-2 gap-3">
+              <Button variant="secondary" size="sm" @click="cargarEjemplo">Ejemplo simple</Button>
+              <Button variant="secondary" size="sm" @click="cargarEjemploRango">Ejemplo rango</Button>
+            </div>
           </div>
         </div>
 
-        <!-- Right Panel: Resultados -->
+        <!-- Right Panel -->
         <div class="lg:col-span-7 space-y-4">
-          <!-- Resultado principal -->
+          <!-- Resultado -->
           <Card v-if="resultado">
             <div
               :class="[
@@ -158,15 +214,12 @@ onMounted(() => {
                 </span>
               </div>
               <p class="text-sm text-neutral-700 mt-2 leading-relaxed">{{ resultado.resumen }}</p>
-
-              <!-- Contraejemplo -->
               <div
                 v-if="resultado.contraejemplo !== undefined"
                 class="mt-3 p-3 rounded-lg bg-red-100 border border-red-200 text-xs font-mono text-red-700"
               >
                 Contraejemplo: x = {{ resultado.contraejemplo }} hace que P({{ resultado.contraejemplo }}) sea Falso.
               </div>
-              <!-- Testigo -->
               <div
                 v-if="resultado.testigo !== undefined"
                 class="mt-3 p-3 rounded-lg bg-emerald-100 border border-emerald-200 text-xs font-mono text-emerald-700"
@@ -225,6 +278,27 @@ onMounted(() => {
               </div>
               <div class="text-indigo-600 font-bold">
                 Equivalente Negado: <span class="text-indigo-700">{{ resultado.deMorgan.negado }}</span>
+              </div>
+            </div>
+          </Card>
+
+          <!-- Resolutor paso a paso -->
+          <Card v-if="resultado && resultado.pasosResolucion.length > 0">
+            <h3 class="text-sm font-bold text-amber-600 mb-3 border-b border-neutral-200 pb-2">
+              Resolutor Paso a Paso
+            </h3>
+            <div class="space-y-3">
+              <div
+                v-for="(paso, idx) in resultado.pasosResolucion"
+                :key="idx"
+                class="bg-amber-50 border border-amber-200 rounded-lg p-3"
+              >
+                <div class="flex items-center gap-2 mb-1">
+                  <Badge variant="yellow">{{ paso.ley }}</Badge>
+                  <span class="text-xs text-neutral-400">Paso {{ idx + 1 }}</span>
+                </div>
+                <p class="text-xs font-mono text-neutral-500 mt-1">Antes: {{ paso.antes }}</p>
+                <p class="text-xs font-mono text-amber-700 font-semibold mt-1">Después: {{ paso.despues }}</p>
               </div>
             </div>
           </Card>

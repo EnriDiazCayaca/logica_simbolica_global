@@ -4,6 +4,7 @@ import Tablas from '../pages/tablas/index.vue'
 import Ejercicios from '../pages/ejercicios/index.vue'
 import EjercicioRunner from '../pages/ejercicios/[id].vue'
 import LeyesLogicas from '../pages/leyes-logicas/index.vue'
+import Aprender from '../pages/aprender/index.vue'
 import Cuantificadores from '../pages/cuantificadores/index.vue'
 import Inferencias from '../pages/inferencias/index.vue'
 import Conjuntos from '../pages/conjuntos/index.vue'
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/leyes-logicas',
       name: 'leyes-logicas',
       component: LeyesLogicas
+    },
+    {
+      path: '/aprender',
+      name: 'aprender',
+      component: Aprender
     },
     {
       path: '/inferencias',
