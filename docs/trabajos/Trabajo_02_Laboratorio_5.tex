@@ -1,0 +1,447 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\definecolor{navy}{HTML}{0F2D8C}
+\definecolor{accent}{HTML}{2563EB}
+\definecolor{lightbg}{HTML}{EEF2FF}
+\definecolor{answerbg}{HTML}{ECFDF5}
+\definecolor{answerbd}{HTML}{10B981}
+\definecolor{muted}{HTML}{6B7280}
+
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=accent,citecolor=navy}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{navy}{\textbf{UNPRG — Lógica Simbólica}}}
+\fancyhead[R]{\small\textcolor{gray}{Trabajo 02 · Lab 5}}
+\fancyfoot[C]{\small\textcolor{gray}{\thepage}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{navy}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcommand{\respuesta}[1]{%
+  \par\medskip\noindent
+  \fcolorbox{answerbd}{answerbg}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textbf{\textcolor{answerbd}{Respuesta:}} #1}%
+  }\par\medskip
+}
+\newcommand{\datosbox}[1]{%
+  \noindent\colorbox{lightbg}{\parbox{\dimexpr\linewidth-2\fboxsep}{\small #1}}\par\medskip
+}
+\newcommand{\resolucion}{\par\noindent\textbf{\textcolor{navy}{Resolución:}}\par}
+\newcommand{\propbox}[1]{\noindent\textcolor{muted}{\small\textit{#1}}\par}
+
+\begin{document}
+
+% ── PORTADA ────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{0.4cm}
+  {\large\scshape\textcolor{navy}{Universidad Nacional Pedro Ruiz Gallo}\par}
+  \vspace{0.15cm}
+  {\small\textcolor{gray}{Facultad de Ingeniería Civil, Sistemas y Arquitectura}\par}
+  \vspace{0.35cm}
+  {\color{navy}\rule{\linewidth}{1.2pt}\par}
+  \vspace{0.9cm}
+  {\Huge\textbf{\textcolor{navy}{Lógica Simbólica}}\par}
+  \vspace{0.35cm}
+  {\Large\textcolor{accent}{Trabajo 02 — Resolución del Laboratorio 5}\par}
+  \vspace{0.2cm}
+  {\large\textcolor{gray}{Conjuntos, subconjuntos y operaciones}\par}
+  \vspace{1.1cm}
+  \begin{center}
+    \begin{tabular}{c}
+      \toprule
+      \small\textcolor{navy}{\textbf{Integrantes}} \\ \midrule
+      \small LUIS ENRIQUE CRISTOBAL DIAZ CAYACA \\
+      \small MAURICIO MILLET FERNANDEZ LIZARZABURU \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.7cm}
+  {\small\textbf{Ciclo:} II\par}
+  \vspace{0.15cm}
+  {\small\textbf{Profesor:} Dr. Mardo Victor Gonzales Herrera\par}
+  \vspace{1.6cm}
+  {\small\textcolor{gray}{26 de agosto de 2026 — Lambayeque, Perú}\par}
+  \vfill
+\end{titlepage}
+
+% ═══════════════════════════════════════════════════════════════════
+\section*{\textcolor{navy}{Laboratorio 5 — Conjuntos, subconjuntos y operaciones}}
+\propbox{Preguntas de la página 1}
+
+% ── PREGUNTA 1 ───────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{Pregunta 1}}
+\begin{enumerate}[label=\arabic*.]
+  \item La notación $A \subseteq B$ se lee ``$A$ es subconjunto de $B$'' y significa que todo elemento de $A$ pertenece a $B$.
+  \item Para demostrar $X \subseteq Y$, suponga $x \in X$ y demuestre que $x \in Y$.
+  \item Para refutar $X \subseteq Y$, muestre un $x \in X$ tal que $x \notin Y$.
+  \item $x \in A \cup B$ sii $x \in A$ o $x \in B$.
+  \item $x \in A \cap B$ sii $x \in A$ y $x \in B$.
+  \item $x \in B - A$ sii $x \in B$ y $x \notin A$.
+  \item $x \in A^c$ sii $x \notin A$.
+  \item El conjunto vacío no tiene ningún elemento.
+  \item El conjunto potencia es el conjunto de todos los subconjuntos.
+  \item $A$ y $B$ son disjuntos sii $A \cap B = \varnothing$.
+  \item Una partición tiene unión igual al conjunto y subconjuntos mutuamente disjuntos.
+  \item El producto cartesiano es el conjunto de todas las $n$-tuplas ordenadas.
+\end{enumerate}
+
+% ── PREGUNTA 2 ───────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{Pregunta 2}}
+\subsubsection*{2.1}
+En cada uno de los ejercicios a) al f), responda: ¿Es $A \subseteq B$? ¿Es $B \subseteq A$? ¿Es ya sea $A$ o $B$ un subconjunto propio del otro?
+
+\begin{itemize}[leftmargin=1.2em]
+  \item[a.] $A = \{2,\{2\},(\sqrt{2})^2\},\; B=\{2,\{2\},\{\{2\}\}\}$
+  \item[b.] $A = \{3,\sqrt{5^2-4^2},\,24/7\},\; B=\{8/5\}$
+  \item[c.] $A = \{\{1,2\},\{2,3\}\},\; B=\{1,2,3\}$
+  \item[d.] $A = \{a,b,c\},\; B=\{\{a\},\{b\},\{c\}\}$
+  \item[e.] $A = \{\sqrt{16},\{4\}\},\; B=\{4\}$
+  \item[f.] $A = \{x\in\mathbb{R}\mid\cos x\in\mathbb{Z}\},\; B=\{x\in\mathbb{R}\mid \sin x\in\mathbb{Z}\}$
+\end{itemize}
+
+\resolucion
+\begin{itemize}[leftmargin=1.2em]
+  \item[a)] $A=\{2,\{2\}\}$ y $B=\{2,\{2\},\{\{2\}\}\}$. Entonces $A \subset B$.
+  \item[b)] $A=B=\{3\}$.
+  \item[c)] $A=\{\{1,2\},\{2,3\}\}$ y $B=\{1,2,3\}$. Ninguno es subconjunto del otro.
+  \item[d)] $A=\{a,b,c\},\; B=\{\{a\},\{b\},\{c\}\}$. Ninguno es subconjunto del otro.
+  \item[e)] $A=\{4,\{4\}\},\; B=\{4\}$. Entonces $B \subset A$.
+  \item[f)] $A=B=\{x\in\mathbb{R}: x=k\pi/2,\,k\in\mathbb{Z}\}$.
+\end{itemize}
+
+\subsubsection*{2.2}
+Complete la demostración del ejemplo 6.1.3: demuestre que $B \subseteq A$ donde
+\[
+  A=\{m\in\mathbb{Z}\mid m=2a\text{ para algún entero }a\}\quad\text{y}\quad
+  B=\{n\in\mathbb{Z}\mid n=2b-2\text{ para algún entero }b\}.
+\]
+\resolucion
+Demostrar $B \subseteq A$. Si $n\in B$, entonces $n=2b-2=2(b-1)$. Como $b-1$ es entero, $n$ es par y por definición $n\in A$. Luego $B\subseteq A$.
+
+% ── PREGUNTA 3 ───────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{Pregunta 3}}
+Sean $R=\{x\in\mathbb{Z}\mid x\text{ es divisible por }2\}$, $S=\{y\in\mathbb{Z}\mid y\text{ es divisible por }3\}$, $T=\{z\in\mathbb{Z}\mid z\text{ es divisible por }6\}$.
+\begin{enumerate}[label=\alph*.]
+  \item ¿Es $R \subseteq T$? Explique.
+  \item ¿Es $T \subseteq R$? Explique.
+  \item ¿Es $T \subseteq S$? Explique.
+\end{enumerate}
+\resolucion $R$: múltiplos de 2; $S$: múltiplos de 3; $T$: múltiplos de 6.
+\begin{itemize}
+  \item[a)] $R \not\subseteq T$.
+  \item[b)] $T \subseteq R$.
+  \item[c)] $T \subseteq S$.
+\end{itemize}
+
+% ── PREGUNTAS 4–7 ────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{Pregunta 4}}
+Sea $A=\{n\in\mathbb{Z}\mid n=5r\text{ para algún entero }r\}$ y $B=\{m\in\mathbb{Z}\mid m=20s\text{ para algún entero }s\}$.
+\begin{enumerate}[label=\alph*.]
+  \item ¿Es $A\subseteq B$? \item ¿Es $B\subseteq A$?
+\end{enumerate}
+\resolucion $A=\{\text{múltiplos de }5\}$, $B=\{\text{múltiplos de }20\}$. a) $A\not\subseteq B$ pues $5\in A$ y $5\notin B$. b) $B\subseteq A$.
+
+\subsection*{\textcolor{accent}{Pregunta 5}}
+$C=\{n\in\mathbb{Z}\mid n=6r-5\}$ y $D=\{m\in\mathbb{Z}\mid m=3s+1\}$. Demuestre o refute:
+\begin{enumerate}[label=\alph*.]
+  \item $C\subseteq D$ \item $D\subseteq C$
+\end{enumerate}
+\resolucion $C=\{6r-5\}$; $D=\{3s+1\}$. a) $C\subseteq D$ porque $6r-5=3(2r-2)+1$. b) $D\not\subseteq C$; por ejemplo $4\in D$ y $4\notin C$.
+
+\subsection*{\textcolor{accent}{Pregunta 6}}
+Sea $A=\{x\in\mathbb{Z}\mid x=5a+2\}$, $B=\{y\in\mathbb{Z}\mid y=10b-3\}$, $C=\{z\in\mathbb{Z}\mid z=10c+7\}$.
+\begin{enumerate}[label=\alph*.]
+  \item $A\subseteq B$ \item $B\subseteq A$ \item $B=C$
+\end{enumerate}
+\resolucion $A=\{5a+2\}$, $B=\{10b-3\}$, $C=\{10c+7\}$. a) $A\not\subseteq B$. b) $B\subseteq A$ porque $10b-3=5(2b-1)+2$. c) $B=C$ porque $10b-3=10(b-1)+7$ y $10c+7=10(c+1)-3$.
+
+\subsection*{\textcolor{accent}{Pregunta 7}}
+Sea $A=\{x\in\mathbb{Z}\mid x=6a+4\}$, $B=\{y\in\mathbb{Z}\mid y=18b-2\}$, $C=\{z\in\mathbb{Z}\mid z=18c+16\}$.
+\begin{enumerate}[label=\alph*.]
+  \item $A\subseteq B$ \item $B\subseteq A$ \item $B=C$
+\end{enumerate}
+\resolucion $A=\{6a+4\}$, $B=\{18b-2\}$, $C=\{18c+16\}$. a) $A\not\subseteq B$. b) $B\subseteq A$ porque $18b-2=6(3b-1)+4$. c) $B=C$.
+
+% ── PREGUNTAS 13–16 ──────────────────────────────────────────────
+\subsection*{\textcolor{accent}{Pregunta 13}}
+Indique cuáles relaciones son verdaderas (V) o falsas (F):
+\begin{enumerate}[label=\alph*.]
+  \item $\mathbb{Z}^+ \subseteq \mathbb{Q}$ \item $\mathbb{R}^- \subseteq \mathbb{Q}$ \item $\mathbb{Q}\subseteq\mathbb{Z}$
+  \item $\mathbb{Z}^- \cup \mathbb{Z}^+ = \mathbb{Z}$ \item $\mathbb{Z}^- \cap \mathbb{Z}^+ = \varnothing$
+  \item $\mathbb{Q}\cap\mathbb{R}=\mathbb{Q}$ \item $\mathbb{Q}\cup\mathbb{Z}=\mathbb{Q}$
+  \item $\mathbb{Z}^+\cap\mathbb{R}=\mathbb{Z}^+$ \item $\mathbb{Z}\cup\mathbb{Q}=\mathbb{Z}$
+\end{enumerate}
+\respuesta{a) V, b) F, c) F, d) F, e) V, f) V, g) V, h) V, i) F.}
+
+\subsection*{\textcolor{accent}{Pregunta 14}}
+Dibuje diagramas de Venn para $A,B,C$ que satisfagan:
+\begin{enumerate}[label=\alph*.]
+  \item $A\subseteq B;\; C\subseteq B;\; A\cap C=\varnothing$
+  \item $C\subseteq A;\; B\cap C=\varnothing$
+\end{enumerate}
+\resolucion a) $A\subseteq B$, $C\subseteq B$ y $A\cap C=\varnothing$. b) $C\subseteq A$ y $B\cap C=\varnothing$.
+
+\subsection*{\textcolor{accent}{Pregunta 15}}
+Dibuje diagramas de Venn para:
+\begin{enumerate}[label=\alph*.]
+  \item $A\cap B=\varnothing,\; A\subseteq C,\; C\cap B\neq\varnothing$
+  \item $A\subseteq B,\; C\subseteq B,\; A\cap C\neq\varnothing$
+  \item $A\cap B\neq\varnothing,\; B\cap C\neq\varnothing,\; A\cap C=\varnothing,\; A\not\subseteq B,\; C\not\subseteq B$
+\end{enumerate}
+\resolucion a) $A\cap B=\varnothing$, $A\subseteq C$ y $C\cap B\neq\varnothing$. b) $A\subseteq B$, $C\subseteq B$ y $A\cap C\neq\varnothing$. c) $A\cap B\neq\varnothing$, $B\cap C\neq\varnothing$, $A\cap C=\varnothing$.
+
+\subsection*{\textcolor{accent}{Pregunta 16}}
+Sea $A=\{a,b,c\}$, $B=\{b,c,d\}$, $C=\{b,c,e\}$.
+\begin{enumerate}[label=\alph*.]
+  \item Determine $A\cup(B\cap C)$, $(A\cup B)\cap C$ y $(A\cup B)\cap(A\cup C)$. ¿Cuáles son iguales?
+  \item Determine $A\cap(B\cup C)$, $(A\cap B)\cup C$ y $(A\cap B)\cup(A\cap C)$. ¿Cuáles son iguales?
+  \item Determine $(A-B)-C$, $A-(B-C)$. ¿Cuáles son iguales?
+\end{enumerate}
+\resolucion
+a) $A\cup(B\cap C)=\{a,b,c\}$; $(A\cup B)\cap C=\{b,c\}$; $(A\cup B)\cap(A\cup C)=\{a,b,c\}$. Son iguales el primero y el tercero.
+
+b) $A\cap(B\cup C)=\{b,c\}$; $(A\cap B)\cup C=\{b,c,e\}$; $(A\cap B)\cup(A\cap C)=\{b,c\}$. Son iguales el primero y el tercero.
+
+c) $(A-B)-C=\{a\}$; $A-(B-C)=\{a,b,c\}$. No son iguales.
+
+% ═══════════ PÁGINA 2 ══════════════════════════════════════════════
+\subsection*{\textcolor{navy}{Preguntas de la página 2}}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 3}}
+\begin{enumerate}[label=3.\alph*]
+  \item $\{x\in U\mid x\in A\text{ y }x\in B\}$ — El conjunto de todos los $x$ del universo que pertenecen a $A$ y también a $B$. \hfill $A\cap B$
+  \item $\{x\in U\mid x\in A\text{ o }x\in B\}$ — El conjunto de todos los $x$ que pertenecen a $A$ o a $B$. \hfill $A\cup B$
+  \item $\{x\in U\mid x\in A\text{ y }x\notin B\}$ — Los $x$ que pertenecen a $A$ pero no a $B$. \hfill $A-B$
+  \item $\{x\in U\mid x\notin A\}$ — Todos los elementos del universo que no pertenecen a $A$. \hfill $A^c$
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 9}}
+\begin{enumerate}[label=9.\alph*]
+  \item $x\notin A\cup B$ sii \underline{\hspace{3cm}}. Para que $x$ no pertenezca a la unión, no debe pertenecer a ninguno de los dos. \textbf{$x$ no pertenece a $A$ y $x$ no pertenece a $B$.}
+  \item $x\notin A\cap B$ sii \underline{\hspace{3cm}}. Basta con que no pertenezca a uno de los conjuntos. \textbf{$x$ no pertenece a $A$ o $x$ no pertenece a $B$.}
+  \item $x\notin A-B$ sii \underline{\hspace{3cm}}. \textbf{$x$ no pertenece a $A$ o $x$ pertenece a $B$.}
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 10}}
+$A=\{1,3,5,7,9\},\; B=\{3,6,9\},\; C=\{2,4,6,8\}$
+\begin{center}\small
+\begin{tabular}{ll}
+10.a $A\cup B=\{1,3,5,6,7,9\}$ & 10.b $A\cap B=\{3,9\}$ \\
+10.c $A\cup C=\{1,2,3,4,5,6,7,8,9\}$ & 10.d $A\cap C=\varnothing$ \\
+10.e $A-B=\{1,5,7\}$ & 10.f $B-A=\{6\}$ \\
+10.g $B\cup C=\{2,3,4,6,8,9\}$ & 10.h $B\cap C=\{6\}$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 11}}
+$A=(0,2],\; B=[1,4),\; C=[3,9),\; U=\mathbb{R}$
+\begin{center}\small
+\begin{tabular}{l}
+11.a $A\cup B=(0,4)$ \quad 11.b $A\cap B=[1,2]$ \quad 11.c $A^c=(-\infty,0]\cup(2,\infty)$ \\
+11.d $A\cup C=(0,2]\cup[3,9)$ \quad 11.e $A\cap C=\varnothing$ \quad 11.f $B^c=(-\infty,1)\cup[4,\infty)$ \\
+11.g $A^c\cap B^c=(A\cup B)^c=(-\infty,0]\cup[4,\infty)$ \\
+11.h $A^c\cup B^c=(A\cap B)^c=(-\infty,1)\cup(2,\infty)$ \\
+11.i $(A\cap B)^c=(-\infty,1)\cup(2,\infty)$ \quad 11.j $(A\cup B)^c=(-\infty,0]\cup[4,\infty)$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 17}}
+\propbox{Considere el diagrama de Venn con tres conjuntos $A,B,C$ superpuestos.}
+\begin{enumerate}[label=17.\alph*]
+  \item $A\cap B$ — Sombrear únicamente la región común entre $A$ y $B$, incluyendo la parte central que también pertenece a $C$.
+  \item $B\cup C$ — Sombrear todo el conjunto $B$ y todo el conjunto $C$.
+  \item $A^c$ — Sombrear todo el universo $U$ excepto la región perteneciente a $A$.
+  \item $A-(B\cup C)=A\cap B^c\cap C^c$ — Sombrear solamente la parte exclusiva de $A$ que no pertenece ni a $B$ ni a $C$.
+  \item $(A\cup B)^c=A^c\cap B^c$ — Sombrear todo lo que se encuentre fuera de $A$ y $B$.
+  \item $A^c\cup B^c=(A\cap B)^c$ — Sombrear todo el universo excepto la región común entre $A$ y $B$.
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 18}}
+\begin{enumerate}[label=18.\alph*]
+  \item ¿Está el número $0$ en $\varnothing$? ¿Por qué? No, porque $\varnothing$ no contiene elementos.
+  \item ¿Es $\varnothing=\{\varnothing\}$? ¿Por qué? No. $\varnothing$ tiene cero elementos, mientras que $\{\varnothing\}$ contiene un elemento: $\varnothing$.
+  \item ¿Es $\varnothing\in\{\varnothing\}$? ¿Por qué? Sí, porque $\varnothing$ es el único elemento del conjunto $\{\varnothing\}$.
+  \item ¿Es $\varnothing\in\varnothing$? ¿Por qué? No, porque el conjunto vacío no contiene ningún elemento.
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 19}}
+$A_i=\{i,i^2\}$, para $i=1,2,3,4$. $A_1=\{1\},\;A_2=\{2,4\},\;A_3=\{3,9\},\;A_4=\{4,16\}$
+\begin{enumerate}[label=19.\alph*]
+  \item $A_1\cup A_2\cup A_3\cup A_4=\{1,2,3,4,9,16\}$
+  \item $A_1\cap A_2\cap A_3\cap A_4=\varnothing$
+  \item ¿Son $A_1,A_2,A_3,A_4$ mutuamente disjuntos? $A_2\cap A_4=\{4\}$. No son mutuamente disjuntos porque $A_2$ y $A_4$ tienen el elemento 4 en común.
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 22}}
+$D_i=[-i,i]$ para todo entero no negativo $i$.
+\begin{center}\small
+\begin{tabular}{ll}
+22.a $\bigcup_{i=0}^4 D_i=[-4,4]$ & 22.b $\bigcap_{i=0}^4 D_i=\{0\}$ \\
+22.c ¿Son $D_0,D_1,\dots$ mutuamente disjuntos? No, porque tienen elementos en común; todos contienen al $0$. \\
+22.d $\bigcup_{i=0}^n D_i=[-n,n]$ & 22.e $\bigcap_{i=0}^n D_i=\{0\}$ \\
+22.f $\bigcup_{i=0}^\infty D_i=\mathbb{R}$ & 22.g $\bigcap_{i=0}^\infty D_i=\{0\}$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 23}}
+$V_i=[-1/i,\,1/i]$ para todo entero positivo $i$.
+\begin{center}\small
+\begin{tabular}{ll}
+23.a $\bigcup_{i=1}^4 V_i=[-1,1]$ & 23.b $\bigcap_{i=1}^4 V_i=[-1/4,1/4]$ \\
+23.c ¿Son $V_1,V_2,\dots$ mutuamente disjuntos? No, porque todos tienen elementos en común; por ejemplo, todos contienen al $0$. \\
+23.d $\bigcup_{i=1}^n V_i=[-1,1]$ & 23.e $\bigcap_{i=1}^n V_i=[-1/n,1/n]$ \\
+23.f $\bigcup_{i=1}^\infty V_i=[-1,1]$ & 23.g $\bigcap_{i=1}^\infty V_i=\{0\}$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 24}}
+$W_i=(i,\infty)$ para todo entero no negativo $i$.
+\begin{center}\small
+\begin{tabular}{ll}
+24.a $\bigcup_{i=0}^4 W_i=(0,\infty)$ & 24.b $\bigcap_{i=0}^4 W_i=(4,\infty)$ \\
+24.c ¿Son $W_0,W_1,\dots$ mutuamente disjuntos? No, porque los conjuntos se superponen y tienen elementos en común. \\
+24.d $\bigcup_{i=0}^n W_i=(0,\infty)$ & 24.e $\bigcap_{i=0}^n W_i=(n,\infty)$ \\
+\end{tabular}
+\end{center}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 28}}
+Sea $E$ el conjunto de todos los enteros pares y $O$ el de los impares. ¿Es $\{E,O\}$ una partición de $\mathbb{Z}$?
+\respuesta{Sí, porque $E\cap O=\varnothing$, $E\cup O=\mathbb{Z}$; todo entero es par o impar y ninguno puede ser ambas cosas.}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 29}}
+Sea $\mathbb{R}$ el conjunto de todos los reales. ¿Es $\{\mathbb{R}^+,\mathbb{R}^-,\{0\}\}$ una partición de $\mathbb{R}$?
+\respuesta{Sí, porque los reales se dividen en positivos, negativos y cero; estos conjuntos son disjuntos entre sí y su unión es $\mathbb{R}$.}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 30}}
+$A_0=\{n\in\mathbb{Z}\mid n=4k\}$, $A_1=\{n\mid n=4k+1\}$, $A_2=\{n\mid n=4k+2\}$, $A_3=\{n\mid n=4k+4\}$. ¿Es $\{A_0,A_1,A_2,A_3\}$ una partición de $\mathbb{Z}$?
+\resolucion $4k+4=4(k+1)$, por lo tanto $A_3=A_0$. Además faltan los enteros de la forma $4k+3$ (ej. $3,7,11,\dots$). \textbf{No}, no es una partición de $\mathbb{Z}$.
+
+\subsubsection*{\textcolor{accent}{Ejercicio 31}}
+$A=\{1,2\},\;B=\{2,3\}$
+\begin{center}\small
+\begin{tabular}{ll}
+31.a $P(A\cap B)$: $A\cap B=\{2\}$, $P(A\cap B)=\{\varnothing,\{2\}\}$ \\
+31.b $P(A)=\{\varnothing,\{1\},\{2\},\{1,2\}\}$ \\
+31.c $P(A\cup B)$: $A\cup B=\{1,2,3\}$, $P(A\cup B)=\{\varnothing,\{1\},\{2\},\{3\},\{1,2\},\{1,3\},\{2,3\},\{1,2,3\}\}$ \\
+31.d $P(A\times B)$: $A\times B=\{(1,2),(1,3),(2,2),(2,3)\}$, $2^4=16$ elementos. (lista de 16 subconjuntos — idéntica al original) \\
+\end{tabular}
+\end{center}
+\propbox{31.d $P(A\times B)=\{\varnothing,\{(1,2)\},\{(1,3)\},\{(2,2)\},\{(2,3)\},\{(1,2),(1,3)\},\{(1,2),(2,2)\},\{(1,2),(2,3)\},\{(1,3),(2,2)\},\{(1,3),(2,3)\},\{(2,2),(2,3)\},\{(1,2),(1,3),(2,2)\},\{(1,2),(1,3),(2,3)\},\{(1,2),(2,2),(2,3)\},\{(1,3),(2,2),(2,3)\},\{(1,2),(1,3),(2,2),(2,3)\}\}$}
+
+\subsubsection*{\textcolor{accent}{Ejercicio 32}}
+\begin{itemize}
+  \item[32.a] $A=\{1\},\;B=\{u,v\}$: $A\times B=\{(1,u),(1,v)\}$, $2^2=4$ elementos. $P(A\times B)=\{\varnothing,\{(1,u)\},\{(1,v)\},\{(1,u),(1,v)\}\}$
+  \item[32.b] $X=\{a,b\},\;Y=\{x,y\}$: $X\times Y=\{(a,x),(a,y),(b,x),(b,y)\}$, $2^4=16$ elementos. (lista idéntica al original de 16 subconjuntos)
+\end{itemize}
+
+% ═══════════ PÁGINA 3 ══════════════════════════════════════════════
+\subsection*{\textcolor{navy}{Ejercicios de la página 3}}
+
+\subsubsection*{\textcolor{accent}{36. Para todos los conjuntos $A$ y $B$}}
+\begin{enumerate}[label=\alph*)]
+  \item Demostrar: $(A-B)\cup(B-A)\cup(A\cap B)=A\cup B$
+
+  Sea $x\in(A-B)\cup(B-A)\cup(A\cap B)$. Entonces $x\in A-B$, o $x\in B-A$, o $x\in A\cap B$. Si $x\in A-B$ entonces $x\in A$. Si $x\in B-A$ entonces $x\in B$. Si $x\in A\cap B$ entonces $x\in A$ y $x\in B$. En todos los casos $x\in A\cup B$. Luego $(A-B)\cup(B-A)\cup(A\cap B)\subseteq A\cup B$.
+
+  Ahora sea $x\in A\cup B$. Entonces $x\in A$ o $x\in B$. Si $x\in A$ y $x\notin B$ entonces $x\in A-B$. Si $x\in B$ y $x\notin A$ entonces $x\in B-A$. Si $x\in A$ y $x\in B$ entonces $x\in A\cap B$. Por tanto $x\in(A-B)\cup(B-A)\cup(A\cap B)$. Luego $A\cup B\subseteq(A-B)\cup(B-A)\cup(A\cap B)$. Por doble inclusión, igualdad. $\blacksquare$
+
+  \item Demostrar que $(A-B)$, $(B-A)$ y $(A\cap B)$ son mutuamente disjuntos.
+
+  $(A-B)\cap(B-A)=\varnothing$ porque $x\in A-B\Rightarrow x\notin B$ mientras que $x\in B-A\Rightarrow x\in B$. También $(A-B)\cap(A\cap B)=\varnothing$ y $(B-A)\cap(A\cap B)=\varnothing$ por la misma razón. Por tanto son mutuamente disjuntos. $\blacksquare$
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{37. Demostrar: $A\cap\left(\bigcup_{i=1}^n B_i\right)=\bigcup_{i=1}^n(A\cap B_i)$}}
+Sea $x\in A\cap(\bigcup_{i=1}^n B_i)$. Entonces $x\in A$ y $x\in\bigcup B_i$, así $x\in B_i$ para algún $i$, luego $x\in A\cap B_i$, así $x\in\bigcup(A\cap B_i)$. Recíprocamente, si $x\in\bigcup(A\cap B_i)$ entonces $x\in A\cap B_i$ para algún $i$, así $x\in A$ y $x\in B_i$, luego $x\in\bigcup B_i$ y $x\in A\cap(\bigcup B_i)$. Por doble inclusión, igualdad. $\blacksquare$
+
+\subsubsection*{\textcolor{accent}{37 (bis). Demostrar: $\bigcup_{i=1}^n(A_i-B)=\left(\bigcup_{i=1}^n A_i\right)-B$}}
+Sea $x\in\bigcup(A_i-B)$. Entonces $x\in A_i-B$ para algún $i$, así $x\in A_i$ y $x\notin B$, luego $x\in\bigcup A_i$ y $x\notin B$, así $x\in(\bigcup A_i)-B$. Recíprocamente, si $x\in(\bigcup A_i)-B$ entonces $x\in A_i$ para algún $i$ y $x\notin B$, así $x\in A_i-B$, luego $x\in\bigcup(A_i-B)$. Por doble inclusión, igualdad. $\blacksquare$
+
+\subsubsection*{\textcolor{accent}{39. Demostrar: $\bigcap_{i=1}^n(A_i-B)=\left(\bigcap_{i=1}^n A_i\right)-B$}}
+Sea $x\in\bigcap(A_i-B)$. Entonces para todo $i$: $x\in A_i-B$, así $x\in A_i$ y $x\notin B$, luego $x\in\bigcap A_i$ y $x\notin B$, así $x\in(\bigcap A_i)-B$. Recíprocamente, si $x\in(\bigcap A_i)-B$ entonces $x\in A_i$ para todo $i$ y $x\notin B$, así $x\in A_i-B$ para todo $i$, luego $x\in\bigcap(A_i-B)$. Igualdad. $\blacksquare$
+
+\subsubsection*{\textcolor{accent}{40. Demostrar: $\bigcup_{i=1}^n(A\times B_i)=A\times\left(\bigcup_{i=1}^n B_i\right)$}}
+Sea $(x,y)\in\bigcup(A\times B_i)$. Entonces $(x,y)\in A\times B_i$ para algún $i$, así $x\in A$ y $y\in B_i$, luego $y\in\bigcup B_i$, así $(x,y)\in A\times(\bigcup B_i)$. Recíprocamente, si $(x,y)\in A\times(\bigcup B_i)$ entonces $y\in B_i$ para algún $i$, así $(x,y)\in A\times B_i$, luego $(x,y)\in\bigcup(A\times B_i)$. Igualdad. $\blacksquare$
+
+% ═══════════ PÁGINA 4 ══════════════════════════════════════════════
+\subsection*{\textcolor{navy}{Ejercicios de la página 4 — Contraejemplos y demostraciones}}
+
+\propbox{En todos los casos se supone que los conjuntos son subconjuntos de un universo $U$. Se exhibe un contraejemplo concreto que muestra la falsedad del enunciado.}
+
+\begin{enumerate}[label=\arabic*.]
+  \item Para todos $A,B,C$: $(A\cap B)\cup C=A\cap(B\cup C)$. \textbf{Falso.} Contraejemplo: $U=\{1\}$, $A=\varnothing$, $B=\varnothing$, $C=\{1\}$. Izq: $(\varnothing\cap\varnothing)\cup\{1\}=\{1\}$. Der: $\varnothing\cap(\varnothing\cup\{1\})=\varnothing$. $\{1\}\neq\varnothing$.
+  \item Para todos $A,B$: $(A\cup B)^c=A^c\cup B^c$. \textbf{Falso.} $U=\{1,2\}$, $A=\{1\}$, $B=\{2\}$: $(A\cup B)^c=\varnothing$, $A^c\cup B^c=\{2\}\cup\{1\}=\{1,2\}$. La ley correcta es $(A\cup B)^c=A^c\cap B^c$.
+  \item Para todos $A,B,C$: si $A\not\subseteq B$ y $B\not\subseteq C$, entonces $A\not\subseteq C$. \textbf{Falso.} $A=\{1\}$, $B=\{2\}$, $C=\{1\}$: $A\not\subseteq B$ y $B\not\subseteq C$ ciertos, pero $A\subseteq C$.
+  \item Para todos $A,B,C$: si $B\cap C\subseteq A$, entonces $(A-B)\cap(A-C)=\varnothing$. \textbf{Falso.} $U=A=\{1,2,3\}$, $B=\{1\}$, $C=\{2\}$: $B\cap C=\varnothing\subseteq A$, pero $(A-B)\cap(A-C)=\{2,3\}\cap\{1,3\}=\{3\}\neq\varnothing$.
+\end{enumerate}
+
+\begin{enumerate}[label=5.,start=5]
+  \item $A-(B-C)=(A-B)-C$. \textbf{Falso.} $A=\{1\}$, $B=\varnothing$, $C=\{1\}$: $A-(B-C)=A-\varnothing=\{1\}$, $(A-B)-C=\{1\}-\{1\}=\varnothing$.
+  \item $A\cap(A\cup B)=A$. \textbf{Verdadero} (absorción). $\subseteq$: si $x\in A\cap(A\cup B)$ entonces $x\in A$. $\supseteq$: si $x\in A$ entonces $x\in A\cup B$, luego $x\in A\cap(A\cup B)$. $\blacksquare$
+  \item $(A-B)\cap(C-B)=A-(B\cup C)$. \textbf{Falso.} $A=\{1\}$, $B=\varnothing$, $C=\{1\}$: izq $A\cap C=\{1\}$, der $\varnothing$. (Igualdad correcta: $(A-B)\cap(C-B)=(A\cap C)-B$.)
+  \item Si $A^c\subseteq B$, entonces $A\cup B=U$. \textbf{Verdadero.} Sea $x\in U$. $x\in A$ o $x\in A^c$. Si $x\in A$ entonces $x\in A\cup B$; si $x\in A^c$ entonces $x\in B$ por hipótesis. Luego $U\subseteq A\cup B$, y $A\cup B=U$. $\blacksquare$
+  \item Si $A\subseteq C$ y $B\subseteq C$, entonces $A\cup B\subseteq C$. \textbf{Verdadero.} Si $x\in A\cup B$ entonces $x\in A$ o $x\in B$, en cualquier caso $x\in C$. $\blacksquare$
+  \item Si $A\subseteq B$, entonces $A\cap B^c=\varnothing$. \textbf{Verdadero.} Por contradicción: si $x\in A\cap B^c$ entonces $x\in A$ y $x\notin B$, pero $A\subseteq B\Rightarrow x\in B$, contradicción. $\blacksquare$
+  \item Si $A\subseteq C$, entonces $A\cap(B\cap C)^c=\varnothing$. \textbf{Falso.} $U=\{1\}$, $A=C=\{1\}$, $B=\varnothing$: $A\subseteq C$, $B\cap C=\varnothing$, $(B\cap C)^c=U$, $A\cap U=\{1\}\neq\varnothing$.
+  \item[H14.] Si $A\cap C\subseteq B\cap C$ y $A\cup C\subseteq B\cup C$, entonces $A\subseteq B$. \textbf{Verdadero.} Sea $x\in A$. Si $x\in C$ entonces $x\in A\cap C\subseteq B\cap C\Rightarrow x\in B$. Si $x\notin C$ entonces $x\in A\cup C\subseteq B\cup C$, pero $x\notin C\Rightarrow x\in B$. $\blacksquare$
+  \item[H15.] Bajo las mismas hipótesis, ¿$A=B$? \textbf{Falso.} $C=U=\{1,2\}$, $A=\{1\}$, $B=\{1,2\}$: $A\cap C=\{1\}\subseteq B\cap C$, $A\cup C=B\cup C$, pero $A\neq B$.
+  \item[16.] Si $A\cap B=\varnothing$, entonces $A\times B=\varnothing$. \textbf{Falso.} $A=\{1\}$, $B=\{2\}$: $A\cap B=\varnothing$ pero $A\times B=\{(1,2)\}\neq\varnothing$.
+  \item[17.] Si $A\subseteq B$, entonces $\mathcal{P}(A)\subseteq\mathcal{P}(B)$. \textbf{Verdadero.} Si $X\subseteq A$ y $A\subseteq B$ entonces $X\subseteq B$. $\blacksquare$
+  \item[18.] $\mathcal{P}(A\cup B)\subseteq\mathcal{P}(A)\cup\mathcal{P}(B)$. \textbf{Falso.} $A=\{1\}$, $B=\{2\}$: $\mathcal{P}(A\cup B)$ contiene $\{1,2\}$ que no está en $\mathcal{P}(A)\cup\mathcal{P}(B)=\{\varnothing,\{1\},\{2\}\}$.
+  \item[H19.] $\mathcal{P}(A)\cup\mathcal{P}(B)\subseteq\mathcal{P}(A\cup B)$. \textbf{Verdadero.} Si $X\subseteq A$ o $X\subseteq B$ entonces $X\subseteq A\cup B$. $\blacksquare$
+  \item[20.] $\mathcal{P}(A\cap B)=\mathcal{P}(A)\cap\mathcal{P}(B)$. \textbf{Verdadero.} Doble inclusión: $X\subseteq A\cap B\iff X\subseteq A$ y $X\subseteq B$. $\blacksquare$
+  \item[21.] $\mathcal{P}(A\times B)=\mathcal{P}(A)\times\mathcal{P}(B)$. \textbf{Falso.} $A=\{1\}$, $B=\{2\}$: $A\times B=\{(1,2)\}$, $\mathcal{P}(A\times B)=\{\varnothing,\{(1,2)\}\}$; $\mathcal{P}(A)\times\mathcal{P}(B)=\{(\varnothing,\varnothing),(\varnothing,\{2\}),(\{1\},\varnothing),(\{1\},\{2\})\}$ — objetos distintos.
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{22. Negaciones de enunciados cuantificados}}
+\begin{enumerate}[label=\alph*)]
+  \item $\forall$ conjunto $S$, $\exists$ un conjunto $T$ tal que $S\cap T=\varnothing$. Negación: $\exists S$ tal que $\forall T$, $S\cap T\neq\varnothing$. El original es \textbf{verdadero} (tome $T=\varnothing$). Por tanto la negación es falsa.
+  \item $\exists S$ tal que $\forall T$, $S\cup T=\varnothing$. Negación: $\forall S$, $\exists T$, $S\cup T\neq\varnothing$. El original es \textbf{falso} (ningún $S$ con $T$ no vacío). Por tanto la negación es verdadera (basta $T\neq\varnothing$).
+\end{enumerate}
+
+\subsubsection*{\textcolor{accent}{H23. Partición de $\mathcal{P}(S)$ por cardinalidad}}
+$S=\{a,b,c\}$. $S_0=\{\varnothing\}$, $S_1=\{\{a\},\{b\},\{c\}\}$, $S_2=\{\{a,b\},\{a,c\},\{b,c\}\}$, $S_3=\{\{a,b,c\}\}$. ¿Es $\{S_0,S_1,S_2,S_3\}$ una partición de $\mathcal{P}(S)$?
+\respuesta{Sí. $|\mathcal{P}(S)|=2^3=8$ y $1+3+3+1=8$, es decir $\bigcup S_i=\mathcal{P}(S)$. Los $S_i$ son mutuamente disjuntos (ningún subconjunto tiene dos cardinalidades) y ninguno es vacío.}
+
+\subsubsection*{\textcolor{accent}{H29. Completar la demostración de $(A\cup B)-C=(A-C)\cup(B-C)$}}
+La demostración dada tiene error: donde dice ``$(A\cup C^c)\cup(B\cap C^c)$'' debería decir ``$(A\cap C^c)\cup(B\cap C^c)$''. Correcta:
+\[
+  (A\cup B)-C=(A\cup B)\cap C^c=(A\cap C^c)\cup(B\cap C^c)=(A-C)\cup(B-C).\;\blacksquare
+\]
+
+\subsubsection*{\textcolor{accent}{30 y 31. Demostraciones algebraicas}}
+\textbf{30.} $(A\cap B)\cup C=(A\cup C)\cap(B\cup C)$:
+\[
+  (A\cup C)\cap(B\cup C)=(C\cup A)\cap(C\cup B)=C\cup(A\cap B)=(A\cap B)\cup C.\;\blacksquare
+\]
+\textbf{31.} $A\cup(B-A)=A\cup B$:
+\[
+  A\cup(B-A)=A\cup(B\cap A^c)=(A\cup B)\cap(A\cup A^c)=(A\cup B)\cap U=A\cup B.\;\blacksquare
+\]
+
+\subsubsection*{\textcolor{accent}{Definición — Diferencia simétrica}}
+$A\triangle B=(A-B)\cup(B-A)$. Ejercicios 46–51:
+
+\begin{itemize}
+  \item[46.] $A=\{1,2,3,4\}$, $B=\{3,4,5,6\}$, $C=\{5,6,7,8\}$:
+    $A\triangle B=\{1,2,5,6\}$, $B\triangle C=\{3,4,7,8\}$, $A\triangle C=\{1,2,3,4,5,6,7,8\}$ (pues $A\cap C=\varnothing$), $(A\triangle B)\triangle C=\{1,2,7,8\}$.
+  \item[47.] $A\triangle B=B\triangle A$: $(A-B)\cup(B-A)=(B-A)\cup(A-B)$. $\blacksquare$
+  \item[48.] $A\triangle\varnothing=A$: $(A-\varnothing)\cup(\varnothing-A)=A\cup\varnothing=A$. $\blacksquare$
+  \item[49.] $A\triangle A^c=U$: $A-A^c=A\cap A=A$, $A^c-A=A^c$, $A\cup A^c=U$. $\blacksquare$
+  \item[50.] $A\triangle A=\varnothing$: $(A-A)\cup(A-A)=\varnothing$. $\blacksquare$
+  \item[H51.] Si $A\triangle C=B\triangle C$, entonces $A=B$: $(A\triangle C)\triangle C=(B\triangle C)\triangle C\Rightarrow A\triangle(C\triangle C)=B\triangle(C\triangle C)\Rightarrow A\triangle\varnothing=B\triangle\varnothing\Rightarrow A=B$. $\blacksquare$
+\end{itemize}
+
+\end{document}
