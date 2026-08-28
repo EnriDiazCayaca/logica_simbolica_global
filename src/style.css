@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+@property --orbit-rotation {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+@property --aura-x {
+  syntax: "<percentage>";
+  initial-value: 30%;
+  inherits: false;
+}
+@property --aura-y {
+  syntax: "<percentage>";
+  initial-value: 20%;
+  inherits: false;
+}
+
 @layer base {
   :root {
     --background: oklch(1 0 0);
@@ -11,10 +27,41 @@
     --border: oklch(0.922 0 0);
     --radius: 0.625rem;
   }
-
   body {
     background-color: var(--background);
     color: var(--foreground);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  }
+  html { scroll-behavior: smooth; }
+}
+
+@layer utilities {
+  .orbital-grid {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .glass {
+    backdrop-filter: blur(16px) saturate(1.4);
+    -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  }
+}
+
+/* Keyframes Orbital */
+@keyframes orbit-slow { from { --orbit-rotation: 0deg; } to { --orbit-rotation: 360deg; } }
+@keyframes orbit-reverse { from { --orbit-rotation: 360deg; } to { --orbit-rotation: 0deg; } }
+@keyframes float-y { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-10px) } }
+@keyframes float-y2 { 0%,100% { transform: translateY(0) rotate(0deg)} 50% { transform: translateY(-14px) rotate(1deg)} }
+@keyframes aura-move { 0% { --aura-x: 20%; --aura-y: 25%; } 33% { --aura-x: 75%; --aura-y: 30%; } 66% { --aura-x: 45%; --aura-y: 75%; } 100% { --aura-x: 20%; --aura-y: 25%; } }
+@keyframes shimmer { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
+@keyframes card-enter { from { opacity:0; transform: translateY(16px) scale(0.98); } to { opacity:1; transform: translateY(0) scale(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

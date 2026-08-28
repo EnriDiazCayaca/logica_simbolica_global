@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import OrbitalCanvas from '@/components/effects/OrbitalCanvas.vue'
 
 const modulos = [
-  { id: 'tablas', nombre: 'Tablas de Verdad', desc: 'Genera tablas de verdad, clasifica tautologías, contradicciones y contingencias.' },
-  { id: 'inferencias', nombre: 'Inferencias', desc: 'Valida reglas de inferencia con trazabilidad y diagnóstico paso a paso.' },
-  { id: 'cuantificadores', nombre: 'Cuantificadores', desc: 'Evalúa ∀ y ∃, aplica De Morgan y resuelve fórmulas de predicados.' },
-  { id: 'conjuntos', nombre: 'Conjuntos', desc: 'Operaciones de teoría de conjuntos y diagramas de Venn interactivos.' },
-  { id: 'aprender', nombre: 'Aprender', desc: 'Recorrido guiado por conceptos con verificación en vivo.' },
-  { id: 'progreso', nombre: 'Progreso', desc: 'Sigue tu avance, precisión y temas recomendados.' },
+  { id: 'tablas', nombre: 'Tablas de Verdad', desc: 'Genera tablas, clasifica tautologías y contradicciones.', icon:'⊞', color:'from-indigo-500 to-violet-600', sub:'Motor AST' },
+  { id: 'inferencias', nombre: 'Inferencias', desc: 'Valida reglas con trazabilidad y diagnóstico.', icon:'∴', color:'from-fuchsia-500 to-pink-600', sub:'Solver' },
+  { id: 'cuantificadores', nombre: 'Cuantificadores', desc: 'Evalúa ∀ y ∃, De Morgan y predicados.', icon:'∀∃', color:'from-cyan-500 to-blue-600', sub:'Nuevo AST' },
+  { id: 'conjuntos', nombre: 'Conjuntos', desc: 'Operaciones y diagramas de Venn interactivos.', icon:'∩∪', color:'from-emerald-500 to-teal-600', sub:'Venn' },
+  { id: 'aprender', nombre: 'Aprender', desc: 'Recorrido guiado con verificación en vivo.', icon:'◐', color:'from-amber-500 to-orange-600', sub:'Guided' },
+  { id: 'progreso', nombre: 'Progreso', desc: 'Sigue tu avance y temas recomendados.', icon:'◈', color:'from-slate-600 to-zinc-800', sub:'Stats' },
 ]
 
 const equipos = [
@@ -16,83 +18,177 @@ const equipos = [
   { nombre: 'Modus Innova', sub: 'Cristian', miembros: 'Danuska, Marlon, Guillermo, Noemí, Julio', tema: 'Cuantificadores' },
   { nombre: 'Linus', sub: 'Jordy', miembros: 'Nio, Mike, Sergio, Fer, Alejandro', tema: 'Conjuntos' },
 ]
+
+const heroRef = ref<HTMLElement|null>(null)
+const statsRef = ref<HTMLElement|null>(null)
+const cardsVisible = ref(false)
+
+onMounted(()=>{
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) cardsVisible.value = true })
+  }, { threshold:0.15 })
+  if(statsRef.value) io.observe(statsRef.value)
+})
 </script>
 
 <template>
-  <section class="bg-neutral-50">
-    <!-- Hero: 50% valor de la plataforma -->
-    <div class="bg-gradient-to-r from-[#0F2D8C] to-blue-700 text-white">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-        <span class="inline-block px-3 py-1 bg-white/15 text-blue-100 text-xs font-semibold rounded-full uppercase tracking-wider mb-5">
-          LogiLearn · Lógica Simbólica Global
-        </span>
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
-          Aprende Lógica Simbólica de forma visual e interactiva
-        </h1>
-        <p class="mt-5 text-lg text-blue-100 max-w-2xl leading-relaxed">
-          Una plataforma colaborativa, gratuita y de código abierto donde cualquier persona
-          construye, practica y domina la lógica proposicional, los cuantificadores y la teoría
-          de conjuntos con motores reales, ejercicios y seguimiento de progreso.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <RouterLink to="/aprender" class="px-5 py-2.5 bg-white text-[#0F2D8C] font-semibold rounded-xl hover:bg-blue-50 transition-colors">
-            Empezar a aprender
-          </RouterLink>
-          <RouterLink to="/tablas" class="px-5 py-2.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors">
-            Probar tablas de verdad
-          </RouterLink>
-        </div>
-        <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">4</p>
-            <p class="text-xs text-blue-100 mt-1">Módulos interactivos</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">12</p>
-            <p class="text-xs text-blue-100 mt-1">Leyes lógicas</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">30+</p>
-            <p class="text-xs text-blue-100 mt-1">Ejercicios</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">100%</p>
-            <p class="text-xs text-blue-100 mt-1">Sílabo cubierto</p>
-          </div>
-        </div>
+ <section class="bg-[#020617] text-white overflow-clip">
+  <!-- HERO ORBITAL -->
+  <div ref="heroRef" class="relative isolate overflow-hidden bg-[#020617]">
+    <!-- gradient mesh -->
+    <div class="absolute inset-0 -z-10">
+      <div class="absolute inset-0 bg-gradient-to-br from-[#0F2D8C] via-[#1e1b9e] to-[#020617]" />
+      <div class="absolute inset-0 opacity-[0.55]" style="background: radial-gradient(700px 500px at var(--aura-x) var(--aura-y), rgba(99,102,241,0.45), transparent 60%), radial-gradient(600px 400px at 85% 15%, rgba(236,72,153,0.28), transparent 60%), radial-gradient(800px 600px at 15% 85%, rgba(14,165,233,0.22), transparent 60%); animation: aura-move 18s ease-in-out infinite;" />
+      <div class="absolute inset-0 orbital-grid opacity-[0.08]" />
+      <!-- blurred orbs -->
+      <div class="absolute -top-24 -left-24 w-[520px] h-[520px] rounded-full blur-[90px] opacity-30" style="background: radial-gradient(circle, #6366f1 0%, transparent 70%)" />
+      <div class="absolute top-1/2 -right-32 w-[480px] h-[480px] rounded-full blur-[80px] opacity-20" style="background: radial-gradient(circle, #ec4899 0%, transparent 70%)" />
+    </div>
+
+    <OrbitalCanvas />
+
+    <!-- orbital rings -->
+    <div class="pointer-events-none absolute left-1/2 top-[52%] -translate-x-1/2 -translate-y-1/2 -z-0 hidden lg:block">
+      <div class="relative w-[760px] h-[760px]">
+        <div class="absolute inset-0 rounded-full border border-white/[0.07]" style="transform: rotate(var(--orbit-rotation)); animation: orbit-slow 90s linear infinite" />
+        <div class="absolute inset-[42px] rounded-full border border-dashed border-white/[0.09]" style="transform: rotate(var(--orbit-rotation)); animation: orbit-reverse 70s linear infinite" />
+        <div class="absolute inset-[92px] rounded-full border border-white/[0.06]" />
+        <!-- orbiting dots -->
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_18px_rgba(255,255,255,0.9)]" style="transform-origin: 0 380px; transform: rotate(var(--orbit-rotation)) translateX(-50%); animation: orbit-slow 28s linear infinite" />
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,0.9)]" style="transform-origin: 0 340px; animation: orbit-reverse 36s linear infinite" />
       </div>
     </div>
 
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
-      <!-- Módulos -->
-      <div>
-        <h2 class="text-2xl font-bold text-neutral-900 mb-2">Explora la plataforma</h2>
-        <p class="text-neutral-500 mb-6">Cada módulo es un motor real que evalúa tus fórmulas.</p>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <RouterLink
-            v-for="m in modulos"
-            :key="m.id"
-            :to="`/${m.id}`"
-            class="group block h-full p-6 bg-white border border-neutral-200 rounded-xl shadow-sm hover:shadow-md hover:border-blue-400 transition-all"
-          >
-            <h3 class="text-lg font-bold text-neutral-800 group-hover:text-blue-700">{{ m.nombre }}</h3>
-            <p class="text-neutral-500 text-sm mt-2 leading-relaxed">{{ m.desc }}</p>
-            <span class="mt-4 inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-800">
-              Abrir <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
-            </span>
-          </RouterLink>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="flex items-center gap-2 mb-6">
+        <span class="inline-flex items-center gap-2 pl-1 pr-3 py-1 rounded-full bg-white/10 glass border border-white/15 text-xs font-semibold tracking-wider uppercase">
+          <span class="w-6 h-6 rounded-full bg-white text-[#0F2D8C] grid place-items-center text-[10px]">◈</span>
+          <span class="text-white/90">LogiLearn · Orbital Cuántico</span>
+          <span class="ml-1 px-1.5 py-0.5 rounded-full bg-emerald-400 text-emerald-950 text-[10px] font-extrabold tracking-wide">LIVE</span>
+        </span>
+        <span class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-white/60">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> experiment/visual-impact
+        </span>
+      </div>
+
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-10 items-center">
+        <div>
+          <h1 class="text-[40px] sm:text-[56px] font-black tracking-[-0.03em] leading-[0.95]">
+            <span class="block text-white">Lógica Simbólica</span>
+            <span class="block bg-gradient-to-r from-cyan-300 via-indigo-300 to-fuchsia-300 bg-clip-text text-transparent" style="background-size:200% auto; animation: shimmer 3.2s linear infinite">en órbita</span>
+          </h1>
+          <p class="mt-5 text-[17px] leading-7 text-white/75 max-w-[52ch]">
+            Plataforma colaborativa open-source. Motores reales, trazabilidad y animación cuántica.
+            <span class="text-white font-medium">∀ ∃ ∴ —</span> domina proposiciones, predicados y conjuntos con feedback fluido a 60fps.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <RouterLink to="/aprender" class="group relative inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-[#0F2D8C] font-bold shadow-[0_8px_30px_rgba(255,255,255,0.2)] hover:shadow-[0_12px_40px_rgba(255,255,255,0.28)] transition-all">
+              Empezar a aprender
+              <span class="w-7 h-7 rounded-lg bg-[#0F2D8C] text-white grid place-items-center text-sm group-hover:translate-x-0.5 transition-transform">→</span>
+            </RouterLink>
+            <RouterLink to="/tablas" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white/10 glass border border-white/15 text-white font-semibold hover:bg-white/15 hover:border-white/20 transition-colors">
+              <span class="w-8 h-8 rounded-lg bg-white/15 grid place-items-center">⊞</span> Probar tablas
+            </RouterLink>
+            <RouterLink to="/cuantificadores" class="hidden sm:inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-transparent border border-white/10 text-white/80 hover:text-white hover:border-white/20 transition-colors text-sm">Ver cuantificadores ∀∃</RouterLink>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-2 text-[11px] font-mono text-white/55">
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/10">p ∧ q → r</span>
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/10">¬(∀x P(x)) ≡ ∃x ¬P(x)</span>
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/10">A ↔ (B ∨ C)</span>
+          </div>
+        </div>
+
+        <!-- mock terminal orbital card -->
+        <div class="relative lg:pl-6">
+          <div class="relative rounded-[20px] bg-white/[0.08] glass border border-white/15 overflow-hidden shadow-[0_24px_80px_rgba(0,0,0,0.45)]">
+            <div class="flex items-center justify-between px-4 py-3 border-b border-white/10">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-red-400/90" /><span class="w-3 h-3 rounded-full bg-yellow-400/90" /><span class="w-3 h-3 rounded-full bg-green-400/90" />
+              </div>
+              <span class="text-[11px] font-mono text-white/60">engine.ts · cuantificadores</span>
+              <span class="text-[10px] px-2 py-1 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/20">● live eval</span>
+            </div>
+            <div class="p-5 font-mono text-[12.5px] leading-6">
+              <div class="text-white/50">// ∀x (x > 2 → x² > 4) en D = {1,2,3,4}</div>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                <span class="px-2 py-1 rounded-lg bg-white text-[#0F2D8C] font-bold">∀x</span>
+                <span class="px-2 py-1 rounded-lg bg-indigo-500 text-white">x ∈ {1,2,3,4}</span>
+                <span class="px-2 py-1 rounded-lg bg-white/10 border border-white/15 text-white">x &gt; 2 → x² &gt; 4</span>
+              </div>
+              <div class="mt-4 grid grid-cols-4 gap-2 text-center text-xs">
+                <div class="rounded-xl bg-white/10 border border-white/10 p-2.5"><div class="text-white/50">x=1</div><div class="font-bold text-white">V <span class="text-emerald-300">✓</span></div></div>
+                <div class="rounded-xl bg-white/10 border border-white/10 p-2.5"><div class="text-white/50">x=2</div><div class="font-bold text-white">V <span class="text-emerald-300">✓</span></div></div>
+                <div class="rounded-xl bg-emerald-500 text-white p-2.5 shadow-lg"><div class="text-white/80">x=3</div><div class="font-bold">V ✓</div></div>
+                <div class="rounded-xl bg-emerald-500 text-white p-2.5 shadow-lg"><div class="text-white/80">x=4</div><div class="font-bold">V ✓</div></div>
+              </div>
+              <div class="mt-4 flex items-center gap-2 text-xs">
+                <span class="px-2.5 py-1 rounded-full bg-emerald-400 text-emerald-950 font-bold">VERDADERO</span>
+                <span class="text-white/60">∀x P(x) ≡ <span class="text-white">¬∃x ¬P(x)</span></span>
+              </div>
+            </div>
+            <div class="h-1 w-full bg-gradient-to-r from-cyan-400 via-indigo-400 to-fuchsia-400" />
+          </div>
+          <!-- floating chips -->
+          <div class="absolute -right-2 -top-3 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-[#0F2D8C] text-xs font-bold shadow-xl" style="animation: float-y 3.4s ease-in-out infinite">⚡ 60fps AST</div>
+          <div class="absolute -left-3 bottom-6 hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#0F2D8C] text-white text-xs font-semibold border border-white/15 shadow-xl" style="animation: float-y2 3.8s ease-in-out infinite">↔ De Morgan vivo</div>
         </div>
       </div>
 
-      <!-- Sobre Nosotros: 50% "nosotros" -->
-      <div>
-        <h2 class="text-2xl font-bold text-neutral-900 mb-2">Sobre Nosotros</h2>
-        <p class="text-neutral-500 mb-6">
-          Proyecto construido colaborativamente por el aula, para el aula.
-        </p>
+      <!-- stats glass -->
+      <div ref="statsRef" class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div v-for="(s,i) in [{k:'4',l:'Módulos'}, {k:'12',l:'Leyes'},{k:'30+',l:'Ejercicios'},{k:'100%',l:'Sílabo'}]" :key="s.l" class="rounded-2xl bg-white/[0.08] glass border border-white/10 p-4 text-center hover:bg-white/[0.12] hover:border-white/15 transition-colors" :style="`animation: card-enter 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: ${i*90}ms`">
+          <div class="text-2xl font-black tracking-tight">{{ s.k }}</div>
+          <div class="text-[11px] tracking-wide uppercase font-semibold text-white/60 mt-1">{{ s.l }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6 mb-6">
-          <h3 class="text-sm font-bold uppercase tracking-wide text-blue-700 mb-3">Marco académico</h3>
+  <!-- módulos orbital -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+    <div class="flex items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 class="text-[22px] font-extrabold tracking-tight text-[#0F2D8C]">Explora la plataforma</h2>
+        <p class="text-sm text-neutral-500">Cada módulo es un motor real. Hover para órbita.</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-xs text-neutral-500"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Motores en vivo</div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 [perspective:1200px]">
+      <RouterLink
+        v-for="(m,i) in modulos"
+        :key="m.id"
+        :to="`/${m.id}`"
+        class="group relative block rounded-[18px] bg-white border border-neutral-200 p-[1px] hover:border-transparent transition-all duration-300 hover:shadow-[0_16px_40px_rgba(15,45,140,0.15)] hover:-translate-y-1"
+        :style="cardsVisible ? `animation: card-enter 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: ${i*70}ms` : 'opacity:0'"
+      >
+        <div class="rounded-[17px] bg-white p-6 h-full relative overflow-hidden">
+          <div :class="['absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br', m.color]" style="opacity:0.06" />
+          <div class="relative">
+            <div class="flex items-start justify-between">
+              <div :class="['w-11 h-11 rounded-xl grid place-items-center text-white font-black shadow-lg bg-gradient-to-br', m.color]">{{ m.icon }}</div>
+              <span class="text-[10px] font-bold tracking-wide uppercase px-2 py-1 rounded-full bg-neutral-900 text-white">{{ m.sub }}</span>
+            </div>
+            <h3 class="mt-4 text-[16px] font-extrabold tracking-tight text-neutral-900 group-hover:text-[#0F2D8C] transition-colors">{{ m.nombre }}</h3>
+            <p class="text-[13px] leading-5 text-neutral-500 mt-1.5">{{ m.desc }}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#0F2D8C]">Abrir <span class="group-hover:translate-x-1 transition-transform">→</span></span>
+          </div>
+          <!-- orbit line on hover -->
+          <div class="pointer-events-none absolute -right-6 -bottom-6 w-28 h-28 rounded-full border border-[#0F2D8C]/10 group-hover:border-[#0F2D8C]/20 transition-colors" />
+        </div>
+      </RouterLink>
+    </div>
+
+    <!-- Sobre Nosotros glass -->
+    <div class="mt-16 space-y-6">
+      <div>
+        <h2 class="text-[22px] font-extrabold tracking-tight text-[#0F2D8C]">Sobre Nosotros</h2>
+        <p class="text-sm text-neutral-500">Proyecto construido colaborativamente por el aula, para el aula.</p>
+      </div>
+      <div class="rounded-[18px] bg-gradient-to-br from-[#0F2D8C] to-indigo-700 p-[1px]">
+        <div class="rounded-[17px] bg-white p-6">
+          <h3 class="text-xs font-black tracking-[0.14em] uppercase text-[#0F2D8C] mb-3">Marco académico</h3>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-neutral-700">
             <li><span class="font-semibold">Universidad:</span> Nacional Pedro Ruiz Gallo</li>
             <li><span class="font-semibold">Escuela:</span> Ingeniería de Sistemas</li>
@@ -102,37 +198,24 @@ const equipos = [
             <li><span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera</li>
           </ul>
         </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div v-for="eq in equipos" :key="eq.nombre" class="bg-white border border-neutral-200 rounded-xl shadow-sm p-5">
-            <div class="flex items-center justify-between mb-2">
-              <h3 class="font-bold text-neutral-800">{{ eq.nombre }}</h3>
-              <span class="text-[10px] font-semibold bg-blue-100 text-blue-700 rounded px-2 py-0.5">Sublíder: {{ eq.sub }}</span>
-            </div>
-            <p class="text-xs text-neutral-500 mb-3">Tema: {{ eq.tema }}</p>
-            <p class="text-sm text-neutral-700">{{ eq.miembros }}</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div v-for="eq in equipos" :key="eq.nombre" class="group rounded-[16px] bg-white border border-neutral-200 p-5 hover:border-[#0F2D8C]/20 hover:shadow-[0_10px_30px_rgba(15,45,140,0.08)] hover:-translate-y-0.5 transition-all">
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="font-extrabold text-neutral-900">{{ eq.nombre }}</h3>
+            <span class="text-[10px] font-black bg-[#0F2D8C] text-white rounded-full px-2 py-1">{{ eq.sub }}</span>
           </div>
-        </div>
-
-        <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
-          <p><span class="font-semibold">Líder de proyecto:</span> Enrique (EnriDiazCayaca)</p>
-          <p class="mt-1"><span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera — mgonzalesh@unprg.edu.pe</p>
-          <p class="mt-1">
-            La lista completa de contribuidores está en <code class="font-semibold">CONTRIBUTORS.md</code>.
-            Repositorio del proyecto:
-            <a
-              href="https://github.com/EnriDiazCayaca/logica_simbolica_global"
-              target="_blank"
-              rel="noopener"
-              class="underline font-semibold hover:text-blue-700"
-            >github.com/EnriDiazCayaca/logica_simbolica_global</a>.
-          </p>
+          <p class="text-xs text-neutral-500">Tema: {{ eq.tema }}</p>
+          <p class="text-[13px] text-neutral-700 mt-2 leading-5">{{ eq.miembros }}</p>
         </div>
       </div>
+      <div class="rounded-2xl bg-[#f8fafc] border border-neutral-200 p-5 text-sm text-neutral-700 flex flex-wrap gap-3 items-center justify-between">
+        <div><span class="font-bold">Líder:</span> Enrique (EnriDiazCayaca) · <span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera — <span class="font-mono text-xs">mgonzalesh@unprg.edu.pe</span></div>
+        <a href="https://github.com/EnriDiazCayaca/logica_simbolica_global" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-full bg-[#0F2D8C] text-white text-xs font-bold hover:bg-[#0e2670] transition-colors">GitHub →</a>
+      </div>
     </div>
+  </div>
 
-    <footer class="border-t border-neutral-200 py-8 text-center text-sm text-neutral-400">
-      LogiLearn · Proyecto de Aula 2026 · Universidad Nacional Pedro Ruiz Gallo
-    </footer>
-  </section>
+  <footer class="border-t border-neutral-200 py-8 text-center text-sm text-neutral-400 bg-white">LogiLearn · <span class="font-mono text-xs">experiment/visual-impact</span> · Orbital Cuántico · 2026</footer>
+ </section>
 </template>
