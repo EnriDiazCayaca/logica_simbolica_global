@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import OptionPill from '@/components/ui/OptionPill.vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 import { LEYES_LOGICAS, type LeyLogica } from '@/data/logicLaws'
 import { ejercicios, type EjercicioIdentificar, type EjercicioLey, type ClaveTema } from '@/data/exercises'
 import { parsearProposicion, evaluar, recolectarVariables, ErrorParseoLogico } from '@/lib/truth-table/evaluator'
@@ -239,12 +240,15 @@ function practicarRecomendacion(t: ProgresoTema) {
 </script>
 
 <template>
-  <section class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold text-neutral-900 mb-2">Aprender</h1>
-      <p class="text-neutral-500 text-sm mb-6 max-w-xl">
-        Explora un concepto paso a paso: definición → ejemplo → ejercicio → solución.
-      </p>
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="◐" kicker="Recorrido Guiado · De la teoría a la práctica" title="Aprender" subtitle="Explora un concepto paso a paso: definición → ejemplo → ejercicio → solución.">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">p ∧ q · p → q</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Definición → Solución</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Verificación en vivo</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Repaso inteligente -->
       <div v-if="temaRecomendado || temasDebiles.length > 0" class="bg-neutral-900 text-white rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">

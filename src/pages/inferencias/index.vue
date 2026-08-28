@@ -14,6 +14,7 @@ import FormularioInferencia from '@/components/inferencias/FormularioInferencia.
 import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 import { History, Trash2 } from '@lucide/vue'
 
 interface ItemHistorial {
@@ -163,23 +164,24 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-50 p-6 md:p-10 text-neutral-900 font-sans">
-    <div class="max-w-6xl mx-auto space-y-8">
-      <!-- Navegación & Encabezado -->
+  <div class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8 text-neutral-900 font-sans">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="∴" kicker="Los Hijos de Linus · Solver + Trazabilidad" title="Demostrador de Inferencias Lógicas" subtitle="Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">∴ Modus Ponens</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">p → q · p ∴ q</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Trazabilidad</span>
+        </template>
+      </OrbitalHeader>
+      <!-- Navegación & Historial trigger -->
       <div class="flex items-start justify-between flex-wrap gap-4">
         <div>
           <router-link
             to="/"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors"
           >
             &larr; Volver al Inicio
           </router-link>
-          <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
-            Demostrador de Inferencias Lógicas
-          </h1>
-          <p class="text-sm text-neutral-600 mt-1.5">
-            Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.
-          </p>
         </div>
 
         <!-- Botón de Historial Local -->

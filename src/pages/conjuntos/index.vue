@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import Card from '@/components/ui/Card.vue'
 import Badge from '@/components/ui/Badge.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 import {
   union, interseccion, diferencia, complemento,
   potencia, verificarPertenencia, sonDisjuntos, esSubconjunto
@@ -104,16 +105,15 @@ const operaciones = [
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-50 p-4 md:p-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-
-      <!-- Título -->
-      <div class="text-center space-y-2">
-        <h1 class="text-3xl font-bold text-neutral-900">
-          🔵 Teoría de Conjuntos
-        </h1>
-        <p class="text-neutral-500">Equipo Linus — Calculadora Interactiva</p>
-      </div>
+  <div class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="∩∪" kicker="Linus · Venn Interactivo" title="Teoría de Conjuntos" subtitle="Calculadora interactiva de operaciones, diagramas de Venn y verificación de pertenencia">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">A ∪ B</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">A ∩ B · A − B</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">∈ · ⊂ · ⊆</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Inputs -->
       <Card>

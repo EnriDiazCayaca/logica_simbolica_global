@@ -15,6 +15,7 @@ import {
 import Card from '@/components/ui/Card.vue'
 import Badge from '@/components/ui/Badge.vue'
 import Button from '@/components/ui/Button.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 
 const router = useRouter()
 
@@ -62,12 +63,15 @@ function goPractice(topicKey: string) {
 </script>
 
 <template>
-  <section class="min-h-screen bg-neutral-50 py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-5xl mx-auto space-y-6">
-      <div>
-        <h1 class="text-3xl font-bold text-neutral-900 mb-1">Mi Progreso</h1>
-        <p class="text-neutral-500 text-sm">Resumen de tu avance en lógica simbólica.</p>
-      </div>
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="◈" kicker="Tu Trayectoria · Analytics" title="Mi Progreso" subtitle="Resumen de tu avance en lógica simbólica, precisión y temas por reforzar.">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Progreso · Precisión</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Nivel · Racha</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">◈ Stats</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Stats cards -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">

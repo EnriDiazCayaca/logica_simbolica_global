@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { LEYES_LOGICAS } from '@/data/logicLaws'
 import Card from '@/components/ui/Card.vue'
 import Badge from '@/components/ui/Badge.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 
 const busqueda = ref('')
 
@@ -19,26 +20,24 @@ const leyesFiltradas = computed(() => {
 </script>
 
 <template>
-  <section class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
-        <div>
-          <h1 class="text-3xl font-bold text-neutral-900 mb-1">Leyes Lógicas</h1>
-          <p class="text-neutral-500 text-sm">
-            Consulta y aprende las reglas fundamentales de la lógica proposicional.
-          </p>
-        </div>
-        <div class="flex items-center gap-2 border border-neutral-300 rounded-lg px-3 py-2 w-full sm:w-auto sm:min-w-[320px]">
-          <span class="text-neutral-400">🔍</span>
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="≡" kicker="Biblioteca Formal · Equivalencias" title="Leyes Lógicas" subtitle="Consulta y aprende las reglas fundamentales de la lógica proposicional.">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">¬(p ∧ q) ≡ ¬p ∨ ¬q</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">p → q ≡ ¬p ∨ q</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Distribución ≡ De Morgan</span>
+        </template>
+        <div class="flex items-center gap-2 bg-white/10 border border-white/15 rounded-lg px-3 py-2 w-full sm:w-auto sm:min-w-[320px] backdrop-blur">
+          <span class="text-white/60">🔍</span>
           <input
             v-model="busqueda"
             type="text"
             placeholder="Buscar una ley lógica..."
-            class="border-none outline-none text-sm w-full font-[inherit]"
+            class="bg-transparent border-none outline-none text-sm w-full font-[inherit] text-white placeholder:text-white/50"
           />
         </div>
-      </div>
+      </OrbitalHeader>
 
       <p v-if="leyesFiltradas.length === 0" class="text-neutral-400 text-sm mb-6">
         No se encontraron leyes que coincidan con "{{ busqueda }}".

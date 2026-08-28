@@ -13,6 +13,7 @@ import {
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 
 const router = useRouter()
 const tabActiva = ref<Dificultad | 'todos'>('todos')
@@ -47,12 +48,15 @@ function irAEjercicio(id: string) {
 </script>
 
 <template>
-  <section class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold text-neutral-900 mb-2">Ejercicios Prácticos</h1>
-      <p class="text-neutral-500 text-sm mb-6">
-        Practica lógica proposicional mediante ejercicios interactivos.
-      </p>
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+      <OrbitalHeader icon="▣" kicker="Práctica Deliberada · Banco de Ejercicios" title="Ejercicios Prácticos" subtitle="Practica lógica proposicional mediante ejercicios interactivos por nivel y tema.">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">Fácil · Medio · Difícil</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">∧ ∨ ¬ → ↔ ≡</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">30+ ejercicios</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Difficulty tabs -->
       <div class="flex gap-3 mb-4 flex-wrap">

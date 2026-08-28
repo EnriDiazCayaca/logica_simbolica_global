@@ -37,7 +37,8 @@ watch(() => route.fullPath, () => closeMobileMenu())
 </script>
 
 <template>
-  <header class="bg-[#0F2D8C] w-full">
+  <header class="sticky top-0 z-50 w-full bg-[#0F2D8C]/90 glass border-b border-white/10 backdrop-blur-xl">
+    <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-indigo-300/40 to-transparent pointer-events-none" />
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-6 px-4 sm:px-6 lg:px-8 py-3.5">
       <RouterLink to="/" class="flex items-center gap-2.5 shrink-0">
         <div class="w-9 h-9 rounded-[10px] bg-white/10 flex items-center justify-center">

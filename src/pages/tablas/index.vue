@@ -5,6 +5,7 @@ import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
 import ToggleSwitch from '@/components/ui/ToggleSwitch.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 import {
   parsearProposicion,
   recolectarVariables,
@@ -140,13 +141,15 @@ generarTabla()
 </script>
 
 <template>
-  <section class="min-h-screen bg-neutral-50 py-8 px-4 sm:px-6 lg:px-8">
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto space-y-6">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-6">
-        <h1 class="text-2xl font-bold">Tablas de Verdad</h1>
-        <p class="text-blue-100 text-sm mt-1">Analiza expresiones de lógica proposicional</p>
-      </div>
+      <OrbitalHeader icon="⊞" kicker="Sinergia · Motor AST" title="Tablas de Verdad" subtitle="Analiza expresiones de lógica proposicional y clasifica tautologías, contradicciones y contingencias">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">p ∧ q → r</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">V · F · Tautología</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">¬ ∧ ∨ → ↔</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Input Card -->
       <Card>

@@ -13,6 +13,7 @@ import { LEYES_LOGICAS } from '@/data/logicLaws'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
+import OrbitalHeader from '@/components/ui/OrbitalHeader.vue'
 
 const pestanaActiva = ref<'cuantificadores' | 'leyes'>('cuantificadores')
 
@@ -84,21 +85,15 @@ onMounted(() => {
 })
 </script>
 
-<template>
-  <section class="min-h-screen bg-neutral-50 py-8 px-4 sm:px-6 lg:px-8">
+ <template>
+  <section class="min-h-screen bg-[#f8fafc] py-6 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto space-y-6">
-      <!-- Header -->
-      <div class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-xl p-6">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center font-mono font-bold text-2xl">
-            ∀∃
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold">Cuantificadores Lógicos</h1>
-            <p class="text-blue-100 text-sm mt-1">Evalúa cuantificadores ∀ y ∃ sobre dominios finitos</p>
-          </div>
-        </div>
-      </div>
+      <OrbitalHeader icon="∀∃" kicker="Modus Innova · Motor AST Seguro" title="Cuantificadores Lógicos" subtitle="Evalúa ∀ y ∃ sobre dominios finitos con trazabilidad y De Morgan vivo">
+        <template #chips>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">AST ∧ parseDomain</span>
+          <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/15 text-xs font-mono text-white/80">¬(∀x) ≡ ∃x ¬</span>
+        </template>
+      </OrbitalHeader>
 
       <!-- Tabs -->
       <div class="flex gap-3">
