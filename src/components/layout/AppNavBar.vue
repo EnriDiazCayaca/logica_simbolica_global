@@ -8,6 +8,7 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
+  { label: 'Inicio', to: '/' },
   { label: 'Aprender', to: '/aprender' },
   { label: 'Tablas de verdad', to: '/tablas' },
   { label: 'Leyes lógicas', to: '/leyes-logicas' },

@@ -227,6 +227,15 @@ export function aplicarLeyes(expresion: string): PasoResolucion[] {
     actual = despues
   }
 
+  // 3b. Doble Negación: ¬¬A → A
+  const dobleNegacionMatch = actual.match(/^¬\s*¬\s*(.+)$/)
+  if (dobleNegacionMatch) {
+    const [, a] = dobleNegacionMatch
+    const despues = a.trim()
+    pasos.push({ ley: 'Doble Negación', antes: actual, despues })
+    actual = despues
+  }
+
   // 4. Distribución: A ∧ (B ∨ C) → (A ∧ B) ∨ (A ∧ C)
   const distMatch = actual.match(/^(.+?)\s*∧\s*\((.+?)\s*∨\s*(.+)\)$/)
   if (distMatch) {

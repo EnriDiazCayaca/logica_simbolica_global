@@ -5,6 +5,7 @@ import {
   parsearDominio,
   obtenerPredicados,
   evaluarExpresionPredicado,
+  aplicarLeyes,
   type TipoCuantificador,
   type ResultadoCuantificador,
 } from '@/lib/cuantificadores/engine'
@@ -14,6 +15,22 @@ import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
 
 const pestanaActiva = ref<'cuantificadores' | 'leyes'>('cuantificadores')
+
+const formulaResolver = ref('¬(A ∧ B)')
+const pasosResolucionLeyes = ref<ReturnType<typeof aplicarLeyes>>([])
+
+function resolverAutomatico() {
+  pasosResolucionLeyes.value = aplicarLeyes(formulaResolver.value)
+}
+
+function cargarEjemploLeyes() {
+  formulaResolver.value = '¬(p ∧ q) ↔ r'
+  resolverAutomatico()
+}
+
+onMounted(() => {
+  resolverAutomatico()
+})
 
 const tipoCuantificador = ref<TipoCuantificador>('forall')
 const dominioRaw = ref('1, 2, 3, 4, 5')
@@ -336,7 +353,46 @@ onMounted(() => {
       </div>
 
       <!-- Contenido: Distribución y Leyes -->
-      <div v-if="pestanaActiva === 'leyes'">
+      <div v-if="pestanaActiva === 'leyes'" class="space-y-6">
+        <!-- Resolutor interactivo -->
+        <Card>
+          <h3 class="text-sm font-bold text-amber-600 mb-2">Resolver Automáticamente</h3>
+          <p class="text-xs text-neutral-500 mb-3">
+            Escribe una fórmula y aplícale las leyes paso a paso (Bicondicional → Implicación → De Morgan → Doble Negación → Distribución).
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input
+              v-model="formulaResolver"
+              type="text"
+              placeholder="¬(A ∧ B) ↔ C"
+              class="flex-1 bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500"
+            />
+            <Button class="sm:w-auto" @click="resolverAutomatico">Resolver</Button>
+            <Button variant="secondary" class="sm:w-auto" @click="cargarEjemploLeyes">Ejemplo</Button>
+          </div>
+          <div v-if="pasosResolucionLeyes.length > 0" class="mt-4 space-y-3">
+            <div
+              v-for="(paso, idx) in pasosResolucionLeyes"
+              :key="idx"
+              class="bg-amber-50 border border-amber-200 rounded-lg p-3"
+            >
+              <div class="flex items-center gap-2 mb-1">
+                <Badge variant="yellow">{{ paso.ley }}</Badge>
+                <span class="text-xs text-neutral-400">Paso {{ idx + 1 }}</span>
+              </div>
+              <p class="text-xs font-mono text-neutral-500 mt-1">Antes: {{ paso.antes }}</p>
+              <p class="text-xs font-mono text-amber-700 font-semibold mt-1">Después: {{ paso.despues }}</p>
+            </div>
+            <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-3 text-sm text-emerald-800 font-semibold">
+              Resultado final: {{ pasosResolucionLeyes[pasosResolucionLeyes.length - 1].despues }}
+            </div>
+          </div>
+          <p v-else class="mt-4 text-xs text-neutral-400">
+            No se identificaron leyes aplicables a la expresión ingresada.
+          </p>
+        </Card>
+
+        <!-- Catálogo de leyes -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <Card v-for="ley in LEYES_LOGICAS" :key="ley.id">
             <div class="flex items-center gap-2 mb-3">
