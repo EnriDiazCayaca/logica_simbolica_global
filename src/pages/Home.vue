@@ -117,7 +117,16 @@ const equipos = [
         <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
           <p><span class="font-semibold">Líder de proyecto:</span> Enrique (EnriDiazCayaca)</p>
           <p class="mt-1"><span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera — mgonzalesh@unprg.edu.pe</p>
-          <p class="mt-1">La lista completa de contribuidores está en <code class="font-semibold">CONTRIBUTORS.md</code>.</p>
+          <p class="mt-1">
+            La lista completa de contribuidores está en <code class="font-semibold">CONTRIBUTORS.md</code>.
+            Repositorio del proyecto:
+            <a
+              href="https://github.com/EnriDiazCayaca/logica_simbolica_global"
+              target="_blank"
+              rel="noopener"
+              class="underline font-semibold hover:text-blue-700"
+            >github.com/EnriDiazCayaca/logica_simbolica_global</a>.
+          </p>
         </div>
       </div>
     </div>
