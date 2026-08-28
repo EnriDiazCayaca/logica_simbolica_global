@@ -31,9 +31,10 @@ onMounted(()=>{
 })
 </script>
 
-<template>
- <section class="bg-[#020617] text-white overflow-clip">
-  <!-- HERO ORBITAL -->
+ <template>
+  <div class="overflow-clip">
+  <section class="bg-[#020617] text-white overflow-clip">
+   <!-- HERO ORBITAL -->
   <div ref="heroRef" class="relative isolate overflow-hidden bg-[#020617]">
     <!-- gradient mesh -->
     <div class="absolute inset-0 -z-10">
@@ -145,8 +146,10 @@ onMounted(()=>{
     </div>
   </div>
 
-  <!-- módulos orbital -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+  </section>
+  <!-- módulos orbital — superficie clara coherente con resto de la app -->
+  <section class="bg-[#f8fafc] py-14">
+   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-end justify-between gap-4 mb-6">
       <div>
         <h2 class="text-[22px] font-extrabold tracking-tight text-[#0F2D8C]">Explora la plataforma</h2>
@@ -160,19 +163,21 @@ onMounted(()=>{
         v-for="(m,i) in modulos"
         :key="m.id"
         :to="`/${m.id}`"
-        class="group relative block rounded-[18px] bg-white border border-neutral-200 p-[1px] hover:border-transparent transition-all duration-300 hover:shadow-[0_16px_40px_rgba(15,45,140,0.15)] hover:-translate-y-1"
+        class="group relative block rounded-[18px] bg-white border border-neutral-200 p-[1px] hover:border-[#0F2D8C]/20 transition-all duration-300 hover:shadow-[0_16px_40px_rgba(15,45,140,0.15)] hover:-translate-y-1"
         :style="cardsVisible ? `animation: card-enter 0.6s cubic-bezier(0.16,1,0.3,1) both; animation-delay: ${i*70}ms` : 'opacity:0'"
       >
-        <div class="rounded-[17px] bg-white p-6 h-full relative overflow-hidden">
+        <div class="rounded-[17px] bg-white p-6 h-full relative overflow-hidden flex flex-col">
           <div :class="['absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br', m.color]" style="opacity:0.06" />
-          <div class="relative">
+          <div class="relative flex-1">
             <div class="flex items-start justify-between">
               <div :class="['w-11 h-11 rounded-xl grid place-items-center text-white font-black shadow-lg bg-gradient-to-br', m.color]">{{ m.icon }}</div>
               <span class="text-[10px] font-bold tracking-wide uppercase px-2 py-1 rounded-full bg-neutral-900 text-white">{{ m.sub }}</span>
             </div>
             <h3 class="mt-4 text-[16px] font-extrabold tracking-tight text-neutral-900 group-hover:text-[#0F2D8C] transition-colors">{{ m.nombre }}</h3>
             <p class="text-[13px] leading-5 text-neutral-500 mt-1.5">{{ m.desc }}</p>
-            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#0F2D8C]">Abrir <span class="group-hover:translate-x-1 transition-transform">→</span></span>
+          </div>
+          <div class="relative mt-5">
+            <span class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-[#0F2D8C] text-white text-xs font-bold shadow-[0_6px_16px_rgba(15,45,140,0.22)] group-hover:bg-[#0e2670] group-hover:shadow-[0_10px_24px_rgba(15,45,140,0.28)] group-hover:translate-y-[-1px] transition-all">Explorar <span class="group-hover:translate-x-0.5 transition-transform">→</span></span>
           </div>
           <!-- orbit line on hover -->
           <div class="pointer-events-none absolute -right-6 -bottom-6 w-28 h-28 rounded-full border border-[#0F2D8C]/10 group-hover:border-[#0F2D8C]/20 transition-colors" />
@@ -209,13 +214,13 @@ onMounted(()=>{
           <p class="text-[13px] text-neutral-700 mt-2 leading-5">{{ eq.miembros }}</p>
         </div>
       </div>
-      <div class="rounded-2xl bg-[#f8fafc] border border-neutral-200 p-5 text-sm text-neutral-700 flex flex-wrap gap-3 items-center justify-between">
+      <div class="rounded-2xl bg-white border border-neutral-200 p-5 text-sm text-neutral-700 flex flex-wrap gap-3 items-center justify-between">
         <div><span class="font-bold">Líder:</span> Enrique (EnriDiazCayaca) · <span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera — <span class="font-mono text-xs">mgonzalesh@unprg.edu.pe</span></div>
         <a href="https://github.com/EnriDiazCayaca/logica_simbolica_global" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-full bg-[#0F2D8C] text-white text-xs font-bold hover:bg-[#0e2670] transition-colors">GitHub →</a>
       </div>
     </div>
   </div>
-
+  </section>
   <footer class="border-t border-neutral-200 py-8 text-center text-sm text-neutral-400 bg-white">LogiLearn · <span class="font-mono text-xs">experiment/visual-impact</span> · Orbital Cuántico · 2026</footer>
- </section>
+ </div>
 </template>
