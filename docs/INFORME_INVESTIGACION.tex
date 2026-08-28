@@ -1,0 +1,254 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\geometry{margin=2.5cm}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=black, citecolor=blue}
+
+\title{\textbf{Informe de Investigación: Plataforma LogiLearn de Lógica Simbólica}}
+\author{
+  Equipos Sinergia, Los Hijos de Linus, Modus Innova y Linus \\
+  Curso Lógica Simbólica (MATG1001) \\
+  Docente: Dr. Mardo Victor Gonzales Herrera \\
+  Universidad Nacional Pedro Ruiz Gallo \\
+  Escuela Profesional de Ingeniería de Sistemas \\
+  Semestre 2026 I $\cdot$ II Ciclo
+}
+\date{Agosto de 2026}
+
+\begin{document}
+
+\maketitle
+
+\section*{Resumen}
+El presente informe documenta el diseño, desarrollo, validación y resultados de \textbf{LogiLearn}, una
+plataforma web colaborativa construida como producto del curso de Lógica Simbólica (MATG1001). La
+plataforma implementa funcionalmente el 100\% de los temas del sílabo mediante \textit{motores reales
+de evaluación lógica}: tablas de verdad, inferencias, cuantificadores y teoría de conjuntos. Se
+describe el marco tecnológico (Vue 3, Vite, Tailwind CSS v4, TypeScript, Vitest), la metodología de
+trabajo en cuatro equipos de dominio con ramificaciones Git y Pull Requests, la arquitectura por
+módulo, la estrategia de pruebas (175 pruebas funcionales), un manual de uso y la reflexión sobre los
+aprendizajes alcanzados respecto a los resultados de aprendizaje D1, D2 y D3 del sílabo. Los
+resultados evidencian que la construcción de software verificable refuerza la comprensión teórica de
+la lógica simbólica.
+
+\textbf{Palabras clave:} lógica simbólica, lógica proposicional, cuantificadores, teoría de conjuntos,
+Vue, educación interactiva, ingeniería de software educativa.
+
+\newpage
+
+\section{Introducción}
+La lógica simbólica constituye el fundamento del razonamiento formal en ingeniería de sistemas. El
+curso MATG1001 plantea como resultado de aprendizaje el desarrollo de la capacidad de ``plantear
+estrategias de solución a problemas de su entorno, usando el razonamiento lógico y analítico en
+diversos contextos'' \cite{silabo}. Sin embargo, la apropiación de conceptos como la validez de
+inferencias o el alcance de los cuantificadores suele ser abstracta para el estudiante cuando se
+aborda únicamente desde la teoría.
+
+LogiLearn nace para cerrar esa brecha: una plataforma donde cada tema del sílabo es un motor
+computacional verificable. El objetivo de este informe es (a) documentar qué se construyó, (b) cómo
+se construyó y (c) qué aprendizajes se derivaron, sirviendo a la vez de memoria académica y de manual
+de uso.
+
+\subsection{Resultados de aprendizaje del sílabo}
+\begin{itemize}
+  \item \textbf{D1:} Identifica y aplica las diversas definiciones, teorías y conceptos de la lógica proposicional.
+  \item \textbf{D2:} Interpreta y aplica las definiciones, teorías y conceptos de la inferencia lógica.
+  \item \textbf{D3:} Discute y analiza los conceptos de la teoría de conjuntos y lo aplica a la lógica simbólica.
+\end{itemize}
+
+\subsection{Formulación del problema}
+Los estudiantes enfrentan tres barreras: (i) dificultad para verificar manualmente tablas de verdad
+de más de tres variables; (ii) ausencia de retroalimentación inmediata al aplicar reglas de
+inferencia; y (iii) falta de herramientas para practicar cuantificadores y conjuntos en español.
+LogiLearn aborda las tres con motores automatizados.
+
+\section{Marco Tecnológico}
+La plataforma se construyó sobre un stack moderno, tipado y orientado a componentes:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Tecnología & Rol & Versión \\
+\midrule
+Vue 3 & Framework de componentes (SFC \texttt{.vue}) & 3.5+ \\
+Vite & Bundler y servidor de desarrollo & 6.x \\
+TypeScript & Tipado estático & 5.x \\
+Tailwind CSS v4 & Estilos utilitarios & 4.x \\
+Vue Router & Enrutamiento & 4.x \\
+Vitest & Pruebas unitarias & 4.x \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El proyecto se despliega mediante \textbf{GitHub Pages} (producción) y \textbf{Netlify} (vistas
+previas de PR), lo que garantiza integración continua y retroalimentación temprana. El tipado
+estático (TypeScript) fue decisivo para reducir errores en los motores lógicos.
+
+\section{Marco Teórico}
+\subsection{Lógica proposicional}
+Una proposición es una afirmación con valor de verdad V o F. Los conectivos son negación ($\neg$),
+conjunción ($\wedge$), disyunción ($\vee$), implicación ($\to$) y bicondicional ($\leftrightarrow$).
+Una fórmula es \textbf{tautología} si es V para toda asignación, \textbf{contradicción} si es F para
+toda asignación, y \textbf{contingencia} en otro caso.
+
+\subsection{Inferencia lógica}
+Una inferencia es válida si, siendo verdaderas las premisas, la conclusión es necesariamente verdadera
+(regla de separación o \textit{Modus Ponens}: $p,\; p\to q \vdash q$). Otras reglas: \textit{Modus
+Tollens} ($\neg q,\; p\to q \vdash \neg p$) y \textit{Silogismo Hipotético} ($p\to q,\; q\to r \vdash
+p\to r$).
+
+\subsection{Cuantificadores}
+El cuantificador universal $\forall x\, P(x)$ es verdadero si $P(x)$ lo es para todo $x$ en el
+dominio $D$; el existencial $\exists x\, P(x)$ lo es si hay al menos un testigo. Leyes de De Morgan
+para cuantificadores:
+\[
+  \neg(\forall x\, P(x)) \equiv \exists x\, \neg P(x), \qquad
+  \neg(\exists x\, P(x)) \equiv \forall x\, \neg P(x).
+\]
+
+\subsection{Teoría de conjuntos}
+Operaciones básicas: unión ($A\cup B$), intersección ($A\cap B$), diferencia ($A-B$), complemento
+($A^c$) y diferencia simétrica ($A\triangle B$). La teoría de conjuntos se vincula con la lógica
+mediante las leyes de De Morgan conjuntistas: $(A\cup B)^c = A^c\cap B^c$ y $(A\cap B)^c = A^c\cup B^c$.
+
+\section{Metodología}
+El trabajo se organizó en \textbf{cuatro equipos de dominio}, cada uno responsable de un módulo del
+sílabo:
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+Equipo & Sublíder & Tema & Carpeta \\
+\midrule
+Sinergia & Alexa & Tablas de Verdad & \texttt{src/pages/tablas} \\
+Los Hijos de Linus & Arom & Inferencias & \texttt{src/pages/inferencias} \\
+Modus Innova & Cristian & Cuantificadores & \texttt{src/pages/cuantificadores} \\
+Linus & Jordy & Conjuntos & \texttt{src/pages/conjuntos} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Ramificaciones y flujo Git}
+Se adoptó un modelo de ramas por funcionalidad. Cada equipo desarrolló en su rama y consolidó
+mediante \textbf{Pull Requests (PR)} revisados por el líder de proyecto. La integración final se
+realizó en la rama \texttt{feat/integrate-sinergia-modus} (PR \#16), donde se unificaron motores,
+branding y pruebas. Las ramas de trabajo previas (PR \#8, \#14, \#15) se cerraron al integrarse
+manualmente.
+
+\subsection{Calidad y pruebas}
+Cada motor cuenta con pruebas unitarias (Vitest). La suite final suma \textbf{175 pruebas
+funcionales} que validan parsers, evaluadores, leyes lógicas y componentes. El build de producción se
+verifica con \texttt{vue-tsc} + \texttt{vite build}. Distribución de pruebas por módulo:
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Módulo & Pruebas \\
+\midrule
+Tablas de verdad & 39 \\
+Inferencias & 24 \\
+Cuantificadores & 30 \\
+Conjuntos & 14 \\
+Solver/parser & 22 \\
+UI / integración & 46 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Gestión de riesgos}
+\begin{itemize}
+  \item \textit{Riesgo:} discrepancias de formato entre equipos $\to$ mitigado con componentes UI compartidos.
+  \item \textit{Riesgo:} errores en motores lógicos $\to$ mitigado con pruebas unitarias por cada ley.
+  \item \textit{Riesgo:} pérdida de avances $\to$ mitigado con PRs y revisión centralizada.
+\end{itemize}
+
+\section{Arquitectura y Desarrollo}
+La lógica se aisló en \texttt{src/lib/} (motores compartidos) y la interfaz en \texttt{src/pages/} y
+\texttt{src/components/ui/} (Button, Card, Badge, ToggleSwitch, OptionPill). A continuación se
+describen los módulos.
+
+\subsection{Tablas de Verdad (Equipo Sinergia)}
+Motor que parsea proposiciones, recolecta variables, genera combinaciones y evalúa subexpresiones.
+\textbf{D1.} Clasifica cada fórmula como tautología, contradicción o contingencia. Incluye 30+
+ejercicios (identificar, clasificar, leyes, quiz) y verificación en vivo.
+
+\subsection{Inferencias (Equipo Los Hijos de Linus)}
+Demostrador con trazabilidad y diagnóstico. Valida reglas como Modus Ponens, Modus Tollens y
+Silogismo Hipotético, mostrando cada paso. \textbf{D2.} El estudiante interpreta y aplica la
+inferencia lógica con retroalimentación inmediata.
+
+\subsection{Cuantificadores (Equipo Modus Innova)}
+Evalúa $\forall$ y $\exists$ sobre dominios finitos, con rangos encadenados (\texttt{0 < x < 90}),
+predicados libres (\texttt{x \% 2 === 0}), negación De Morgan profunda y un \textbf{resolutor paso a
+paso} (Bicondicional $\to$ Implicación $\to$ De Morgan $\to$ Doble Negación $\to$ Distribución). La
+pestaña ``Distribución y Leyes'' permite resolver fórmulas de predicados automáticamente.
+
+\subsection{Conjuntos (Equipo Linus)}
+Operaciones básicas (unión, intersección, diferencia, complemento, diferencia simétrica) y familia de
+conjuntos, con diagramas de Venn interactivos. \textbf{D3.} Aplica la teoría de conjuntos a la lógica
+simbólica.
+
+\subsection{Aprender y Progreso}
+Vista de recorrido guiado por concepto (definición $\to$ ejemplo $\to$ ejercicio $\to$ solución) con
+verificación en vivo, y un store de progreso con \texttt{localStorage} que sugiere temas débiles.
+
+\section{Manual de Uso}
+\begin{enumerate}
+  \item \textbf{Inicio:} la landing presenta los módulos y la información del curso.
+  \item \textbf{Tablas de Verdad:} escribe una fórmula (ej. \texttt{p \^{} q}), inserta conectivos y
+    genera la tabla; revisa la clasificación.
+  \item \textbf{Inferencias:} introduce premisas y conclusión; el sistema valida la inferencia con trazabilidad.
+  \item \textbf{Cuantificadores:} elige $\forall$/$\exists$, define dominio (lista o rango) y
+    predicado; usa ``Distribución y Leyes'' para resolver fórmulas paso a paso.
+  \item \textbf{Conjuntos:} define conjuntos y aplica operaciones; observa el diagrama de Venn.
+  \item \textbf{Aprender:} sigue el recorrido guiado por conectores y leyes.
+  \item \textbf{Ejercicios / Progreso:} practica y consulta tu avance y recomendaciones.
+\end{enumerate}
+
+\section{Resultados y Aprendizajes}
+El proyecto cubrió el 100\% del sílabo con motores funcionales y 175 pruebas. Los aprendizajes por
+equipo fueron:
+\begin{itemize}
+  \item \textbf{Sinergia:} diseño de parsers recursivos y clasificación de fórmulas; comprensión de validez.
+  \item \textbf{Los Hijos de Linus:} trazabilidad de inferencias, manejo de errores y formalización de reglas.
+  \item \textbf{Modus Innova:} cuantificadores, De Morgan y reescritura de fórmulas; pensamiento algorítmico.
+  \item \textbf{Linus:} modelado de conjuntos y visualización; conexión conjuntos--lógica.
+\end{itemize}
+
+Estos resultados atañen directamente a \textbf{D1} (lógica proposicional), \textbf{D2} (inferencia) y
+\textbf{D3} (conjuntos), demostrando que la construcción de software refuerza la comprensión teórica.
+
+\section{Limitaciones y Trabajo Futuro}
+\textbf{Limitaciones:} dominios finitos (no se evalúan cuantificadores sobre infinitos); predicados
+libres restringidos a expresiones seguras; la inferencia valida reglas, no demuestra teoremas
+arbitrarios.
+
+\textbf{Trabajo futuro:} (i) exportación LaTeX de tablas y demostraciones; (ii) más ejercicios y modo
+profesor con calificación; (iii) soporte de lógica de primer orden completa; (iv) tutor adaptativo
+basado en el store de progreso.
+
+\section{Conclusiones}
+LogiLearn demuestra que la implementación de una plataforma interactiva potencia el aprendizaje de la
+lógica simbólica. La metodología por equipos y PRs fomentó trabajo colaborativo y calidad. La
+cobertura del 100\% del sílabo con 175 pruebas valida la robustez de los motores. Se recomienda la
+adopción de enfoques similares en otros cursos de fundamentos.
+
+\begin{thebibliography}{9}
+\bibitem[UNPRG, 2026]{silabo} Universidad Nacional Pedro Ruiz Gallo. (2026). \textit{Sílabo de Lógica Simbólica} (MATG1001, 2026 I).
+\bibitem[Copi y Cohen, 2009]{copi} Copi, I. \& Cohen, C. (2009). \textit{Introducción a la lógica} (14.ª ed.). Pearson.
+\bibitem[Vue, 2026]{vue} Vue.js. (2026). \textit{Documentación oficial}. \url{https://vuejs.org}
+\bibitem[Vite, 2026]{vite} Vite. (2026). \textit{Documentación oficial}. \url{https://vitejs.dev}
+\bibitem[Tailwind, 2026]{tw} Tailwind CSS. (2026). \textit{Documentación oficial}. \url{https://tailwindcss.com}
+\bibitem[Vitest, 2026]{vitest} Vitest. (2026). \textit{Documentación oficial}. \url{https://vitest.dev}
+\end{thebibliography}
+
+\end{document}

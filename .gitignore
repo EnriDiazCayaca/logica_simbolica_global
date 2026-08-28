@@ -19,6 +19,9 @@
 /out/
 /.next/
 
+# legacy / tooling lockfiles
+skills-lock.json
+
 # misc
 .DS_Store
 *.pem
@@ -38,3 +41,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.gz
