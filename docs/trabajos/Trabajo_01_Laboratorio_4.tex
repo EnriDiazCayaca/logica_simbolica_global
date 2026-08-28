@@ -1,0 +1,202 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[a4paper,margin=2.4cm,headheight=14pt]{geometry}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{graphicx}
+
+\definecolor{navy}{HTML}{0F2D8C}
+\definecolor{accent}{HTML}{2563EB}
+\definecolor{lightbg}{HTML}{EEF2FF}
+\definecolor{answerbg}{HTML}{ECFDF5}
+\definecolor{answerbd}{HTML}{10B981}
+
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=accent,citecolor=navy}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{navy}{\textbf{UNPRG — Lógica Simbólica}}}
+\fancyhead[R]{\small\textcolor{gray}{Trabajo 01 · Lab 4}}
+\fancyfoot[C]{\small\textcolor{gray}{\thepage}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{navy}\leaders\hrule height \headrulewidth\hfill}}
+
+\newcommand{\respuesta}[1]{%
+  \par\medskip\noindent
+  \fcolorbox{answerbd}{answerbg}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+      \small\textbf{\textcolor{answerbd}{Respuesta:}} #1
+    }%
+  }\par\medskip
+}
+
+\newcommand{\datosbox}[1]{%
+  \noindent\colorbox{lightbg}{%
+    \parbox{\dimexpr\linewidth-2\fboxsep}{%
+      \small #1
+    }%
+  }\par\medskip
+}
+
+\begin{document}
+
+% ── PORTADA ────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{0.4cm}
+  {\large\scshape\textcolor{navy}{Universidad Nacional Pedro Ruiz Gallo}\par}
+  \vspace{0.15cm}
+  {\small\textcolor{gray}{Facultad de Ingeniería Civil, Sistemas y Arquitectura}\par}
+  \vspace{0.35cm}
+  {\color{navy}\rule{\linewidth}{1.2pt}\par}
+  \vspace{0.9cm}
+  {\Huge\textbf{\textcolor{navy}{Lógica Simbólica}}\par}
+  \vspace{0.35cm}
+  {\Large\textcolor{accent}{Trabajo 01 — Resolución del Laboratorio 4}\par}
+  \vspace{0.2cm}
+  {\large\textcolor{gray}{Conjuntos y combinatoria}\par}
+  \vspace{1.1cm}
+  \begin{center}
+    \begin{tabular}{c}
+      \toprule
+      \small\textcolor{navy}{\textbf{Integrantes}} \\ \midrule
+      \small LUIS ENRIQUE CRISTOBAL DIAZ CAYACA \\
+      \small MAURICIO MILLET FERNANDEZ LIZARZABURU \\
+      \bottomrule
+    \end{tabular}
+  \end{center}
+  \vspace{0.7cm}
+  {\small\textbf{Ciclo:} II\par}
+  \vspace{0.15cm}
+  {\small\textbf{Profesor:} Dr. Mardo Victor Gonzales Herrera\par}
+  \vspace{1.6cm}
+  {\small\textcolor{gray}{26 de agosto de 2026 — Lambayeque, Perú}\par}
+  \vfill
+\end{titlepage}
+
+% ── CONTENIDO ─────────────────────────────────────────────────────
+\section*{\textcolor{navy}{Resolución de ejercicios}}
+\subsection*{\textcolor{navy}{Conjuntos y combinatoria}}
+
+% ── EJ 1 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{1. Jugadores de fútbol, básquet y béisbol}}
+\datosbox{%
+  \textbf{Datos:} Fútbol: 48 jugadores. Básquet: 25 jugadores. Béisbol: 30 jugadores. Total: 68 jugadores. En los tres deportes: 6 jugadores.%
+}
+Sea $x$ la cantidad de jugadores que figuran exactamente en dos deportes y $y$ la cantidad que figura exactamente en un deporte.
+
+Como hay 68 jugadores:
+\[
+  x + y + 6 = 68 \qquad\Longrightarrow\qquad x + y = 62 \tag{1}
+\]
+
+Contamos las participaciones:
+\[
+  48 + 25 + 30 = 103
+\]
+Los que están en un deporte cuentan una vez, los que están en dos cuentan dos veces y los que están en los tres cuentan tres veces:
+\[
+  y + 2x + 3(6) = 103 \;\Longrightarrow\; y + 2x + 18 = 103 \;\Longrightarrow\; y + 2x = 85 \tag{2}
+\]
+
+Restando (1) de (2):
+\[
+  x = 23
+\]
+\respuesta{23 jugadores figuran exactamente en dos deportes.}
+
+% ── EJ 2 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{2. Conjuntos $A$ y $B$}}
+\datosbox{\textbf{Datos:} $|A \cup B| = 24,\; |A - B| = 10,\; |B - A| = 6$}
+Usamos:
+\[
+  |A \cup B| = |A - B| + |B - A| + |A \cap B|
+\]
+Entonces:
+\[
+  24 = 10 + 6 + |A \cap B| \;\Longrightarrow\; |A \cap B| = 8
+\]
+Por tanto:
+\[
+  |A| = |A - B| + |A \cap B| = 10 + 8 = 18
+\]
+\[
+  |B| = |B - A| + |A \cap B| = 6 + 8 = 14
+\]
+Calculamos:
+\[
+  5|A| - 4|B| = 5(18) - 4(14) = 90 - 56 = 34
+\]
+\respuesta{34.}
+
+% ── EJ 3 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{3. Conjuntos $A$ y $B$ definidos por comprensión}}
+\[
+  A = \{2x \mid x \in \mathbb{Z},\; 3 < x < 9\} \qquad
+  B = \{3n \mid n \in \mathbb{Z},\; 5 < n < 10\}
+\]
+Los valores enteros de $x$ son $x = 4,5,6,7,8$. Por tanto:
+\[
+  A = \{8, 10, 12, 14, 16\}
+\]
+Los valores enteros de $n$ son $n = 6,7,8,9$. Por tanto:
+\[
+  B = \{18, 21, 24, 27\}
+\]
+No tienen elementos en común:
+\[
+  A \cap B = \varnothing \qquad |A \cap B| = 0
+\]
+Además $|A \cup B| = 5 + 4 = 9$. Entonces:
+\[
+  |A \cap B| + |A \cup B| = 0 + 9 = 9
+\]
+\respuesta{9.}
+
+% ── EJ 4 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{4. Escoger tres números del 1 al 9 sin consecutivos}}
+Tenemos los números $1,2,3,4,5,6,7,8,9$. Queremos escoger 3 números sin que haya números consecutivos.
+
+Usamos la fórmula:
+\[
+  \binom{n - r + 1}{r} \qquad\text{con } n=9,\; r=3
+\]
+\[
+  \binom{9-3+1}{3} = \binom{7}{3} = \frac{7!}{3!\,4!} = \frac{7\cdot 6\cdot 5}{3\cdot 2\cdot 1} = 35
+\]
+\respuesta{35 formas.}
+
+% ── EJ 5 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{5. Palabras con las cinco vocales}}
+Las vocales son $A, E, I, O, U$.
+
+\subsubsection*{a) Palabras de longitud 4 sin repetir vocales}
+Debemos escoger y ordenar 4 de las 5 vocales:
+\[
+  P(5,4) = \frac{5!}{(5-4)!} = 5! = 120
+\]
+\respuesta{120 palabras.}
+
+\subsubsection*{b) Palabras de longitud 5 sin repetir vocales}
+Se utilizan las cinco vocales:
+\[
+  P(5,5) = 5! = 5\cdot 4\cdot 3\cdot 2\cdot 1 = 120
+\]
+\respuesta{120 palabras.}
+
+% ── EJ 6 ──────────────────────────────────────────────────────────
+\subsection*{\textcolor{accent}{6. Comité de tres alumnos}}
+En una clase hay 35 alumnos y se desea elegir un comité de 3 alumnos. Como el orden no importa, usamos combinación:
+\[
+  \binom{35}{3} = \frac{35!}{3!\,32!} = \frac{35\cdot 34\cdot 33}{3\cdot 2\cdot 1} = \frac{39270}{6} = 6545
+\]
+\respuesta{6545 comités diferentes.}
+
+\end{document}
