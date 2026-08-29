@@ -12,9 +12,10 @@ import { construirTrazabilidad } from '@/lib/trazabilidad/historial'
 
 import FormularioInferencia from '@/components/inferencias/FormularioInferencia.vue'
 import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguajeNatural.vue'
+import ArbolAST from '@/components/inferencias/ArbolAST.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
-import { History, Trash2 } from '@lucide/vue'
+import { History, Trash2, Keyboard, BookOpen, TreePine, Network } from '@lucide/vue'
 
 interface ItemHistorial {
   id: string
@@ -25,7 +26,7 @@ interface ItemHistorial {
 }
 
 // Pestaña activa en la columna izquierda
-const activeTab = ref<'simbolos' | 'lenguaje'>('simbolos')
+const activeTab = ref<'simbolos' | 'lenguaje' | 'arbol'>('simbolos')
 
 // Estado de fórmulas sincronizado entre pestañas
 const formulaData = ref<{ premisas: string[]; conclusion: string }>({
@@ -174,12 +175,19 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           >
             &larr; Volver al Inicio
           </router-link>
-          <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
-            Demostrador de Inferencias Lógicas
-          </h1>
-          <p class="text-sm text-neutral-600 mt-1.5">
-            Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural y valida la deducción lógica paso a paso.
-          </p>
+          <div class="flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
+              <Network :size="22" />
+            </span>
+            <div>
+              <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+                Demostrador de Inferencias Lógicas
+              </h1>
+              <p class="text-sm text-neutral-600 mt-0.5">
+                Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural, explora su árbol de nodos y valida la deducción paso a paso.
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- Botón de Historial Local -->
@@ -242,31 +250,43 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
       <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural) -->
         <div class="lg:col-span-6 space-y-4">
-          <!-- Switcher de Pestañas -->
-          <div class="flex items-center gap-1.5 p-1 bg-neutral-200/70 rounded-xl border border-neutral-200 w-fit">
+          <!-- Switcher de Pestañas (Segmented Control) -->
+          <div class="inline-flex items-center gap-1 p-1 bg-neutral-200/80 rounded-2xl border border-neutral-200 shadow-inner w-full sm:w-fit overflow-x-auto">
             <button
               type="button"
               @click="activeTab = 'simbolos'"
               :class="[
-                'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer',
+                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
                 activeTab === 'simbolos'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
               ]"
             >
-              <span>⌨️</span> Simbología Formal
+              <Keyboard :size="14" /> Simbología Formal
             </button>
             <button
               type="button"
               @click="activeTab = 'lenguaje'"
               :class="[
-                'px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer',
+                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
                 activeTab === 'lenguaje'
-                  ? 'bg-white text-blue-700 shadow-xs'
-                  : 'text-neutral-600 hover:text-neutral-900'
+                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
               ]"
             >
-              <span>📖</span> Lenguaje Natural
+              <BookOpen :size="14" /> Lenguaje Natural
+            </button>
+            <button
+              type="button"
+              @click="activeTab = 'arbol'"
+              :class="[
+                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
+                activeTab === 'arbol'
+                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
+                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
+              ]"
+            >
+              <TreePine :size="14" /> Árbol de Nodos
             </button>
           </div>
 
@@ -289,6 +309,16 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               :premisas="formulaData.premisas"
               :conclusion="formulaData.conclusion"
             />
+          </div>
+
+          <!-- Contenido de Pestaña 3: Árbol de Nodos (AST) -->
+          <div v-show="activeTab === 'arbol'">
+            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+              <ArbolAST
+                :premisas="formulaData.premisas"
+                :conclusion="formulaData.conclusion"
+              />
+            </section>
           </div>
         </div>
 

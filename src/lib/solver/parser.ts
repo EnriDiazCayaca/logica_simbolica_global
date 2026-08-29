@@ -220,3 +220,23 @@ export function parsearExpresion(entrada: string): NodoExpresion {
   const tokens = tokenizar(entrada);
   return construirAST(tokens);
 }
+
+/**
+ * Normaliza una expresión escrita con notación matemática (→, ∧, ∨, ¬, ↔, △, ↓, ↑)
+ * a las palabras clave internas del motor lógico (ENTONCES, Y, O, NO, ...).
+ * Se usa tanto al enviar el formulario como al visualizar el árbol, para que el
+ * parser reciba siempre el formato canónico.
+ */
+export function normalizarExpresion(texto: string): string {
+  return texto
+    .replace(/<->|<=>|↔|⟺/g, ' SI_Y_SOLO_SI ')
+    .replace(/->|=>|→|⟹/g, ' ENTONCES ')
+    .replace(/\^|∧|&&/g, ' Y ')
+    .replace(/∨|\|\|/g, ' O ')
+    .replace(/~|¬|!/g, ' NO ')
+    .replace(/△|∆|▲|⊕|⊻/g, ' O_EXCLUSIVA ')
+    .replace(/↓/g, ' NI ')
+    .replace(/↑/g, ' INCOMPATIBLE ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
