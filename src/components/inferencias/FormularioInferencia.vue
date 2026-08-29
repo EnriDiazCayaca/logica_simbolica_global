@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
 import type { InferenciaRequest } from '@/types/inferencias'
+import { normalizarExpresion } from '@/lib/solver/parser'
 import Button from '@/components/ui/Button.vue'
 
 const props = defineProps<{
@@ -62,18 +63,9 @@ watch([premisasText, conclusionText], () => {
 
 /**
  * Normaliza símbolos matemáticos a las palabras clave internas del motor lógico.
+ * (Delegado a la función compartida del parser para evitar duplicación.)
  */
-const normalizarSintaxis = (linea: string): string => {
-  return linea
-    .replace(/<->|<=>|↔|⟺/g, ' SI_Y_SOLO_SI ')
-    .replace(/->|=>|→|⟹/g, ' ENTONCES ')
-    .replace(/\^|∧|&&/g, ' Y ')
-    .replace(/∨|\|\|/g, ' O ')
-    .replace(/~|¬|!/g, ' NO ')
-    .replace(/△|∆|▲|⊕|⊻/g, ' O_EXCLUSIVA ')
-    .replace(/\s+/g, ' ')
-    .trim()
-}
+const normalizarSintaxis = (linea: string): string => normalizarExpresion(linea)
 
 /**
  * Conectivos y variables
