@@ -1,0 +1,245 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\geometry{top=3cm, bottom=3cm, left=2.5cm, right=2.5cm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{float}
+
+% --- Configuracion de Colores Estilo Code ---
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codeblue}{rgb}{0.1,0.4,0.8}
+\definecolor{backcolour}{rgb}{0.96,0.96,0.96}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{orange},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% --- Configuracion de Encabezado y Pie ---
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Equipo Linus - Logica Simbolica}
+\rhead{Informe de Proyecto}
+\cfoot{\thepage}
+
+\begin{document}
+
+% ==================== PORTADA ====================
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\scshape\LARGE Universidad Nacional Pedro Ruiz Gallo \par}
+    \vspace{1cm}
+    {\scshape\Large Facultad de Ingenieria Civil, de Sistemas y de Arquitectura \par}
+    \vspace{0.5cm}
+    {\large Escuela Profesional de Ingenieria de Sistemas \par}
+    \vspace{1.5cm}
+    
+    {\Huge\bfseries Sistema Web Interactivo de Teoria de Conjuntos y Diagramas de Venn \par}
+    \vspace{1cm}
+    {\Large\bfseries Informe Tecnico Final del Proyecto \par}
+    \vspace{2cm}
+    
+    {\large\bfseries Integrantes - Equipo Linus (Grupo 4):\par}
+    \vspace{0.3cm}
+    {\large
+    Jordy Jose (Sublider) \\
+    Junior \\
+    Mike \\
+    Sergio \\
+    Fernando \\
+    Alejandro \par}
+    
+    \vspace{2cm}
+    {\large\bfseries Docente:\par}
+    {\large Dr. Mardo Victor Gonzales Herrera \par}
+    
+    \vfill
+    {\large Lambayeque, 2026 \par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ==================== SECCION 1 ====================
+\section{Introduccion y Propuesta del Proyecto (Sprint 1)}
+El aprendizaje de la Teoria de Conjuntos representa una base fundamental en la logica matematica y la ciencia de la computacion. No obstante, la visualizacion espacial de las operaciones (como uniones, intersecciones complejas y complementos) y el calculo manual del Conjunto Potencia $2^N$ suelen ser fuentes de confusion academica.
+
+Para mitigar este problema, el \textbf{Equipo Linus} desarrollo una herramienta de software interactiva y didactica basada en la web. La funcionalidad se diseno a partir de bocetos y maquetas preliminares de la interfaz que sirvieron de base para estructurar el software final.
+
+\begin{figure}[H]
+    \centering
+    % Descomentar y definir el archivo de imagen cuando lo tengas
+    % \includegraphics[width=0.7\textwidth]{boceto_propuesta.png}
+    \caption{Diseno en maqueta inicial (Wireframe) del proyecto.}
+    \label{fig:boceto}
+\end{figure}
+
+% ==================== SECCION 2 ====================
+\section{Arquitectura del Software y Flujo de Trabajo (Git Flow)}
+El proyecto se diseño bajo una arquitectura desacoplada para asegurar escalabilidad y modularidad, separando la logica pura (el motor) de la interfaz de usuario. 
+
+\subsection{Estructura de Directorios}
+La organizacion de los archivos creados en el repositorio es la siguiente:
+\begin{itemize}
+    \item \textbf{Capa Logica:} \texttt{src/lib/sets/operations.ts}
+    \item \textbf{Pruebas Unitarias:} \texttt{src/lib/sets/operations.test.ts}
+    \item \textbf{Capa de Interfaz:} \texttt{src/pages/conjuntos/index.vue}
+    \item \textbf{Documentacion de Avance:} \texttt{TAREAS/02\_Motor/linus/avance.md}, \texttt{TAREAS/03\_UI/linus/avance.md}, \texttt{TAREAS/04\_Deploy/linus/uso.md}
+\end{itemize}
+
+\subsection{Flujo de Git por Ramas}
+Para mantener el repositorio limpio, cada fase se desarrollo en una rama de Git independiente antes de enviarse al repositorio principal mediante Pull Requests (PR):
+\begin{itemize}
+    \item \texttt{equipo-4-linus-propuesta} (Sprint 1)
+    \item \texttt{equipo-4-linus-motor} (Sprint 2)
+    \item \texttt{equipo-4-linus-ui} (Sprint 3)
+    \item \texttt{equipo-4-linus-deploy} (Sprint 4)
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{captura_ramas_git.png}
+    \caption{Historial de desarrollo secuencial por ramas del Equipo Linus.}
+    \label{fig:ramas}
+\end{figure}
+
+% ==================== SECCION 3 ====================
+\section{Capa Logica: El Motor Matematico (Sprint 2)}
+El motor logico realiza todos los calculos matematicos de conjuntos. Se implemento en TypeScript de forma estricta (tipado estricto) utilizando la estructura de datos nativa \texttt{Set} de ES6.
+
+\subsection{Ventaja del Tipo Set}
+En lugar de arreglos comunes, se seleccionaron \texttt{Set} debido a que:
+\begin{enumerate}
+    \item Filtran automaticamente elementos repetidos.
+    \item La busqueda de elementos con \texttt{.has()} tiene una complejidad temporal de $O(1)$ (tiempo constante) gracias al uso de tablas hash internas.
+\end{enumerate}
+
+\subsection{Codigo Fuente del Motor Logico}
+A continuacion, se detalla el codigo matematico de \texttt{src/lib/sets/operations.ts}:
+
+\begin{lstlisting}[language=TypeScript, caption=Codigo de operaciones de conjuntos]
+// src/lib/sets/operations.ts
+
+export function union<T>(a: Set<T>, b: Set<T>): Set<T> {
+  return new Set([...a, ...b]);
+}
+
+export function interseccion<T>(a: Set<T>, b: Set<T>): Set<T> {
+  return new Set([...a].filter(x => b.has(x)));
+}
+
+export function diferencia<T>(a: Set<T>, b: Set<T>): Set<T> {
+  return new Set([...a].filter(x => !b.has(x)));
+}
+
+export function complemento<T>(universo: Set<T>, a: Set<T>): Set<T> {
+  return diferencia(universo, a);
+}
+
+export function potencia<T>(a: Set<T>): Set<Set<T>> {
+  const elementos = Array.from(a);
+  const subconjuntos = new Set<Set<T>>();
+  const numSubconjuntos = Math.pow(2, elementos.length);
+  for (let i = 0; i < numSubconjuntos; i++) {
+    const subconjunto = new Set<T>();
+    for (let j = 0; j < elementos.length; j++) {
+      if ((i & (1 << j)) !== 0) {
+        subconjunto.add(elementos[j]);
+      }
+    }
+    subconjuntos.add(subconjunto);
+  }
+  return subconjuntos;
+}
+\end{lstlisting}
+
+% ==================== SECCION 4 ====================
+\section{Capa Visual: Interfaz con Vibe Duolingo (Sprint 3)}
+La pantalla interactiva en \texttt{index.vue} conecta el motor logico con el usuario final de manera atractiva y sencilla, adoptando el diseno de estilo ``Duolingo'' (color azul de acento, bordes redondeados amplios y tarjetas limpias).
+
+\subsection{Reactividad en Vue 3}
+\begin{itemize}
+    \item \textbf{\texttt{ref}:} Usado para registrar el texto ingresado por el usuario (Inputs del Universo, A y B).
+    \item \textbf{\texttt{computed}:} Propiedades calculadas en memoria con cache de procesamiento. Permiten actualizar el resultado matematico y el diagrama SVG automaticamente en tiempo real solo cuando cambian los inputs de origen.
+\end{itemize}
+
+\subsection{Iluminacion Dinamica del Diagrama de Venn (SVG)}
+En lugar de importar una libreria pesada de graficos, se programo un diagrama vectorial SVG nativo. El color de las regiones cambia en tiempo real mediante la clase reactiva \texttt{vennColores}, asignando opacidades al circulo de la izquierda, derecha o a la interseccion segun la operacion seleccionada.
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.8\textwidth]{captura_interfaz.png}
+    \caption{Captura de pantalla de la interfaz interactiva y el Diagrama de Venn en accion.}
+    \label{fig:interfaz}
+\end{figure}
+
+% ==================== SECCION 5 ====================
+\section{Pruebas de Calidad del Codigo (Sprint 4)}
+Para asegurar que las matematicas de la aplicacion sean infalibles y no presenten errores logicos, se diseno una bateria de 14 pruebas unitarias con la suite de testing \texttt{Vitest}.
+
+Estas pruebas comprueban leyes matematicas fundamentales, tales como:
+\begin{itemize}
+    \item Ley conmutativa: $A \cup B = B \cup A$
+    \item Ley distributiva: $A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    % \includegraphics[width=0.7\textwidth]{captura_pruebas.png}
+    \caption{Ejecucion exitosa de la bateria de pruebas logicas.}
+    \label{fig:tests}
+\end{figure}
+
+% ==================== SECCION 6 ====================
+\section{Participacion y Aportes del Equipo}
+La distribucion de responsabilidades en el desarrollo de los entregables se resume en la siguiente tabla:
+
+\begin{table}[H]
+    \centering
+    \caption{Participacion y roles de cada integrante del equipo.}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Integrante} & \textbf{Rol Principal} & \textbf{Contribucion Clave} \\
+        \midrule
+        Jordy Jose & Sublider / Git Manager & Gestion de ramas, fusiones y desarrollo de UI. \\
+        Junior & Analista de Logica & Verificacion del modulo de propiedades y pertenencia. \\
+        Mike & Ingeniero de Pruebas & Implementacion de casos limite en Vitest. \\
+        Sergio & Desarrollador Frontend & Implementacion de la visualizacion SVG del diagrama. \\
+        Fernando & Documentador Tecnico & Elaboracion del manual de usuario y documentacion. \\
+        Alejandro & Disenador de Software & Modelado inicial del comportamiento del sistema. \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+% ==================== SECCION 7 ====================
+\section{Conclusiones}
+\begin{enumerate}
+    \item Se logro construir una aplicacion web interactiva que traduce conceptos matematicos abstractos de la teoria de conjuntos en graficos dinamicos comprensibles.
+    \item La separacion limpia entre la logica matematica (\texttt{operations.ts}) y la presentacion visual (\texttt{index.vue}) demostro ser clave para el desarrollo colaborativo y la ejecucion de pruebas robustas sin acoplamiento grafico.
+\end{enumerate}
+
+\end{document}
