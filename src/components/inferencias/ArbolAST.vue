@@ -4,7 +4,7 @@ import { parsearExpresion, normalizarExpresion } from '@/lib/solver/parser'
 import { META_OPERADOR, COLOR_NODO, estadisticasNodo } from '@/lib/solver/astVisual'
 import type { NodoExpresion } from '@/lib/solver/types'
 import NodoArbol from './NodoArbol.vue'
-import { Maximize2, Network, X } from '@lucide/vue'
+import { Maximize2, Network, X, ZoomIn, ZoomOut, RotateCcw } from '@lucide/vue'
 
 interface Props {
   premisas: string[]
@@ -84,6 +84,18 @@ const modelo = computed(() => {
 const leyenda = computed(() =>
   Object.values(META_OPERADOR).map((m) => ({ ...m, clase: COLOR_NODO[m.color] }))
 )
+
+// Control de Zoom y Escala
+const escala = ref(1)
+const aumentarZoom = () => {
+  if (escala.value < 1.6) escala.value = Number((escala.value + 0.1).toFixed(1))
+}
+const reducirZoom = () => {
+  if (escala.value > 0.6) escala.value = Number((escala.value - 0.1).toFixed(1))
+}
+const reiniciarZoom = () => {
+  escala.value = 1
+}
 
 // Control del modal de vista completa
 const mostrarCompleto = ref(false)
@@ -179,24 +191,62 @@ watch(
       </ul>
     </div>
 
-    <!-- Estadísticas globales del diagrama -->
+    <!-- Estadísticas globales del diagrama & Controles de Zoom -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="flex flex-wrap items-center gap-2 text-[10px] font-medium text-neutral-500"
+      class="flex flex-wrap items-center justify-between gap-3 text-[10px] font-medium text-neutral-500"
     >
-      <span class="rounded bg-neutral-100 px-2 py-0.5">📦 {{ modelo.total }} proposiciones</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">⦿ {{ modelo.stats.nodos }} nodos</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">↕ prof. máx {{ modelo.stats.profundidad }}</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">◍ {{ modelo.stats.variables }} variables</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">⚇ {{ modelo.stats.operadores }} conectivos</span>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="rounded bg-neutral-100 px-2 py-0.5">📦 {{ modelo.total }} proposiciones</span>
+        <span class="rounded bg-neutral-100 px-2 py-0.5">⦿ {{ modelo.stats.nodos }} nodos</span>
+        <span class="rounded bg-neutral-100 px-2 py-0.5">↕ prof. máx {{ modelo.stats.profundidad }}</span>
+        <span class="rounded bg-neutral-100 px-2 py-0.5">◍ {{ modelo.stats.variables }} variables</span>
+        <span class="rounded bg-neutral-100 px-2 py-0.5">⚇ {{ modelo.stats.operadores }} conectivos</span>
+      </div>
+
+      <!-- Controles de Zoom -->
+      <div class="flex items-center gap-1 bg-neutral-100/90 rounded-lg p-1 border border-neutral-200/80">
+        <button
+          type="button"
+          @click="reducirZoom"
+          title="Reducir zoom"
+          :disabled="escala <= 0.6"
+          class="p-1 text-neutral-600 hover:text-neutral-900 hover:bg-white rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <ZoomOut :size="13" />
+        </button>
+        <span class="px-1.5 font-mono text-[10px] font-bold text-neutral-700 select-none">
+          {{ Math.round(escala * 100) }}%
+        </span>
+        <button
+          type="button"
+          @click="aumentarZoom"
+          title="Aumentar zoom"
+          :disabled="escala >= 1.6"
+          class="p-1 text-neutral-600 hover:text-neutral-900 hover:bg-white rounded transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <ZoomIn :size="13" />
+        </button>
+        <button
+          type="button"
+          @click="reiniciarZoom"
+          title="Reiniciar zoom a 100%"
+          class="p-1 text-neutral-600 hover:text-neutral-900 hover:bg-white rounded transition-colors cursor-pointer"
+        >
+          <RotateCcw :size="12" />
+        </button>
+      </div>
     </div>
 
     <!-- Diagrama único -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="overflow-x-auto rounded-xl bg-neutral-50/60 py-6 px-2"
+      class="overflow-x-auto rounded-xl bg-neutral-50/60 py-6 px-2 border border-neutral-100"
     >
-      <div class="arbol-contenedor">
+      <div
+        class="arbol-contenedor transition-transform duration-200"
+        :style="{ transform: `scale(${escala})`, transformOrigin: 'top center' }"
+      >
         <ul class="arbol-raiz">
           <NodoArbol
             :nodo="NODO_RAIZ"

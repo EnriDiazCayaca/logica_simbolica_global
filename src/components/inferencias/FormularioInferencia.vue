@@ -75,6 +75,47 @@ const CONECTIVOS_CON_ESPACIO = ['∧', '∨', '△', '→', '↔']
 const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
 const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
+interface EjemploRapido {
+  nombre: string
+  premisas: string[]
+  conclusion: string
+  tipo: 'valido' | 'falacia'
+}
+
+const EJEMPLOS_RAPIDOS: EjemploRapido[] = [
+  {
+    nombre: 'Modus Ponens',
+    premisas: ['P → Q', 'P'],
+    conclusion: 'Q',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Silogismo Hipotético',
+    premisas: ['P → Q', 'Q → R'],
+    conclusion: 'P → R',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Dilema Constructivo',
+    premisas: ['P → Q', 'R → S', 'P ∨ R'],
+    conclusion: 'Q ∨ S',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Falacia Afirm. Consecuente',
+    premisas: ['P → Q', 'Q'],
+    conclusion: 'P',
+    tipo: 'falacia'
+  }
+]
+
+const cargarEjemplo = (ej: EjemploRapido) => {
+  premisasText.value = ej.premisas.join('\n')
+  conclusionText.value = ej.conclusion
+  premisasCursor.value = premisasText.value.length
+  conclusionCursor.value = conclusionText.value.length
+}
+
 /**
  * Inserta un símbolo con regla determinista de espaciado:
  * - Conectivos binarios (∧, ∨, △, →, ↔): ponen un espacio antes y después de forma inteligente.
@@ -158,6 +199,29 @@ const handleSubmit = () => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-4">
+    <!-- Ejemplos Rápidos Didácticos -->
+    <div class="space-y-1.5 pb-1 border-b border-neutral-100">
+      <span class="text-[11px] font-bold text-neutral-500 uppercase tracking-wider flex items-center gap-1">
+        <span>⚡</span> Ejemplos rápidos:
+      </span>
+      <div class="flex flex-wrap gap-1.5">
+        <button
+          v-for="ej in EJEMPLOS_RAPIDOS"
+          :key="ej.nombre"
+          type="button"
+          @click="cargarEjemplo(ej)"
+          class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border transition-all cursor-pointer select-none active:scale-95 shadow-2xs"
+          :class="[
+            ej.tipo === 'valido'
+              ? 'bg-blue-50/70 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300'
+              : 'bg-amber-50/70 border-amber-200 text-amber-800 hover:bg-amber-100 hover:border-amber-300'
+          ]"
+        >
+          {{ ej.nombre }}
+        </button>
+      </div>
+    </div>
+
     <!-- Campo de Premisas -->
     <div class="space-y-1.5">
       <div class="flex justify-between items-center">

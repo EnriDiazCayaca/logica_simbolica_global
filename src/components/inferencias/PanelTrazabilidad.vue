@@ -13,7 +13,8 @@ import {
   Copy,
   Check,
   FileCode2,
-  FileText
+  FileText,
+  Download
 } from '@lucide/vue'
 import type { PasoInferencia, ErrorLogico } from '@/types/inferencias'
 import Card from '@/components/ui/Card.vue'
@@ -271,6 +272,22 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
     console.error('Error al copiar al portapapeles:', err)
   }
 }
+
+const descargarArchivo = (tipo: 'markdown' | 'latex') => {
+  const contenido = tipo === 'markdown' ? generarMarkdownAcademico.value : generarLatexAcademico.value
+  const nombreArchivo = tipo === 'markdown' ? 'demostracion_logica.md' : 'demostracion_logica.tex'
+  const mimeType = tipo === 'markdown' ? 'text/markdown;charset=utf-8' : 'text/x-tex;charset=utf-8'
+
+  const blob = new Blob([contenido], { type: mimeType })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = nombreArchivo
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -367,28 +384,53 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
     <!-- CASO B: INFERENCIA VÁLIDA CON PASOS DEMOSTRADOS -->
     <div v-else-if="props.pasos && props.pasos.length > 0" class="space-y-4">
       <!-- Barra de Exportación Académica -->
-      <div class="flex items-center justify-between p-2.5 bg-neutral-100/80 rounded-xl border border-neutral-200 text-xs">
+      <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-neutral-100/80 rounded-xl border border-neutral-200 text-xs">
         <span class="font-semibold text-neutral-600 flex items-center gap-1.5">
           <span>🎓</span> Formato Académico:
         </span>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <!-- Copiar Markdown -->
           <button
             type="button"
             @click="copiarPortapapeles('markdown')"
             title="Copiar demostración en Markdown"
-            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-colors cursor-pointer text-xs"
+            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
           >
             <component :is="copiadoTipo === 'markdown' ? Check : FileText" :size="13" :class="copiadoTipo === 'markdown' ? 'text-emerald-600' : ''" />
-            <span>{{ copiadoTipo === 'markdown' ? '¡Copiado MD!' : 'Copiar Markdown' }}</span>
+            <span>{{ copiadoTipo === 'markdown' ? '¡Copiado MD!' : 'Copiar MD' }}</span>
           </button>
+
+          <!-- Descargar Markdown -->
+          <button
+            type="button"
+            @click="descargarArchivo('markdown')"
+            title="Descargar archivo .md"
+            class="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
+          >
+            <Download :size="13" class="text-blue-600" />
+            <span>.md</span>
+          </button>
+
+          <!-- Copiar LaTeX -->
           <button
             type="button"
             @click="copiarPortapapeles('latex')"
             title="Copiar demostración en LaTeX"
-            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-colors cursor-pointer text-xs"
+            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
           >
             <component :is="copiadoTipo === 'latex' ? Check : FileCode2" :size="13" :class="copiadoTipo === 'latex' ? 'text-emerald-600' : ''" />
             <span>{{ copiadoTipo === 'latex' ? '¡Copiado LaTeX!' : 'Copiar LaTeX' }}</span>
+          </button>
+
+          <!-- Descargar LaTeX -->
+          <button
+            type="button"
+            @click="descargarArchivo('latex')"
+            title="Descargar archivo .tex para Overleaf"
+            class="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
+          >
+            <Download :size="13" class="text-indigo-600" />
+            <span>.tex</span>
           </button>
         </div>
       </div>

@@ -18,6 +18,7 @@ interface EstadoVisual {
   clasesIcono: string
   clasesTitulo: string
   clasesBorde: string
+  clasesFondo: string
 }
 
 const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> = {
@@ -25,33 +26,37 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
     icono: Check,
     titulo: 'Inferencia válida (Demostrada)',
     descripcion: 'La conclusión se deduce correctamente de las premisas mediante deducción directa.',
-    clasesIcono: 'bg-green-600',
-    clasesTitulo: 'text-green-700',
-    clasesBorde: 'border-l-green-600'
+    clasesIcono: 'bg-emerald-600 shadow-emerald-600/30',
+    clasesTitulo: 'text-emerald-800',
+    clasesBorde: 'border-l-emerald-600',
+    clasesFondo: 'bg-gradient-to-r from-emerald-50/80 to-white'
   },
   invalida: {
     icono: X,
     titulo: 'Inferencia inválida (Refutada)',
     descripcion: 'La conclusión no se sigue de las premisas. Se encontró un contraejemplo explícito que falsea el argumento.',
-    clasesIcono: 'bg-red-600',
-    clasesTitulo: 'text-red-700',
-    clasesBorde: 'border-l-red-600'
+    clasesIcono: 'bg-rose-600 shadow-rose-600/30',
+    clasesTitulo: 'text-rose-800',
+    clasesBorde: 'border-l-rose-600',
+    clasesFondo: 'bg-gradient-to-r from-rose-50/80 to-white'
   },
   no_demostrable_directa: {
     icono: Compass,
     titulo: 'Inferencia válida (Método indirecto requerido)',
     descripcion: 'El argumento es lógicamente válido (sin contraejemplos), pero su prueba formal requiere técnicas avanzadas como Reducción al Absurdo o Prueba Condicional.',
-    clasesIcono: 'bg-indigo-600',
-    clasesTitulo: 'text-indigo-700',
-    clasesBorde: 'border-l-indigo-600'
+    clasesIcono: 'bg-indigo-600 shadow-indigo-600/30',
+    clasesTitulo: 'text-indigo-800',
+    clasesBorde: 'border-l-indigo-600',
+    clasesFondo: 'bg-gradient-to-r from-indigo-50/80 to-white'
   },
   error: {
     icono: AlertTriangle,
     titulo: 'Error de sintaxis o procesamiento',
     descripcion: 'Ocurrió un problema al evaluar la inferencia.',
-    clasesIcono: 'bg-amber-600',
-    clasesTitulo: 'text-amber-700',
-    clasesBorde: 'border-l-amber-600'
+    clasesIcono: 'bg-amber-600 shadow-amber-600/30',
+    clasesTitulo: 'text-amber-800',
+    clasesBorde: 'border-l-amber-600',
+    clasesFondo: 'bg-gradient-to-r from-amber-50/80 to-white'
   }
 }
 
@@ -75,8 +80,8 @@ const descripcion = computed<string>(() => {
       v-if="estado"
       role="status"
       aria-live="polite"
-      class="border-l-4"
-      :class="estado.clasesBorde"
+      class="border-l-4 shadow-sm"
+      :class="[estado.clasesBorde, estado.clasesFondo]"
     >
       <div class="flex items-center gap-4 sm:gap-5">
         <div

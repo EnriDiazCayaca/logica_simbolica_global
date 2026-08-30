@@ -164,27 +164,27 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-50 p-6 md:p-10 text-neutral-900 font-sans">
-    <div class="max-w-6xl mx-auto space-y-8">
+  <div class="min-h-screen bg-neutral-50/80 p-5 md:p-10 text-neutral-900 font-sans selection:bg-blue-500/20">
+    <div class="max-w-6xl mx-auto space-y-7">
       <!-- Navegación & Encabezado -->
-      <div class="flex items-start justify-between flex-wrap gap-4">
+      <div class="flex items-start justify-between flex-wrap gap-4 bg-white/60 backdrop-blur-md p-5 rounded-2xl border border-neutral-200/80 shadow-xs">
         <div>
           <router-link
             to="/"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
+            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-2.5"
           >
             &larr; Volver al Inicio
           </router-link>
-          <div class="flex items-center gap-3">
-            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
-              <Network :size="22" />
+          <div class="flex items-center gap-3.5">
+            <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/25">
+              <Network :size="24" />
             </span>
             <div>
-              <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
+              <h1 class="text-2xl md:text-3xl font-black text-neutral-900 tracking-tight">
                 Demostrador de Inferencias Lógicas
               </h1>
-              <p class="text-sm text-neutral-600 mt-0.5">
-                Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural, explora su árbol de nodos y valida la deducción paso a paso.
+              <p class="text-xs md:text-sm text-neutral-600 mt-0.5">
+                Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural, explora su árbol sintáctico (AST) y valida deducciones formales paso a paso.
               </p>
             </div>
           </div>
@@ -195,7 +195,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           v-if="historialLocal.length > 0"
           type="button"
           @click="mostrarHistorial = !mostrarHistorial"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-100 text-xs font-semibold text-neutral-700 rounded-xl border border-neutral-300 shadow-xs cursor-pointer transition-colors"
+          class="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-neutral-100 text-xs font-bold text-neutral-700 rounded-xl border border-neutral-300 shadow-2xs cursor-pointer transition-all active:scale-95"
         >
           <History :size="14" class="text-blue-600" />
           <span>{{ mostrarHistorial ? 'Ocultar Historial' : `Historial Reciente (${historialLocal.length})` }}</span>
@@ -203,53 +203,62 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
       </div>
 
       <!-- Panel Desplegable de Historial Local -->
-      <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-4 bg-white rounded-xl border border-neutral-200 shadow-sm space-y-3">
-        <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
-          <span class="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
-            <History :size="14" /> Ejercicios Demostrados Recientemente
-          </span>
-          <button
-            type="button"
-            @click="limpiarHistorial"
-            class="text-[11px] font-semibold text-red-600 hover:text-red-800 flex items-center gap-1 cursor-pointer"
-          >
-            <Trash2 :size="12" /> Limpiar Historial
-          </button>
-        </div>
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
+      >
+        <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
+            <span class="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
+              <History :size="14" class="text-blue-600" /> Ejercicios Demostrados Recientemente
+            </span>
+            <button
+              type="button"
+              @click="limpiarHistorial"
+              class="text-[11px] font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              <Trash2 :size="12" /> Limpiar Historial
+            </button>
+          </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-          <div
-            v-for="item in historialLocal"
-            :key="item.id"
-            @click="restaurarDesdeHistorial(item)"
-            class="p-3 bg-neutral-50 hover:bg-blue-50/70 border border-neutral-200/80 hover:border-blue-300 rounded-lg cursor-pointer transition-all space-y-1.5 shadow-2xs group"
-          >
-            <div class="flex items-center justify-between text-[10px]">
-              <span
-                class="font-bold uppercase px-1.5 py-0.5 rounded"
-                :class="{
-                  'bg-emerald-100 text-emerald-800': item.resultado === 'valida',
-                  'bg-indigo-100 text-indigo-800': item.resultado === 'no_demostrable_directa',
-                  'bg-red-100 text-red-800': item.resultado === 'invalida' || item.resultado === 'error'
-                }"
-              >
-                {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
-              </span>
-              <span class="text-neutral-400">{{ item.fecha }}</span>
-            </div>
-            <div class="font-mono text-xs text-neutral-800 truncate font-semibold">
-              {{ item.premisas.join('; ') }}
-            </div>
-            <div class="text-[11px] text-blue-700 font-mono font-bold flex items-center gap-1">
-              <span>&there4;</span> {{ item.conclusion }}
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+            <div
+              v-for="item in historialLocal"
+              :key="item.id"
+              @click="restaurarDesdeHistorial(item)"
+              class="p-3 bg-neutral-50/80 hover:bg-blue-50/70 border border-neutral-200/80 hover:border-blue-300 rounded-xl cursor-pointer transition-all space-y-1.5 shadow-2xs hover:shadow-xs group"
+            >
+              <div class="flex items-center justify-between text-[10px]">
+                <span
+                  class="font-bold uppercase px-1.5 py-0.5 rounded-md"
+                  :class="{
+                    'bg-emerald-100 text-emerald-800': item.resultado === 'valida',
+                    'bg-indigo-100 text-indigo-800': item.resultado === 'no_demostrable_directa',
+                    'bg-rose-100 text-rose-800': item.resultado === 'invalida' || item.resultado === 'error'
+                  }"
+                >
+                  {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
+                </span>
+                <span class="text-neutral-400 font-mono text-[10px]">{{ item.fecha }}</span>
+              </div>
+              <div class="font-mono text-xs text-neutral-800 truncate font-semibold">
+                {{ item.premisas.join('; ') }}
+              </div>
+              <div class="text-[11px] text-blue-700 font-mono font-bold flex items-center gap-1">
+                <span>&there4;</span> {{ item.conclusion }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Transition>
 
-      <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural) -->
-        <div class="lg:col-span-6 space-y-4">
+      <main class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural vs Árbol AST) -->
+        <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-4' : 'lg:col-span-6 space-y-4'">
           <!-- Switcher de Pestañas (Segmented Control) -->
           <div class="inline-flex items-center gap-1 p-1 bg-neutral-200/80 rounded-2xl border border-neutral-200 shadow-inner w-full sm:w-fit overflow-x-auto">
             <button
@@ -286,13 +295,13 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
                   : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
               ]"
             >
-              <TreePine :size="14" /> Árbol de Nodos
+              <TreePine :size="14" /> Árbol de Nodos (AST)
             </button>
           </div>
 
           <!-- Contenido de Pestaña 1: Formulario Simbólico -->
           <div v-show="activeTab === 'simbolos'">
-            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-200/80">
               <FormularioInferencia
                 :isLoading="isLoading"
                 :premisasIniciales="formulaData.premisas"
@@ -313,7 +322,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
           <!-- Contenido de Pestaña 3: Árbol de Nodos (AST) -->
           <div v-show="activeTab === 'arbol'">
-            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+            <section class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-200/80">
               <ArbolAST
                 :premisas="formulaData.premisas"
                 :conclusion="formulaData.conclusion"
@@ -323,7 +332,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         </div>
 
         <!-- Columna Derecha: Indicador de Resultado & Trazabilidad con Contraejemplos / Exportación -->
-        <div class="lg:col-span-6 space-y-6">
+        <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-6' : 'lg:col-span-6 space-y-6'">
           <!-- Indicador de Resultado -->
           <IndicadorResultado
             :resultado="resultado"
@@ -331,7 +340,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           />
 
           <!-- Panel de Trazabilidad / Análisis de la Demostración -->
-          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80 min-h-[380px]">
+          <section class="bg-white p-6 rounded-2xl shadow-sm border border-neutral-200/80 min-h-[380px]">
             <div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-5">
               <h2 class="text-base md:text-lg font-bold text-neutral-800 flex items-center gap-2">
                 <span>{{ resultado === 'valida' ? '⚡' : '🔍' }}</span>
