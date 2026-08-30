@@ -435,38 +435,37 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
         </div>
       </div>
 
-      <!-- Tarjetas de Pasos de Demostración -->
-      <TransitionGroup name="fade" tag="div" class="space-y-3">
-        <Card
+      <!-- Tarjetas de Pasos de Demostración con Estilo Timeline -->
+      <TransitionGroup name="fade" tag="div" class="space-y-3.5">
+        <div
           v-for="paso in props.pasos"
           :key="paso.paso"
-          hoverable
+          class="p-4 sm:p-5 bg-white/95 rounded-2xl border border-slate-200/90 hover:border-blue-300 shadow-2xs hover:shadow-xs transition-all space-y-3"
           role="listitem"
-          class="transition-all border border-neutral-200/80"
         >
           <div class="flex items-start gap-3.5">
-            <!-- Número de paso (Estilo Formal: Línea global) -->
+            <!-- Número de paso (Línea global formal) -->
             <div
-              class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-xs"
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-xs font-black text-white shadow-xs"
               aria-hidden="true"
             >
               {{ props.premisasOriginales.length ? props.premisasOriginales.length + paso.paso : paso.paso }}
             </div>
 
-            <div class="min-w-0 flex-1 space-y-2.5">
+            <div class="min-w-0 flex-1 space-y-2">
               <!-- Encabezado del paso: Regla y botón de acordeón -->
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex flex-wrap items-center gap-2">
-                  <Badge variant="blue">
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/80">
                     {{ paso.regla }}
-                  </Badge>
+                  </span>
 
                   <!-- Premisas usadas en este paso -->
                   <div v-if="paso.premisas?.length" class="flex flex-wrap gap-1">
                     <span
                       v-for="(premisa, pIndex) in paso.premisas"
                       :key="pIndex"
-                      class="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 border border-neutral-200/60"
+                      class="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600 border border-slate-200/80"
                     >
                       {{ premisa }}
                     </span>
@@ -480,7 +479,7 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
                   @click="togglePaso(paso.paso)"
                   :aria-expanded="Boolean(pasosAbiertos[paso.paso])"
                   :title="pasosAbiertos[paso.paso] ? 'Ocultar desglose detallado' : 'Ver desglose detallado'"
-                  class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50/80 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition-colors border border-blue-200/70 cursor-pointer"
+                  class="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-900 bg-blue-50/90 hover:bg-blue-100/90 px-3 py-1 rounded-xl transition-all border border-blue-200/80 cursor-pointer active:scale-95"
                 >
                   <HelpCircle :size="13" />
                   <span>{{ pasosAbiertos[paso.paso] ? 'Ocultar desglose' : '¿Cómo se deduce?' }}</span>
@@ -492,10 +491,10 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
                 </button>
               </div>
 
-              <!-- Conclusión del paso (foco de atención) -->
+              <!-- Conclusión del paso (Fórmula Deducida) -->
               <div class="flex items-center gap-2 pt-0.5">
-                <span class="text-neutral-400 font-serif text-base">&there4;</span>
-                <p class="font-mono text-sm md:text-base font-bold text-neutral-900 break-words">
+                <span class="text-blue-600 font-serif text-lg font-bold select-none">&there4;</span>
+                <p class="font-mono text-sm md:text-base font-extrabold text-slate-900 break-words tracking-wide">
                   {{ paso.conclusion }}
                 </p>
               </div>
@@ -504,60 +503,64 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
               <Transition name="desplegar">
                 <div
                   v-if="pasosAbiertos[paso.paso]"
-                  class="mt-3 p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3 shadow-2xs text-xs"
+                  class="mt-3 p-4 bg-slate-50/90 border border-slate-200/90 rounded-2xl space-y-3 shadow-2xs text-xs"
                 >
                   <!-- 1. Premisas Base Involucradas -->
                   <div v-if="paso.detalle?.premisasBase?.length" class="space-y-1.5">
-                    <span class="font-bold text-neutral-500 uppercase tracking-wider text-[10px] block">
+                    <span class="font-bold text-slate-500 uppercase tracking-wider text-[10px] block">
                       📌 Premisas base utilizadas:
                     </span>
                     <div class="grid grid-cols-1 gap-1.5">
                       <div
                         v-for="(pBase, pbIdx) in paso.detalle.premisasBase"
                         :key="pbIdx"
-                        class="flex items-center justify-between p-2 bg-white rounded-lg border border-neutral-200/70 text-xs"
+                        class="flex items-center justify-between p-2.5 bg-white rounded-xl border border-slate-200/80 text-xs"
                       >
                         <div class="flex items-center gap-2">
-                          <span class="font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded text-[11px]">
+                          <span class="font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md text-[11px] border border-blue-100">
                             Línea {{ pBase.linea }}
                           </span>
-                          <code class="font-mono font-bold text-neutral-800">{{ pBase.expresion }}</code>
+                          <code class="font-mono font-bold text-slate-800">{{ pBase.expresion }}</code>
                         </div>
-                        <span class="text-[11px] text-neutral-500 italic">{{ pBase.rol }}</span>
+                        <span class="text-[11px] text-slate-500 italic">{{ pBase.rol }}</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- 2. Justificación Lógica de la Regla -->
-                  <div v-if="paso.detalle?.reglaJustificacion" class="space-y-1 p-2.5 bg-blue-50/70 rounded-lg border border-blue-100/80">
+                  <div v-if="paso.detalle?.reglaJustificacion" class="space-y-1 p-3 bg-blue-50/80 rounded-xl border border-blue-200/70">
                     <span class="font-bold text-blue-800 uppercase tracking-wider text-[10px] block">
                       ⚙️ Regla aplicada: {{ paso.detalle.reglaNombre }} {{ paso.detalle.reglaAlias ? `(${paso.detalle.reglaAlias})` : '' }}
                     </span>
-                    <p class="text-neutral-700 text-xs leading-relaxed whitespace-pre-line">
+                    <p class="text-slate-700 text-xs leading-relaxed whitespace-pre-line">
                       {{ paso.detalle.reglaJustificacion }}
                     </p>
                   </div>
 
                   <!-- 3. Deducción Resultante -->
-                  <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200/60">
-                    <CheckCircle2 :size="14" class="text-emerald-600 flex-shrink-0" />
+                  <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50/90 p-2.5 rounded-xl border border-emerald-200/80">
+                    <CheckCircle2 :size="16" class="text-emerald-600 shrink-0" />
                     <span>Resultado: {{ paso.detalle?.conclusionDeducida || paso.explicacion }}</span>
                   </div>
                 </div>
               </Transition>
             </div>
           </div>
-        </Card>
+        </div>
       </TransitionGroup>
     </div>
 
     <!-- Estado vacío / Inicial -->
-    <p
-      v-else
-      class="py-8 text-center text-sm text-neutral-500"
-    >
-      Aún no hay pasos de deducción para mostrar. Ingresa las premisas y presiona <strong>Demostrar Inferencia</strong>.
-    </p>
+    <div v-else class="py-12 text-center space-y-2 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 p-6">
+      <span class="text-2xl block">🔍</span>
+      <p class="text-sm font-semibold text-slate-700">
+        Aún no hay pasos de deducción para mostrar.
+        <span class="sr-only">Aún no hay pasos de deducción para mostrar.</span>
+      </p>
+      <p class="text-xs text-slate-500 max-w-sm mx-auto">
+        Ingresa tus premisas en la columna izquierda y presiona <strong>Demostrar Inferencia</strong> para ver el paso a paso detallado.
+      </p>
+    </div>
   </section>
 </template>
 

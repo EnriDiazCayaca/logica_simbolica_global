@@ -76,34 +76,34 @@ const descripcion = computed<string>(() => {
 
 <template>
   <Transition name="aparecer">
-    <Card
+    <div
       v-if="estado"
       role="status"
       aria-live="polite"
-      class="border-l-4 shadow-sm"
+      class="p-5 sm:p-6 rounded-3xl border shadow-sm transition-all duration-300 relative overflow-hidden"
       :class="[estado.clasesBorde, estado.clasesFondo]"
     >
-      <div class="flex items-center gap-4 sm:gap-5">
+      <div class="flex items-start sm:items-center gap-4 sm:gap-5">
         <div
           :class="[
-            'flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center rounded-full text-white shadow-xs',
+            'flex h-13 w-13 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-md ring-4 ring-white/80',
             estado.clasesIcono
           ]"
           aria-hidden="true"
         >
-          <component :is="estado.icono" :size="26" :stroke-width="2.5" />
+          <component :is="estado.icono" :size="28" :stroke-width="2.5" />
         </div>
 
-        <div class="min-w-0">
-          <p :class="['text-xl sm:text-2xl font-bold tracking-tight', estado.clasesTitulo]">
+        <div class="min-w-0 flex-1">
+          <h3 :class="['text-lg sm:text-xl font-extrabold tracking-tight leading-snug', estado.clasesTitulo]">
             {{ estado.titulo }}
-          </p>
-          <p v-if="descripcion" class="mt-0.5 text-xs sm:text-sm text-neutral-600 leading-snug">
+          </h3>
+          <p v-if="descripcion" class="mt-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
             {{ descripcion }}
           </p>
         </div>
       </div>
-    </Card>
+    </div>
   </Transition>
 </template>
 
