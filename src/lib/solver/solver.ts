@@ -8,16 +8,17 @@ import type {
 } from './types';
 
 /**
- * Extrae todas las variables proposicionales únicas de un nodo AST.
+ * Extrae todas las variables proposicionales únicas de un nodo AST (optimizado con Set acumulador).
  */
-export function extraerVariablesDeNodo(nodo: NodoExpresion): string[] {
+export function extraerVariablesDeNodo(nodo: NodoExpresion, acc?: Set<string>): string[] {
+  const acumulador = acc ?? new Set<string>();
   if (nodo.tipo === 'variable') {
-    return [nodo.nombre.toUpperCase()];
+    acumulador.add(nodo.nombre.toUpperCase());
+  } else if (nodo.tipo === 'operacion') {
+    if (nodo.izquierdo) extraerVariablesDeNodo(nodo.izquierdo, acumulador);
+    if (nodo.derecho) extraerVariablesDeNodo(nodo.derecho, acumulador);
   }
-  const vars: string[] = [];
-  if (nodo.izquierdo) vars.push(...extraerVariablesDeNodo(nodo.izquierdo));
-  if (nodo.derecho) vars.push(...extraerVariablesDeNodo(nodo.derecho));
-  return Array.from(new Set(vars));
+  return acc ? [] : Array.from(acumulador);
 }
 
 /**
@@ -129,6 +130,7 @@ export function sonPremisasInconsistentes(premisas: NodoExpresion[]): boolean {
  * Verifica si dos nodos del AST son estructuralmente idénticos.
  */
 export function sonNodosIguales(a: NodoExpresion, b: NodoExpresion): boolean {
+  if (a === b) return true;
   if (a.tipo !== b.tipo) return false;
   if (a.tipo === 'variable' && b.tipo === 'variable') {
     return a.nombre.toUpperCase() === b.nombre.toUpperCase();
