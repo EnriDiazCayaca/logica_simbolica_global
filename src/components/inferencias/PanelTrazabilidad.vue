@@ -318,7 +318,7 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
         <!-- Partición 1: Detalle del Problema Detectado -->
         <div class="space-y-1.5 text-xs text-orange-900 bg-white/80 p-3 rounded-lg border border-orange-100">
           <span class="font-bold uppercase tracking-wider text-[10px] text-orange-700 block">
-            📋 Análisis de las premisas:
+            📋 Análisis:
           </span>
           <p class="leading-relaxed">
             {{ props.errorLogico.mensaje }}
@@ -365,14 +365,14 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
           </div>
 
           <p class="text-[11px] text-red-900/90 leading-normal pt-1 italic">
-            Bajo esta asignación concreta de valores de verdad, todas las premisas se cumplen simultáneamente como verdaderas, pero la conclusión resulta falsa. Por lo tanto, el argumento es formalmente inválido.
+            Con esta asignación, todas las premisas son verdaderas pero la conclusión resulta falsa; el argumento queda formalmente refutado.
           </p>
         </div>
 
         <!-- Partición 4: ¿Cómo corregir el argumento? -->
         <div class="space-y-1.5 text-xs text-blue-900 bg-blue-50/80 p-3 rounded-lg border border-blue-100">
           <span class="font-bold uppercase tracking-wider text-[10px] text-blue-700 block flex items-center gap-1">
-            <span>💡</span> ¿Cómo solucionarlo o deducirlo válidamente?
+            <span>💡</span> Sugerencia de corrección:
           </span>
           <p class="leading-relaxed text-blue-950">
             {{ props.errorLogico.sugerencia }}
@@ -386,7 +386,7 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
       <!-- Barra de Exportación Académica -->
       <div class="flex flex-wrap items-center justify-between gap-2 p-2.5 bg-neutral-100/80 rounded-xl border border-neutral-200 text-xs">
         <span class="font-semibold text-neutral-600 flex items-center gap-1.5">
-          <span>🎓</span> Formato Académico:
+          <span>🎓</span> Exportar:
         </span>
         <div class="flex flex-wrap items-center gap-1.5">
           <!-- Copiar Markdown -->
@@ -558,7 +558,7 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
         <span class="sr-only">Aún no hay pasos de deducción para mostrar.</span>
       </p>
       <p class="text-xs text-slate-500 max-w-sm mx-auto">
-        Ingresa tus premisas en la columna izquierda y presiona <strong>Demostrar Inferencia</strong> para ver el paso a paso detallado.
+        Ingresa premisas y conclusión, luego pulsa <strong>Demostrar Inferencia</strong> para ver el paso a paso.
       </p>
     </div>
   </section>

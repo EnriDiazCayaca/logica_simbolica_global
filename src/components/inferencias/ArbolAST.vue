@@ -132,7 +132,7 @@ watch(
         <span>🌳</span> Árbol de Derivación Sintáctica (AST)
       </h3>
       <p class="text-xs text-slate-500 mt-1">
-        Visualiza la estructura jerárquica de tu deducción completa: un nodo raíz del que cuelgan cada premisa y la conclusión, descompuestas en sus conectivos lógicos y variables.
+        Estructura jerárquica de la deducción: nodo raíz, ramas por premisa y conclusión, operadores y variables proposicionales.
       </p>
     </div>
 
@@ -150,26 +150,26 @@ watch(
     </div>
 
     <!-- Guía para lectura del árbol -->
-    <div class="rounded-2xl bg-sky-50/80 border border-sky-200/90 px-4 py-3.5 text-xs text-sky-950 leading-relaxed shadow-2xs space-y-1.5">
+    <div class="rounded-2xl bg-sky-50/80 border border-sky-200/90 px-4 py-3 text-xs text-sky-950 leading-relaxed shadow-2xs space-y-1">
       <p class="font-bold flex items-center gap-1.5 text-sky-900">
-        <span>💡</span> ¿Cómo interpretar este diagrama?
+        <span>💡</span> Interpretación del árbol:
       </p>
-      <ul class="list-disc pl-5 space-y-1 text-sky-900/90">
-        <li>El <strong>nodo superior oscuro</strong> representa la <em>demostración completa</em>.</li>
-        <li>Cada <strong>rama principal</strong> que desciende de él es una <strong>premisa</strong> (P1, P2…) o la <strong>conclusión</strong>.</li>
-        <li>Los <strong>conectivos</strong> (∧ ∨ → ¬ ↔ △) actúan como nodos intermedios y las <strong>letras</strong> (P, Q…) son las hojas o variables proposicionales.</li>
+      <ul class="list-disc pl-5 space-y-0.5 text-sky-900/90 text-[11px]">
+        <li><strong>Nodo raíz:</strong> representa la deducción completa.</li>
+        <li><strong>Ramas principales:</strong> premisas individuales (P1, P2…) y conclusión (∴).</li>
+        <li><strong>Nodos y hojas:</strong> operadores lógicos como conectores y letras como variables.</li>
       </ul>
     </div>
 
     <!-- Aviso de ejemplo cuando no hay entrada -->
     <div
       v-if="modelo.esDemo"
-      class="flex items-start gap-2.5 rounded-2xl border border-dashed border-blue-300 bg-blue-50/70 p-4 text-xs text-blue-900"
+      class="flex items-start gap-2.5 rounded-2xl border border-dashed border-blue-300 bg-blue-50/70 p-3.5 text-xs text-blue-900"
     >
       <span class="text-lg leading-none">✨</span>
       <span>
         Mostrando <strong>ejemplo didáctico</strong>.
-        Escribe tus premisas en la pestaña <strong>Simbología Formal</strong> y este árbol se actualizará automáticamente en tiempo real.
+        Escribe tus premisas en <strong>Simbología Formal</strong> para actualizar el árbol en tiempo real.
       </span>
     </div>
 

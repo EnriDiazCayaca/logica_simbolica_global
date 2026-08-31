@@ -25,7 +25,7 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
   valida: {
     icono: Check,
     titulo: 'Inferencia válida (Demostrada)',
-    descripcion: 'La conclusión se deduce correctamente de las premisas mediante deducción directa.',
+    descripcion: 'La conclusión se deduce correctamente de las premisas mediante derivación formal.',
     clasesIcono: 'bg-emerald-600 shadow-emerald-600/30',
     clasesTitulo: 'text-emerald-800',
     clasesBorde: 'border-l-emerald-600',
@@ -34,7 +34,7 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
   invalida: {
     icono: X,
     titulo: 'Inferencia inválida (Refutada)',
-    descripcion: 'La conclusión no se sigue de las premisas. Se encontró un contraejemplo explícito que falsea el argumento.',
+    descripcion: 'El argumento no es válido. Se determinó un contraejemplo explícito que falsea la inferencia.',
     clasesIcono: 'bg-rose-600 shadow-rose-600/30',
     clasesTitulo: 'text-rose-800',
     clasesBorde: 'border-l-rose-600',
@@ -43,7 +43,7 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
   no_demostrable_directa: {
     icono: Compass,
     titulo: 'Inferencia válida (Método indirecto requerido)',
-    descripcion: 'El argumento es lógicamente válido (sin contraejemplos), pero su prueba formal requiere técnicas avanzadas como Reducción al Absurdo o Prueba Condicional.',
+    descripcion: 'Argumento válido sin contraejemplos. Requiere métodos indirectos (Absurdo o Prueba Condicional).',
     clasesIcono: 'bg-indigo-600 shadow-indigo-600/30',
     clasesTitulo: 'text-indigo-800',
     clasesBorde: 'border-l-indigo-600',
@@ -52,7 +52,7 @@ const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> =
   error: {
     icono: AlertTriangle,
     titulo: 'Error de sintaxis o procesamiento',
-    descripcion: 'Ocurrió un problema al evaluar la inferencia.',
+    descripcion: 'Ocurrió un problema al evaluar la expresión lógica.',
     clasesIcono: 'bg-amber-600 shadow-amber-600/30',
     clasesTitulo: 'text-amber-800',
     clasesBorde: 'border-l-amber-600',

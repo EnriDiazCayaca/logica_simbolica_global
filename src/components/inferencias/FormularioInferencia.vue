@@ -203,9 +203,9 @@ const handleSubmit = () => {
     <div class="space-y-2 pb-2 border-b border-slate-100">
       <div class="flex items-center justify-between">
         <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-          <span>⚡</span> Ejemplos de prueba rápida:
+          <span>⚡</span> Ejemplos rápidos:
         </span>
-        <span class="text-[10px] text-slate-400">1 clic para cargar</span>
+        <span class="text-[10px] text-slate-400">Clic para cargar</span>
       </div>
       <div class="flex flex-wrap gap-1.5">
         <button
@@ -233,7 +233,7 @@ const handleSubmit = () => {
     <div class="space-y-1.5">
       <div class="flex justify-between items-center">
         <label for="premisas" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-          <span>📋</span> Premisas Iniciales
+          <span>📋</span> Premisas
         </label>
         <button
           v-if="premisasText || conclusionText"
@@ -257,13 +257,13 @@ const handleSubmit = () => {
         placeholder="Ej: P → Q&#10;P"
         class="w-full font-mono text-base rounded-2xl border border-slate-200 px-4 py-3 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-white focus:bg-white transition-all shadow-xs leading-relaxed"
       ></textarea>
-      <p class="text-[11px] text-slate-400 italic">Escribe una premisa por línea. Puedes usar símbolos matemáticos o palabras clave (Y, O, ENTONCES, NO).</p>
+      <p class="text-[11px] text-slate-400 italic">Una premisa por línea. Admite símbolos (∧, ∨, →, ¬) o palabras clave (Y, O, ENTONCES, NO).</p>
     </div>
 
     <!-- Campo de Conclusión -->
     <div class="space-y-1.5">
       <label for="conclusion" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-        <span>🎯</span> Conclusión a Demostrar
+        <span>🎯</span> Conclusión
       </label>
       <div class="relative flex items-center">
         <span class="absolute left-3.5 text-blue-600 font-serif font-bold text-lg select-none pointer-events-none">
@@ -289,10 +289,10 @@ const handleSubmit = () => {
     <div class="p-3 bg-slate-100/80 rounded-2xl border border-slate-200/90 space-y-2.5">
       <div class="flex items-center justify-between px-0.5">
         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-          ⌨️ Teclado Simbólico Rápido
+          ⌨️ Teclado Simbólico
         </span>
         <span class="text-[10px] text-slate-400 italic">
-          (inserta en el cursor)
+          (en cursor)
         </span>
       </div>
 
@@ -368,7 +368,7 @@ const handleSubmit = () => {
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Demostrando Deducción...
+          Demostrando...
         </span>
         <span v-else class="flex items-center gap-1.5">
           <span>Demostrar Inferencia</span>

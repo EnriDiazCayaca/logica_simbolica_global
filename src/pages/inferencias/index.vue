@@ -205,7 +205,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               Demostrador de Inferencias Lógicas
             </h1>
             <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
-              Ingresa tus premisas con simbología formal, visualiza su traducción a lenguaje natural, explora el árbol de derivación (AST) y comprueba deducciones formales paso a paso.
+              Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.
             </p>
           </div>
         </div>
@@ -223,14 +223,14 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-sm space-y-3">
           <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
             <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-              <History :size="15" class="text-blue-600" /> Ejercicios Demostrados Recientemente
+              <History :size="15" class="text-blue-600" /> Ejercicios recientes
             </span>
             <button
               type="button"
               @click="limpiarHistorial"
               class="text-[11px] font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer transition-colors"
             >
-              <Trash2 :size="12" /> Limpiar Historial
+              <Trash2 :size="12" /> Limpiar
             </button>
           </div>
 

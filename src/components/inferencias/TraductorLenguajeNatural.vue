@@ -65,14 +65,14 @@ const tieneContenido = computed(() => {
         <span>📖</span> Interpretación en Lenguaje Natural
       </h3>
       <p class="text-xs text-slate-500 mt-1">
-        Asigna significado en lenguaje real a tus variables para leer tu razonamiento como una historia argumentativa.
+        Asigna enunciados cotidianos a las variables para interpretar el razonamiento en prosa.
       </p>
     </div>
 
     <!-- Asignación de Variables -->
     <div class="space-y-3">
       <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">
-        Significado de las Variables Proposicionales:
+        Significado de las Variables:
       </label>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div
@@ -125,7 +125,7 @@ const tieneContenido = computed(() => {
     </div>
 
     <div v-else class="text-center py-6 text-xs text-slate-400 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-      Ingresa premisas y una conclusión en la pestaña de Simbología Formal para ver su traducción automática aquí.
+      Ingresa premisas y conclusión en Simbología Formal para ver la traducción aquí.
     </div>
   </div>
 </template>
