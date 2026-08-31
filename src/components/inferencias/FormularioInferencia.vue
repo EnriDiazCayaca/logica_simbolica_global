@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
-import { Zap, AlignLeft, Target, Keyboard, CornerDownLeft, ArrowRight, Sparkles } from '@lucide/vue'
+import { Zap, AlignLeft, Target, Keyboard, CornerDownLeft, ArrowRight, Sparkles, Delete } from '@lucide/vue'
 import type { InferenciaRequest } from '@/types/inferencias'
 import { normalizarExpresion } from '@/lib/solver/parser'
 import Button from '@/components/ui/Button.vue'
@@ -71,8 +71,26 @@ const normalizarSintaxis = (linea: string): string => normalizarExpresion(linea)
 /**
  * Conectivos y variables
  */
-const CONECTIVOS = ['¬', '∧', '∨', '△', '→', '↔', '(', ')']
 const CONECTIVOS_CON_ESPACIO = ['∧', '∨', '△', '→', '↔']
+
+interface TeclaConectivo {
+  simbolo: string
+  label: string
+  title: string
+  claseExtra?: string
+}
+
+const CONECTIVOS_TECLADO: TeclaConectivo[] = [
+  { simbolo: '¬', label: '¬', title: 'Negación (NO)' },
+  { simbolo: '∧', label: '∧', title: 'Conjunción (Y)' },
+  { simbolo: '∨', label: '∨', title: 'Disyunción (O)' },
+  { simbolo: '△', label: '△', title: 'Disyunción Exclusiva (XOR)', claseExtra: 'font-black scale-95' },
+  { simbolo: '→', label: '→', title: 'Condicional (ENTONCES)' },
+  { simbolo: '↔', label: '↔', title: 'Bicondicional (SI Y SOLO SI)' },
+  { simbolo: '(', label: '(', title: 'Paréntesis apertura' },
+  { simbolo: ')', label: ')', title: 'Paréntesis cierre' }
+]
+
 const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
 const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
@@ -156,6 +174,65 @@ const insertarSimbolo = (simbolo: string) => {
 
   const newVal = before + toInsert + after
   const newPos = start + toInsert.length
+
+  if (isPremisas) {
+    premisasText.value = newVal
+    premisasCursor.value = newPos
+  } else {
+    conclusionText.value = newVal
+    conclusionCursor.value = newPos
+  }
+
+  nextTick(() => {
+    if (inputEl) {
+      inputEl.setSelectionRange(newPos, newPos)
+      const esDispositivoTactil = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+      if (!esDispositivoTactil) {
+        inputEl.focus({ preventScroll: true })
+      }
+    }
+  })
+}
+
+/**
+ * Borra el carácter o rango seleccionado previo al cursor en el campo enfocado.
+ */
+const borrarCaracter = () => {
+  const isPremisas = lastFocusedField.value === 'premisas'
+  const inputEl = isPremisas ? premisasRef.value : conclusionRef.value
+  const currentVal = isPremisas ? premisasText.value : conclusionText.value
+
+  if (currentVal.length === 0) return
+
+  let start = isPremisas ? premisasCursor.value : conclusionCursor.value
+  if (inputEl && inputEl.selectionStart !== null) {
+    start = inputEl.selectionStart
+  }
+  let end = isPremisas ? premisasCursor.value : conclusionCursor.value
+  if (inputEl && inputEl.selectionEnd !== null) {
+    end = inputEl.selectionEnd
+  }
+
+  if (start < 0 || start > currentVal.length) {
+    start = currentVal.length
+    end = currentVal.length
+  }
+
+  let newVal = ''
+  let newPos = 0
+
+  if (start !== end) {
+    // Si hay rango seleccionado
+    newVal = currentVal.substring(0, start) + currentVal.substring(end)
+    newPos = start
+  } else if (start > 0) {
+    const before = currentVal.substring(0, start)
+    const after = currentVal.substring(start)
+    newVal = before.slice(0, -1) + after
+    newPos = start - 1
+  } else {
+    return
+  }
 
   if (isPremisas) {
     premisasText.value = newVal
@@ -301,21 +378,27 @@ const handleSubmit = () => {
         </span>
       </div>
 
-      <!-- Fila 1: Grid estricto de 8 columnas simétricas para Conectivos -->
+      <!-- Fila 1: Grid estricto de 8 columnas simétricas para Conectivos con consistencia tipográfica -->
       <div class="grid grid-cols-8 gap-1.5">
         <button
-          v-for="op in CONECTIVOS"
-          :key="op"
+          v-for="op in CONECTIVOS_TECLADO"
+          :key="op.simbolo"
           type="button"
+          :title="op.title"
           @mousedown.prevent
-          @click="insertarSimbolo(op)"
-          class="h-8.5 flex items-center justify-center bg-white hover:bg-slate-50 hover:border-blue-400 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-200 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
+          @click="insertarSimbolo(op.simbolo)"
+          class="h-9 flex items-center justify-center bg-white hover:bg-slate-50 hover:border-blue-400 text-slate-800 font-semibold rounded-lg border border-slate-200 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
         >
-          {{ op }}
+          <span
+            class="font-mono text-base font-semibold leading-none tracking-normal"
+            :class="op.claseExtra"
+          >
+            {{ op.label }}
+          </span>
         </button>
       </div>
 
-      <!-- Fila 2: Variables a la izquierda y Botón Salto a la derecha -->
+      <!-- Fila 2: Variables a la izquierda y Botones de Borrar y Salto a la derecha -->
       <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/80">
         <!-- Grupo de Variables: P, Q, R, S | A, B, C, D -->
         <div class="flex items-center gap-1 overflow-x-auto py-0.5 px-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent [scrollbar-width:thin]">
@@ -325,7 +408,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-7.5 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
@@ -338,21 +421,32 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7 w-7 sm:w-7.5 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
         </div>
 
-        <!-- Botón Salto a la derecha de la fila 2 -->
+        <!-- Botones de Acción (Borrar y Salto) a la derecha de la fila 2 -->
         <div class="flex items-center gap-1.5 flex-shrink-0">
+          <button
+            type="button"
+            @mousedown.prevent
+            @click="borrarCaracter"
+            title="Borrar carácter anterior"
+            class="h-7.5 px-2.5 bg-slate-200/90 hover:bg-rose-50 hover:text-rose-700 hover:border-rose-300 text-slate-700 font-semibold text-xs rounded-lg border border-slate-300/70 shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
+          >
+            <Delete :size="12" />
+            <span>Borrar</span>
+          </button>
+
           <button
             v-if="lastFocusedField === 'premisas'"
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo('\n')"
             title="Insertar salto de línea en premisas"
-            class="h-7 px-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
+            class="h-7.5 px-2.5 bg-slate-200/90 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-lg border border-slate-300/70 shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
           >
             <CornerDownLeft :size="11" />
             <span>Salto</span>

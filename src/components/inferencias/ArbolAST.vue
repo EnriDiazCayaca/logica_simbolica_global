@@ -252,7 +252,7 @@ watch(
     <!-- Diagrama único -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="overflow-x-auto rounded-2xl bg-slate-50/70 py-8 px-4 border border-slate-200/80 shadow-inner min-h-[260px] flex items-center justify-center"
+      class="overflow-x-auto rounded-2xl bg-slate-50/60 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:14px_14px] py-8 px-4 border border-slate-200/80 shadow-inner min-h-[280px] flex items-center justify-center relative"
     >
       <div
         class="arbol-contenedor transition-transform duration-200"
@@ -273,9 +273,10 @@ watch(
       <button
         type="button"
         @click="toggleCompleto"
-        class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
+        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl bg-slate-900 text-white shadow-xs hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
       >
-        <Maximize2 :size="14" /> Ver a pantalla completa
+        <Maximize2 :size="13" />
+        <span>Ver a pantalla completa</span>
       </button>
     </div>
 
@@ -297,29 +298,30 @@ watch(
         >
           <!-- Fondo oscuro -->
           <div
-            class="absolute inset-0 bg-neutral-900/70 backdrop-blur-sm"
+            class="absolute inset-0 bg-slate-950/70 backdrop-blur-sm"
             @click="cerrarCompleto"
           ></div>
 
           <!-- Panel -->
           <div
-            class="relative w-full max-w-6xl max-h-[90vh] flex flex-col rounded-2xl bg-white shadow-2xl ring-1 ring-neutral-200 overflow-hidden"
+            class="relative w-full max-w-6xl max-h-[90vh] flex flex-col rounded-2xl bg-white shadow-2xl ring-1 ring-slate-200 overflow-hidden"
           >
-            <div class="flex items-center justify-between border-b border-neutral-100 px-5 py-3">
-              <h4 class="text-sm font-bold text-neutral-800 flex items-center gap-2">
-                <Network :size="16" class="text-blue-600" /> Diagrama de árbol completo
+            <div class="flex items-center justify-between border-b border-slate-100 px-5 py-3.5 bg-white">
+              <h4 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+                <GitBranch :size="16" class="text-teal-600" />
+                <span>Diagrama de árbol completo</span>
               </h4>
               <button
                 type="button"
                 @click="cerrarCompleto"
-                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800 transition-colors cursor-pointer"
+                class="inline-flex items-center justify-center h-8 w-8 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition-colors cursor-pointer"
                 aria-label="Cerrar"
               >
-                <X :size="18" />
+                <X :size="16" />
               </button>
             </div>
 
-            <div class="flex-1 overflow-auto bg-neutral-50/70 p-8">
+            <div class="flex-1 overflow-auto bg-slate-50/60 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:14px_14px] p-8">
               <div class="arbol-contenedor">
                 <ul class="arbol-raiz">
                   <NodoArbol

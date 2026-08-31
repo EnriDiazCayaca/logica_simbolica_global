@@ -180,7 +180,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
     <div class="relative max-w-6xl mx-auto p-4 sm:p-6 md:p-8 space-y-6">
       <!-- Navegación & Encabezado Principal -->
-      <header class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+      <header class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-xs ring-1 ring-slate-900/5 space-y-4">
         <div class="flex items-center justify-between flex-wrap gap-3">
           <div class="flex items-center gap-2">
             <router-link
@@ -190,8 +190,9 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               <ArrowLeft :size="13" />
               <span>Volver</span>
             </router-link>
-            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70">
-              Hijos de Linus
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 inline-flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+              <span>Hijos de Linus</span>
             </span>
           </div>
 
@@ -208,7 +209,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         </div>
 
         <div class="flex items-start gap-3.5 sm:gap-4">
-          <div class="flex h-12 w-12 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white shadow-sm ring-1 ring-slate-950/10">
+          <div class="flex h-12 w-12 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm ring-1 ring-slate-950/10">
             <Network :size="24" :stroke-width="1.75" />
           </div>
           <div>

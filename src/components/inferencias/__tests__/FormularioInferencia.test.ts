@@ -80,4 +80,20 @@ describe('FormularioInferencia', () => {
 
     expect(wrapper.find('textarea').element.value).toBe('P → ')
   })
+
+  it('borra el último carácter al pulsar el botón de borrar', async () => {
+    const wrapper = mount(FormularioInferencia, {
+      props: { isLoading: false },
+      global: { components: { Button } }
+    })
+
+    await wrapper.find('textarea').setValue('P ∧ Q')
+    
+    // Buscar el botón borrar
+    const btnBorrar = wrapper.findAll('button').find((b: any) => b.text().includes('Borrar'))
+    expect(btnBorrar).toBeDefined()
+    await btnBorrar!.trigger('click')
+
+    expect(wrapper.find('textarea').element.value).toBe('P ∧ ')
+  })
 })
