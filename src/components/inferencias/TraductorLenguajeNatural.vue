@@ -59,69 +59,73 @@ const tieneContenido = computed(() => {
 </script>
 
 <template>
-  <Card class="space-y-6">
-    <div class="border-b border-neutral-100 pb-4">
-      <h3 class="text-lg font-bold text-neutral-800 flex items-center gap-2">
+  <div class="bg-white/95 backdrop-blur-sm p-6 rounded-3xl border border-slate-200/90 shadow-sm space-y-6">
+    <div class="border-b border-slate-100 pb-4">
+      <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
         <span>📖</span> Interpretación en Lenguaje Natural
       </h3>
-      <p class="text-xs text-neutral-500 mt-1">
-        Asigna significado en lenguaje real a tus variables para leer tu razonamiento como una historia argumentativa.
+      <p class="text-xs text-slate-500 mt-1">
+        Asigna enunciados cotidianos a las variables para interpretar el razonamiento en prosa.
       </p>
     </div>
 
     <!-- Asignación de Variables -->
     <div class="space-y-3">
-      <label class="block text-xs font-semibold text-neutral-600 uppercase tracking-wider">
-        Significado de las Variables Proposicionales:
+      <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider">
+        Significado de las Variables:
       </label>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div
           v-for="v in variablesDetectadas"
           :key="v"
-          class="flex items-center gap-2 bg-neutral-50 p-2.5 rounded-xl border border-neutral-200 focus-within:border-blue-500 focus-within:bg-white transition-all shadow-2xs"
+          class="flex items-center gap-2.5 bg-slate-50/80 p-3 rounded-2xl border border-slate-200 focus-within:border-blue-500 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 transition-all shadow-2xs"
         >
-          <span class="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-800 text-xs font-bold font-mono">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-800 text-xs font-extrabold font-mono shadow-2xs">
             {{ v }}
           </span>
-          <span class="text-xs text-neutral-400 font-semibold">=</span>
+          <span class="text-xs text-slate-400 font-bold">=</span>
           <input
             v-model="significados[v]"
             type="text"
             :placeholder="`Significado de ${v}...`"
-            class="w-full bg-transparent text-xs text-neutral-800 focus:outline-none placeholder-neutral-400"
+            class="w-full bg-transparent text-xs font-medium text-slate-800 focus:outline-none placeholder-slate-400"
           />
         </div>
       </div>
     </div>
 
     <!-- Texto Narrativo Traducido -->
-    <div v-if="tieneContenido" class="p-4 bg-blue-50/50 rounded-xl border border-blue-100 space-y-3">
+    <div v-if="tieneContenido" class="p-5 bg-gradient-to-br from-blue-50/70 via-indigo-50/40 to-slate-50 rounded-2xl border border-blue-100/90 space-y-3.5 shadow-2xs">
       <h4 class="text-xs font-bold text-blue-900 uppercase tracking-wider flex items-center gap-1.5">
-        <span>💬</span> Argumento Traducido:
+        <span>💬</span> Argumento Traducido en Prosa:
       </h4>
 
-      <ul class="space-y-1.5 text-xs text-neutral-700">
+      <ul class="space-y-2 text-xs text-slate-700 leading-relaxed">
         <li
           v-for="(premisaTexto, idx) in premisasTraducidas"
           :key="idx"
-          class="flex items-start gap-2"
+          class="flex items-start gap-2.5 bg-white/70 p-2.5 rounded-xl border border-blue-100/60"
         >
-          <span class="font-bold text-blue-700 flex-shrink-0">P{{ idx + 1 }}:</span>
-          <span>{{ premisaTexto }}.</span>
+          <span class="font-bold text-blue-700 bg-blue-100/80 px-2 py-0.5 rounded-md text-[11px] shrink-0">
+            Premisa {{ idx + 1 }}
+          </span>
+          <span class="pt-0.5 capitalize">{{ premisaTexto }}.</span>
         </li>
       </ul>
 
       <div
         v-if="conclusionTraducida"
-        class="pt-2 mt-2 border-t border-blue-200/60 flex items-start gap-2 text-xs font-medium text-blue-950"
+        class="pt-3 border-t border-blue-200/70 flex items-start gap-2.5 text-xs font-semibold text-blue-950 bg-blue-100/50 p-3 rounded-xl"
       >
-        <span class="font-extrabold text-blue-700 flex-shrink-0">∴ Conclusión:</span>
-        <span>Por lo tanto, {{ conclusionTraducida.toLowerCase() }}.</span>
+        <span class="font-extrabold text-blue-800 bg-blue-200/80 px-2 py-0.5 rounded-md text-[11px] shrink-0">
+          ∴ Conclusión
+        </span>
+        <span class="pt-0.5">Por lo tanto, {{ conclusionTraducida.toLowerCase() }}.</span>
       </div>
     </div>
 
-    <div v-else class="text-center py-4 text-xs text-neutral-400">
-      Ingresa premisas y una conclusión para ver su traducción en lenguaje natural aquí.
+    <div v-else class="text-center py-6 text-xs text-slate-400 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+      Ingresa premisas y conclusión en Simbología Formal para ver la traducción aquí.
     </div>
-  </Card>
+  </div>
 </template>

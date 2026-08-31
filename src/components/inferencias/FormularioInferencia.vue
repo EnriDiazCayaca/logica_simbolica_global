@@ -75,6 +75,47 @@ const CONECTIVOS_CON_ESPACIO = ['∧', '∨', '△', '→', '↔']
 const GRUPO_VARS_1 = ['P', 'Q', 'R', 'S']
 const GRUPO_VARS_2 = ['A', 'B', 'C', 'D']
 
+interface EjemploRapido {
+  nombre: string
+  premisas: string[]
+  conclusion: string
+  tipo: 'valido' | 'falacia'
+}
+
+const EJEMPLOS_RAPIDOS: EjemploRapido[] = [
+  {
+    nombre: 'Modus Ponens',
+    premisas: ['P → Q', 'P'],
+    conclusion: 'Q',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Silogismo Hipotético',
+    premisas: ['P → Q', 'Q → R'],
+    conclusion: 'P → R',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Dilema Constructivo',
+    premisas: ['P → Q', 'R → S', 'P ∨ R'],
+    conclusion: 'Q ∨ S',
+    tipo: 'valido'
+  },
+  {
+    nombre: 'Falacia Afirm. Consecuente',
+    premisas: ['P → Q', 'Q'],
+    conclusion: 'P',
+    tipo: 'falacia'
+  }
+]
+
+const cargarEjemplo = (ej: EjemploRapido) => {
+  premisasText.value = ej.premisas.join('\n')
+  conclusionText.value = ej.conclusion
+  premisasCursor.value = premisasText.value.length
+  conclusionCursor.value = conclusionText.value.length
+}
+
 /**
  * Inserta un símbolo con regla determinista de espaciado:
  * - Conectivos binarios (∧, ∨, △, →, ↔): ponen un espacio antes y después de forma inteligente.
@@ -158,19 +199,49 @@ const handleSubmit = () => {
 
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-4">
+    <!-- Ejemplos Rápidos Didácticos -->
+    <div class="space-y-2 pb-2 border-b border-slate-100">
+      <div class="flex items-center justify-between">
+        <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+          <span>⚡</span> Ejemplos rápidos:
+        </span>
+        <span class="text-[10px] text-slate-400">Clic para cargar</span>
+      </div>
+      <div class="flex flex-wrap gap-1.5">
+        <button
+          v-for="ej in EJEMPLOS_RAPIDOS"
+          :key="ej.nombre"
+          type="button"
+          @click="cargarEjemplo(ej)"
+          class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border transition-all cursor-pointer select-none active:scale-95 shadow-2xs flex items-center gap-1.5"
+          :class="[
+            ej.tipo === 'valido'
+              ? 'bg-blue-50/80 border-blue-200/90 text-blue-700 hover:bg-blue-100 hover:border-blue-300'
+              : 'bg-amber-50/80 border-amber-200/90 text-amber-800 hover:bg-amber-100 hover:border-amber-300'
+          ]"
+        >
+          <span
+            class="h-1.5 w-1.5 rounded-full"
+            :class="ej.tipo === 'valido' ? 'bg-emerald-500' : 'bg-amber-500'"
+          ></span>
+          <span>{{ ej.nombre }}</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Campo de Premisas -->
     <div class="space-y-1.5">
       <div class="flex justify-between items-center">
-        <label for="premisas" class="block text-sm font-semibold text-neutral-800">
-          Premisas (una por línea)
+        <label for="premisas" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+          <span>📋</span> Premisas
         </label>
         <button
           v-if="premisasText || conclusionText"
           type="button"
           @click="limpiarFormulario"
-          class="text-xs text-neutral-400 hover:text-red-600 transition-colors cursor-pointer"
+          class="text-xs font-semibold text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
         >
-          Limpiar
+          Limpiar campos
         </button>
       </div>
       <textarea
@@ -184,62 +255,77 @@ const handleSubmit = () => {
         rows="4"
         :disabled="isLoading"
         placeholder="Ej: P → Q&#10;P"
-        class="w-full font-mono text-base rounded-xl border border-neutral-200 px-4 py-3 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs leading-relaxed"
+        class="w-full font-mono text-base rounded-2xl border border-slate-200 px-4 py-3 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-white focus:bg-white transition-all shadow-xs leading-relaxed"
       ></textarea>
+      <p class="text-[11px] text-slate-400 italic">Una premisa por línea. Admite símbolos (∧, ∨, →, ¬) o palabras clave (Y, O, ENTONCES, NO).</p>
     </div>
 
     <!-- Campo de Conclusión -->
     <div class="space-y-1.5">
-      <label for="conclusion" class="block text-sm font-semibold text-neutral-800">
-        Conclusión a Demostrar
+      <label for="conclusion" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
+        <span>🎯</span> Conclusión
       </label>
-      <input
-        id="conclusion"
-        ref="conclusionRef"
-        v-model="conclusionText"
-        @focus="guardarPosicionCursor('conclusion')"
-        @click="guardarPosicionCursor('conclusion')"
-        @keyup="guardarPosicionCursor('conclusion')"
-        @select="guardarPosicionCursor('conclusion')"
-        type="text"
-        :disabled="isLoading"
-        placeholder="Ej: Q"
-        class="w-full font-mono text-base rounded-xl border border-neutral-200 px-4 py-2.5 placeholder-neutral-400 focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed bg-white transition-all shadow-xs leading-relaxed"
-      />
+      <div class="relative flex items-center">
+        <span class="absolute left-3.5 text-blue-600 font-serif font-bold text-lg select-none pointer-events-none">
+          &there4;
+        </span>
+        <input
+          id="conclusion"
+          ref="conclusionRef"
+          v-model="conclusionText"
+          @focus="guardarPosicionCursor('conclusion')"
+          @click="guardarPosicionCursor('conclusion')"
+          @keyup="guardarPosicionCursor('conclusion')"
+          @select="guardarPosicionCursor('conclusion')"
+          type="text"
+          :disabled="isLoading"
+          placeholder="Ej: Q"
+          class="w-full font-mono text-base rounded-2xl border border-slate-200 pl-8 pr-4 py-2.5 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-white focus:bg-white transition-all shadow-xs leading-relaxed"
+        />
+      </div>
     </div>
 
     <!-- Teclado Simbólico Estructurado (2 filas fijas simétricas) -->
-    <div class="p-2.5 sm:p-3 bg-neutral-100/75 rounded-xl border border-neutral-200/80 space-y-2">
-      <!-- Fila 1: Grid estricto de 8 columnas simétricas -->
-      <div class="grid grid-cols-8 gap-1 sm:gap-1.5">
+    <div class="p-3 bg-slate-100/80 rounded-2xl border border-slate-200/90 space-y-2.5">
+      <div class="flex items-center justify-between px-0.5">
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+          ⌨️ Teclado Simbólico
+        </span>
+        <span class="text-[10px] text-slate-400 italic">
+          (en cursor)
+        </span>
+      </div>
+
+      <!-- Fila 1: Grid estricto de 8 columnas simétricas para Conectivos -->
+      <div class="grid grid-cols-8 gap-1.5">
         <button
           v-for="op in CONECTIVOS"
           :key="op"
           type="button"
           @mousedown.prevent
           @click="insertarSimbolo(op)"
-          class="h-8 flex items-center justify-center bg-white hover:bg-neutral-50 text-neutral-800 font-bold text-sm sm:text-base rounded-lg border border-neutral-300 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
+          class="h-9 flex items-center justify-center bg-white hover:bg-slate-50 hover:border-blue-400 text-slate-800 font-bold text-sm sm:text-base rounded-xl border border-slate-200 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
         >
           {{ op }}
         </button>
       </div>
 
       <!-- Fila 2: Variables a la izquierda y Botón Salto a la derecha -->
-      <div class="flex items-center justify-between gap-2 pt-2 border-t border-neutral-200/80">
+      <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/80">
         <!-- Grupo de Variables: P, Q, R, S | A, B, C, D con espacio vertical adecuado -->
-        <div class="flex items-center gap-1 overflow-x-auto py-1.5 px-0.5 scrollbar-thin scrollbar-thumb-neutral-300/80 scrollbar-track-transparent [scrollbar-width:thin] min-h-[40px]">
+        <div class="flex items-center gap-1 overflow-x-auto py-1 px-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent [scrollbar-width:thin] min-h-[38px]">
           <button
             v-for="v in GRUPO_VARS_1"
             :key="v"
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
 
-          <span class="text-neutral-300 select-none px-1 text-xs flex-shrink-0">|</span>
+          <span class="text-slate-300 select-none px-1 text-xs flex-shrink-0">|</span>
 
           <button
             v-for="v in GRUPO_VARS_2"
@@ -247,7 +333,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-md border border-neutral-300 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
@@ -255,19 +341,16 @@ const handleSubmit = () => {
 
         <!-- Botón Salto a la derecha de la fila 2 -->
         <div class="flex items-center gap-1.5 flex-shrink-0">
-          <span class="text-[10px] text-neutral-400 italic hidden md:inline">
-            (escribe más con tu teclado)
-          </span>
-
           <button
             v-if="lastFocusedField === 'premisas'"
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo('\n')"
-            title="Salto de línea"
-            class="h-7 px-2.5 bg-neutral-200 hover:bg-neutral-300 text-neutral-700 font-medium text-xs rounded-md shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none"
+            title="Insertar salto de línea en premisas"
+            class="h-7.5 px-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
           >
-            ↵ Salto
+            <span>↵</span>
+            <span>Salto</span>
           </button>
         </div>
       </div>
@@ -275,12 +358,10 @@ const handleSubmit = () => {
 
     <!-- Botón de Envío -->
     <div class="flex justify-end pt-1">
-      <Button
+      <button
         type="submit"
-        variant="primary"
-        size="md"
-        class="w-full sm:w-auto font-semibold"
         :disabled="isFormEmpty || isLoading"
+        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 text-sm"
       >
         <span v-if="isLoading" class="flex items-center gap-2">
           <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -290,9 +371,10 @@ const handleSubmit = () => {
           Demostrando...
         </span>
         <span v-else class="flex items-center gap-1.5">
-          Demostrar Inferencia &rarr;
+          <span>Demostrar Inferencia</span>
+          <span>&rarr;</span>
         </span>
-      </Button>
+      </button>
     </div>
   </form>
 </template>

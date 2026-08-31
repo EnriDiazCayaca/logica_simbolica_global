@@ -49,7 +49,7 @@ describe('ArbolAST (visualización de nodos)', () => {
         conclusion: 'Q'
       }
     })
-    expect(wrapper.text()).toContain('no se pudieron construir')
+    expect(wrapper.text()).toContain('errores de sintaxis')
     // La conclusión válida sí debe aparecer en el árbol
     expect(wrapper.text()).toContain('∴ Conclusión')
   })
@@ -75,7 +75,7 @@ describe('ArbolAST (visualización de nodos)', () => {
         conclusion: ''
       }
     })
-    expect(wrapper.text()).toContain('ejemplo demostrativo')
+    expect(wrapper.text()).toContain('ejemplo didáctico')
     // El ejemplo debe renderizar nodos (P, Q)
     expect(wrapper.text()).toContain('P')
     expect(wrapper.text()).toContain('Q')

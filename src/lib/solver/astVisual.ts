@@ -93,22 +93,33 @@ export interface EstadisticasAST {
   operadores: number
 }
 
-/** Calcula estadísticas resumidas de un subárbol. */
+/** Calcula estadísticas resumidas de un subárbol en una única pasada O(N). */
 export function estadisticasNodo(nodo: NodoExpresion): EstadisticasAST {
-  let variables = 0
-  let operadores = 0
-  const recorrer = (n: NodoExpresion) => {
-    if (n.tipo === 'variable') variables++
-    else {
-      operadores++
-      hijosDeNodo(n).forEach(recorrer)
+  function analizar(n: NodoExpresion): { nodos: number; profundidad: number; variables: number; operadores: number } {
+    if (n.tipo === 'variable') {
+      return { nodos: 1, profundidad: 1, variables: 1, operadores: 0 }
+    }
+    const hijos = hijosDeNodo(n)
+    let totalNodos = 1
+    let maxProf = 0
+    let totalVars = 0
+    let totalOps = 1
+
+    for (const h of hijos) {
+      const res = analizar(h)
+      totalNodos += res.nodos
+      if (res.profundidad > maxProf) maxProf = res.profundidad
+      totalVars += res.variables
+      totalOps += res.operadores
+    }
+
+    return {
+      nodos: totalNodos,
+      profundidad: 1 + maxProf,
+      variables: totalVars,
+      operadores: totalOps
     }
   }
-  recorrer(nodo)
-  return {
-    nodos: contarNodos(nodo),
-    profundidad: profundidadNodo(nodo),
-    variables,
-    operadores
-  }
+
+  return analizar(nodo)
 }

@@ -4,7 +4,7 @@ import { parsearExpresion, normalizarExpresion } from '@/lib/solver/parser'
 import { META_OPERADOR, COLOR_NODO, estadisticasNodo } from '@/lib/solver/astVisual'
 import type { NodoExpresion } from '@/lib/solver/types'
 import NodoArbol from './NodoArbol.vue'
-import { Maximize2, Network, X } from '@lucide/vue'
+import { Maximize2, Network, X, ZoomIn, ZoomOut, RotateCcw } from '@lucide/vue'
 
 interface Props {
   premisas: string[]
@@ -85,6 +85,18 @@ const leyenda = computed(() =>
   Object.values(META_OPERADOR).map((m) => ({ ...m, clase: COLOR_NODO[m.color] }))
 )
 
+// Control de Zoom y Escala
+const escala = ref(1)
+const aumentarZoom = () => {
+  if (escala.value < 1.6) escala.value = Number((escala.value + 0.1).toFixed(1))
+}
+const reducirZoom = () => {
+  if (escala.value > 0.6) escala.value = Number((escala.value - 0.1).toFixed(1))
+}
+const reiniciarZoom = () => {
+  escala.value = 1
+}
+
 // Control del modal de vista completa
 const mostrarCompleto = ref(false)
 const cerrarCompleto = () => (mostrarCompleto.value = false)
@@ -115,13 +127,12 @@ watch(
 
 <template>
   <div class="space-y-6">
-    <div class="border-b border-neutral-100 pb-4">
-      <h3 class="text-lg font-bold text-neutral-800 flex items-center gap-2">
-        <span>🌳</span> Árbol de Nodos (AST)
+    <div class="border-b border-slate-100 pb-4">
+      <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+        <span>🌳</span> Árbol de Derivación Sintáctica (AST)
       </h3>
-      <p class="text-xs text-neutral-500 mt-1">
-        Visualiza tu demostración completa como un único diagrama jerárquico: un nodo raíz
-        del que cuelgan cada premisa y la conclusión, descompuestas en sus conectivos y variables.
+      <p class="text-xs text-slate-500 mt-1">
+        Estructura jerárquica de la deducción: nodo raíz, ramas por premisa y conclusión, operadores y variables proposicionales.
       </p>
     </div>
 
@@ -130,73 +141,109 @@ watch(
       <span
         v-for="op in leyenda"
         :key="op.corto"
-        class="inline-flex items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-semibold shadow-2xs"
+        class="inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[11px] font-bold shadow-2xs transition-all hover:scale-105 select-none"
         :class="op.clase"
       >
-        <span class="text-sm font-black leading-none">{{ op.simbolo }}</span>
-        {{ op.nombre }}
+        <span class="text-sm font-black leading-none font-serif">{{ op.simbolo }}</span>
+        <span>{{ op.nombre }}</span>
       </span>
     </div>
 
-    <!-- Guía para quienes no conocen los árboles -->
-    <div class="rounded-xl bg-sky-50/70 border border-sky-200 px-4 py-3 text-xs text-sky-900 leading-relaxed">
-      <p class="font-bold flex items-center gap-1.5 mb-1">
-        <span>💡</span> ¿Cómo leer este diagrama?
+    <!-- Guía para lectura del árbol -->
+    <div class="rounded-2xl bg-sky-50/80 border border-sky-200/90 px-4 py-3 text-xs text-sky-950 leading-relaxed shadow-2xs space-y-1">
+      <p class="font-bold flex items-center gap-1.5 text-sky-900">
+        <span>💡</span> Interpretación del árbol:
       </p>
-      <ul class="list-disc pl-5 space-y-0.5">
-        <li>El <strong>nodo oscuro superior</strong> es tu <em>demostración completa</em>.</li>
-        <li>Cada <strong>rama</strong> que sale de él es una <strong>premisa</strong> (P1, P2…) o la <strong>conclusión</strong>.</li>
-        <li>Dentro de cada proposición, los <strong>conectivos</strong> (∧ ∨ → ¬ ↔) son nodos rama y las <strong>letras</strong> (P, Q…) son los hechos u hojas.</li>
-        <li>Las líneas unen cada parte con la que la contiene: lee de arriba (general) hacia abajo (detalle).</li>
+      <ul class="list-disc pl-5 space-y-0.5 text-sky-900/90 text-[11px]">
+        <li><strong>Nodo raíz:</strong> representa la deducción completa.</li>
+        <li><strong>Ramas principales:</strong> premisas individuales (P1, P2…) y conclusión (∴).</li>
+        <li><strong>Nodos y hojas:</strong> operadores lógicos como conectores y letras como variables.</li>
       </ul>
     </div>
 
     <!-- Aviso de ejemplo cuando no hay entrada -->
     <div
       v-if="modelo.esDemo"
-      class="flex items-start gap-2 rounded-xl border border-dashed border-blue-300 bg-blue-50/60 px-4 py-3 text-xs text-blue-800"
+      class="flex items-start gap-2.5 rounded-2xl border border-dashed border-blue-300 bg-blue-50/70 p-3.5 text-xs text-blue-900"
     >
-      <span class="text-base leading-none">✨</span>
+      <span class="text-lg leading-none">✨</span>
       <span>
-        Aún no has ingresado premisas. Abajo ves un <strong>ejemplo demostrativo</strong>.
-        Escribe tus proposiciones en la pestaña <strong>Simbología Formal</strong> y este único
-        árbol se actualizará solo.
+        Mostrando <strong>ejemplo didáctico</strong>.
+        Escribe tus premisas en <strong>Simbología Formal</strong> para actualizar el árbol en tiempo real.
       </span>
     </div>
 
     <!-- Errores de sintaxis (no detienen el resto del árbol) -->
     <div
       v-if="modelo.errores.length"
-      class="space-y-1.5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-xs text-red-700"
+      class="space-y-1.5 rounded-2xl border border-rose-200 bg-rose-50/80 p-4 text-xs text-rose-800"
     >
       <p class="font-bold flex items-center gap-1.5">
-        <span>⚠️</span> Algunas proposiciones no se pudieron construir:
+        <span>⚠️</span> Algunas proposiciones contienen errores de sintaxis:
       </p>
-      <ul class="list-disc pl-5">
+      <ul class="list-disc pl-5 space-y-0.5">
         <li v-for="(err, i) in modelo.errores" :key="i">
-          <code class="font-mono">{{ err.etiqueta }}</code>: {{ err.error }}
+          <code class="font-mono font-bold">{{ err.etiqueta }}</code>: {{ err.error }}
         </li>
       </ul>
     </div>
 
-    <!-- Estadísticas globales del diagrama -->
+    <!-- Estadísticas globales del diagrama & Controles de Zoom -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="flex flex-wrap items-center gap-2 text-[10px] font-medium text-neutral-500"
+      class="flex flex-wrap items-center justify-between gap-3 text-[10px] font-semibold text-slate-500 bg-slate-50/80 p-2.5 rounded-2xl border border-slate-200/80"
     >
-      <span class="rounded bg-neutral-100 px-2 py-0.5">📦 {{ modelo.total }} proposiciones</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">⦿ {{ modelo.stats.nodos }} nodos</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">↕ prof. máx {{ modelo.stats.profundidad }}</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">◍ {{ modelo.stats.variables }} variables</span>
-      <span class="rounded bg-neutral-100 px-2 py-0.5">⚇ {{ modelo.stats.operadores }} conectivos</span>
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">📦 {{ modelo.total }} proposiciones</span>
+        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">⦿ {{ modelo.stats.nodos }} nodos</span>
+        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">↕ prof. máx {{ modelo.stats.profundidad }}</span>
+        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">◍ {{ modelo.stats.variables }} variables</span>
+        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">⚇ {{ modelo.stats.operadores }} conectivos</span>
+      </div>
+
+      <!-- Controles de Zoom -->
+      <div class="flex items-center gap-1 bg-white rounded-xl p-1 border border-slate-200 shadow-2xs">
+        <button
+          type="button"
+          @click="reducirZoom"
+          title="Reducir zoom"
+          :disabled="escala <= 0.6"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <ZoomOut :size="14" />
+        </button>
+        <span class="px-2 font-mono text-[10px] font-bold text-slate-700 select-none">
+          {{ Math.round(escala * 100) }}%
+        </span>
+        <button
+          type="button"
+          @click="aumentarZoom"
+          title="Aumentar zoom"
+          :disabled="escala >= 1.6"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+        >
+          <ZoomIn :size="14" />
+        </button>
+        <button
+          type="button"
+          @click="reiniciarZoom"
+          title="Reiniciar zoom a 100%"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+        >
+          <RotateCcw :size="13" />
+        </button>
+      </div>
     </div>
 
     <!-- Diagrama único -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="overflow-x-auto rounded-xl bg-neutral-50/60 py-6 px-2"
+      class="overflow-x-auto rounded-2xl bg-slate-50/70 py-8 px-4 border border-slate-200/80 shadow-inner min-h-[260px] flex items-center justify-center"
     >
-      <div class="arbol-contenedor">
+      <div
+        class="arbol-contenedor transition-transform duration-200"
+        :style="{ transform: `scale(${escala})`, transformOrigin: 'top center' }"
+      >
         <ul class="arbol-raiz">
           <NodoArbol
             :nodo="NODO_RAIZ"
@@ -212,7 +259,7 @@ watch(
       <button
         type="button"
         @click="toggleCompleto"
-        class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl bg-neutral-900 text-white shadow-sm hover:bg-neutral-700 active:scale-95 transition-all cursor-pointer"
+        class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-slate-900 text-white shadow-sm hover:bg-slate-800 active:scale-95 transition-all cursor-pointer"
       >
         <Maximize2 :size="14" /> Ver a pantalla completa
       </button>
