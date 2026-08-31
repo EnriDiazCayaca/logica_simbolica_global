@@ -79,7 +79,14 @@ const textoSecundario = computed(() => {
     >
       <span
         v-if="etiqueta"
-        class="mb-1 text-[10px] font-bold uppercase tracking-wider text-neutral-400"
+        class="mb-1.5 px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md"
+        :class="[
+          etiqueta.includes('Conclusión') || etiqueta.includes('∴')
+            ? 'bg-blue-100 text-blue-800 border border-blue-200'
+            : etiqueta.startsWith('P')
+              ? 'bg-slate-100 text-slate-700 border border-slate-200'
+              : 'text-slate-400 font-semibold'
+        ]"
       >
         {{ etiqueta }}
       </span>
@@ -87,28 +94,28 @@ const textoSecundario = computed(() => {
       <!-- Nodo raíz global del diagrama -->
       <div
         v-if="esRaizGlobal"
-        class="flex items-center gap-2 rounded-2xl border px-4 py-2.5 shadow-2xs ring-1 ring-inset transition-all duration-150 hover:-translate-y-0.5"
+        class="flex items-center gap-2.5 rounded-2xl border px-5 py-3 shadow-md ring-1 ring-inset transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
         :class="claseNodo"
       >
-        <Network :size="18" class="opacity-90" />
+        <Network :size="20" class="opacity-90 text-blue-400" />
         <span class="flex flex-col leading-tight text-left">
-          <span class="text-sm font-extrabold">{{ tituloRaiz }}</span>
-          <span class="text-[10px] font-medium opacity-70">Premisas + Conclusión</span>
+          <span class="text-sm font-black tracking-wide">{{ tituloRaiz }}</span>
+          <span class="text-[10px] font-semibold opacity-75">Premisas + Conclusión</span>
         </span>
       </div>
 
       <!-- Nodo normal: variable u operación -->
       <div
         v-else
-        class="flex items-center gap-1.5 rounded-xl border px-3 py-2 shadow-2xs ring-1 ring-inset transition-all duration-150 hover:-translate-y-0.5 hover:shadow-md"
+        class="flex items-center gap-2 rounded-2xl border px-3.5 py-2 shadow-2xs ring-1 ring-inset transition-all duration-150 hover:-translate-y-1 hover:shadow-md cursor-default select-none"
         :class="claseNodo"
       >
-        <span class="text-lg font-black leading-none">{{ textoPrincipal }}</span>
-        <span class="flex flex-col leading-none">
-          <span class="text-[10px] font-semibold opacity-80">{{ textoSecundario }}</span>
+        <span class="text-lg font-black leading-none font-serif">{{ textoPrincipal }}</span>
+        <span class="flex flex-col leading-none text-left">
+          <span class="text-[10px] font-bold opacity-85">{{ textoSecundario }}</span>
           <span
             v-if="!esVariable && meta"
-            class="text-[9px] font-medium opacity-60"
+            class="text-[9px] font-semibold opacity-60 uppercase tracking-wider"
           >{{ meta.corto }}</span>
         </span>
       </div>

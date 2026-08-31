@@ -9,9 +9,9 @@ describe('FormularioInferencia', () => {
       props: { isLoading: false },
       global: { components: { Button } }
     })
-    
-    const btn = wrapper.findComponent(Button)
-    expect(btn.props('disabled')).toBe(true)
+
+    const btn = wrapper.find('button[type="submit"]')
+    expect(btn.attributes('disabled')).toBeDefined()
   })
 
   it('habilita el botón si hay premisas y conclusión', async () => {
@@ -19,12 +19,12 @@ describe('FormularioInferencia', () => {
       props: { isLoading: false },
       global: { components: { Button } }
     })
-    
+
     await wrapper.find('textarea').setValue('P\nP ENTONCES Q')
     await wrapper.find('input').setValue('Q')
 
-    const btn = wrapper.findComponent(Button)
-    expect(btn.props('disabled')).toBe(false)
+    const btn = wrapper.find('button[type="submit"]')
+    expect(btn.attributes('disabled')).toBeUndefined()
   })
 
   it('deshabilita el botón si isLoading es true, incluso con entradas llenas', async () => {
@@ -32,12 +32,12 @@ describe('FormularioInferencia', () => {
       props: { isLoading: true },
       global: { components: { Button } }
     })
-    
+
     await wrapper.find('textarea').setValue('P')
     await wrapper.find('input').setValue('P')
 
-    const btn = wrapper.findComponent(Button)
-    expect(btn.props('disabled')).toBe(true)
+    const btn = wrapper.find('button[type="submit"]')
+    expect(btn.attributes('disabled')).toBeDefined()
     expect(wrapper.text()).toContain('Demostrando')
   })
 
