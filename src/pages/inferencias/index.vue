@@ -15,7 +15,17 @@ import TraductorLenguajeNatural from '@/components/inferencias/TraductorLenguaje
 import ArbolAST from '@/components/inferencias/ArbolAST.vue'
 import IndicadorResultado from '@/components/inferencias/IndicadorResultado.vue'
 import PanelTrazabilidad from '@/components/inferencias/PanelTrazabilidad.vue'
-import { History, Trash2, Keyboard, BookOpen, TreePine, Network } from '@lucide/vue'
+import {
+  History,
+  Trash2,
+  Terminal,
+  Languages,
+  GitBranch,
+  Network,
+  CheckCircle2,
+  Layers,
+  ArrowLeft
+} from '@lucide/vue'
 
 interface ItemHistorial {
   id: string
@@ -164,135 +174,160 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-neutral-50 p-6 md:p-10 text-neutral-900 font-sans">
-    <div class="max-w-6xl mx-auto space-y-8">
-      <!-- Navegación & Encabezado -->
-      <div class="flex items-start justify-between flex-wrap gap-4">
-        <div>
-          <router-link
-            to="/"
-            class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-800 transition-colors mb-3"
-          >
-            &larr; Volver al Inicio
-          </router-link>
-          <div class="flex items-center gap-3">
-            <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-600/20">
-              <Network :size="22" />
+  <div class="min-h-screen bg-slate-50/70 text-slate-900 font-sans relative overflow-hidden selection:bg-blue-500/20">
+    <!-- Fondo ambiental decorativo sutil -->
+    <div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[360px] bg-gradient-to-b from-blue-500/8 via-indigo-500/5 to-transparent blur-3xl rounded-full"></div>
+
+    <div class="relative max-w-6xl mx-auto p-4 sm:p-6 md:p-8 space-y-6">
+      <!-- Navegación & Encabezado Principal -->
+      <header class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-xs ring-1 ring-slate-900/5 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-3">
+          <div class="flex items-center gap-2">
+            <router-link
+              to="/"
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200/80 rounded-lg transition-colors"
+            >
+              <ArrowLeft :size="13" />
+              <span>Volver</span>
+            </router-link>
+            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 inline-flex items-center gap-1.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+              <span>Hijos de Linus</span>
             </span>
-            <div>
-              <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight">
-                Demostrador de Inferencias Lógicas
-              </h1>
-              <p class="text-sm text-neutral-600 mt-0.5">
-                Escribe tus premisas con simbología formal, visualiza su traducción a lenguaje natural, explora su árbol de nodos y valida la deducción paso a paso.
-              </p>
-            </div>
           </div>
-        </div>
 
-        <!-- Botón de Historial Local -->
-        <button
-          v-if="historialLocal.length > 0"
-          type="button"
-          @click="mostrarHistorial = !mostrarHistorial"
-          class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-neutral-100 text-xs font-semibold text-neutral-700 rounded-xl border border-neutral-300 shadow-xs cursor-pointer transition-colors"
-        >
-          <History :size="14" class="text-blue-600" />
-          <span>{{ mostrarHistorial ? 'Ocultar Historial' : `Historial Reciente (${historialLocal.length})` }}</span>
-        </button>
-      </div>
-
-      <!-- Panel Desplegable de Historial Local -->
-      <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-4 bg-white rounded-xl border border-neutral-200 shadow-sm space-y-3">
-        <div class="flex items-center justify-between border-b border-neutral-100 pb-2">
-          <span class="text-xs font-bold text-neutral-700 flex items-center gap-1.5">
-            <History :size="14" /> Ejercicios Demostrados Recientemente
-          </span>
+          <!-- Botón de Historial Local -->
           <button
+            v-if="historialLocal.length > 0"
             type="button"
-            @click="limpiarHistorial"
-            class="text-[11px] font-semibold text-red-600 hover:text-red-800 flex items-center gap-1 cursor-pointer"
+            @click="mostrarHistorial = !mostrarHistorial"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 rounded-xl border border-slate-200 transition-all cursor-pointer active:scale-95"
           >
-            <Trash2 :size="12" /> Limpiar Historial
+            <History :size="13" class="text-blue-600" />
+            <span>{{ mostrarHistorial ? 'Ocultar historial' : `Historial (${historialLocal.length})` }}</span>
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
-          <div
-            v-for="item in historialLocal"
-            :key="item.id"
-            @click="restaurarDesdeHistorial(item)"
-            class="p-3 bg-neutral-50 hover:bg-blue-50/70 border border-neutral-200/80 hover:border-blue-300 rounded-lg cursor-pointer transition-all space-y-1.5 shadow-2xs group"
-          >
-            <div class="flex items-center justify-between text-[10px]">
-              <span
-                class="font-bold uppercase px-1.5 py-0.5 rounded"
-                :class="{
-                  'bg-emerald-100 text-emerald-800': item.resultado === 'valida',
-                  'bg-indigo-100 text-indigo-800': item.resultado === 'no_demostrable_directa',
-                  'bg-red-100 text-red-800': item.resultado === 'invalida' || item.resultado === 'error'
-                }"
-              >
-                {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
-              </span>
-              <span class="text-neutral-400">{{ item.fecha }}</span>
-            </div>
-            <div class="font-mono text-xs text-neutral-800 truncate font-semibold">
-              {{ item.premisas.join('; ') }}
-            </div>
-            <div class="text-[11px] text-blue-700 font-mono font-bold flex items-center gap-1">
-              <span>&there4;</span> {{ item.conclusion }}
+        <div class="flex items-start gap-3.5 sm:gap-4">
+          <div class="flex h-12 w-12 sm:h-13 sm:w-13 shrink-0 items-center justify-center rounded-2xl bg-slate-900 text-white shadow-sm ring-1 ring-slate-950/10">
+            <Network :size="24" :stroke-width="1.75" />
+          </div>
+          <div>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
+              Demostrador de Inferencias Lógicas
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
+              Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Panel Desplegable de Historial Local -->
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="opacity-0 -translate-y-2"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 -translate-y-2"
+      >
+        <div v-if="mostrarHistorial && historialLocal.length > 0" class="p-4 sm:p-5 bg-white rounded-2xl border border-slate-200/90 shadow-sm space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+              <History :size="14" class="text-blue-600" />
+              <span>Ejercicios recientes</span>
+            </span>
+            <button
+              type="button"
+              @click="limpiarHistorial"
+              class="text-[11px] font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              <Trash2 :size="12" />
+              <span>Limpiar</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+            <div
+              v-for="item in historialLocal"
+              :key="item.id"
+              @click="restaurarDesdeHistorial(item)"
+              class="p-3 bg-slate-50/80 hover:bg-blue-50/60 border border-slate-200/80 hover:border-blue-300 rounded-xl cursor-pointer transition-all space-y-1.5 shadow-2xs group"
+            >
+              <div class="flex items-center justify-between text-[10px]">
+                <span
+                  class="font-bold uppercase px-2 py-0.5 rounded-md text-[10px]"
+                  :class="{
+                    'bg-emerald-100 text-emerald-800': item.resultado === 'valida',
+                    'bg-indigo-100 text-indigo-800': item.resultado === 'no_demostrable_directa',
+                    'bg-rose-100 text-rose-800': item.resultado === 'invalida' || item.resultado === 'error'
+                  }"
+                >
+                  {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
+                </span>
+                <span class="text-slate-400 font-mono text-[10px]">{{ item.fecha }}</span>
+              </div>
+              <div class="font-mono text-xs text-slate-800 truncate font-semibold">
+                {{ item.premisas.join('; ') }}
+              </div>
+              <div class="text-[11px] text-blue-700 font-mono font-bold flex items-center gap-1">
+                <span>&there4;</span> {{ item.conclusion }}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </Transition>
 
-      <main class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural) -->
-        <div class="lg:col-span-6 space-y-4">
+      <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural vs Árbol AST) -->
+        <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-4' : 'lg:col-span-6 space-y-4'">
           <!-- Switcher de Pestañas (Segmented Control) -->
-          <div class="inline-flex items-center gap-1 p-1 bg-neutral-200/80 rounded-2xl border border-neutral-200 shadow-inner w-full sm:w-fit overflow-x-auto">
+          <div class="inline-flex items-center gap-1 p-1 bg-slate-200/70 rounded-xl border border-slate-200/80 w-full sm:w-fit overflow-x-auto">
             <button
               type="button"
               @click="activeTab = 'simbolos'"
               :class="[
-                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
+                'flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
                 activeTab === 'simbolos'
-                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
+                  ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200/70'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
               ]"
             >
-              <Keyboard :size="14" /> Simbología Formal
+              <Terminal :size="13" class="text-blue-600" />
+              <span>Simbología Formal</span>
             </button>
             <button
               type="button"
               @click="activeTab = 'lenguaje'"
               :class="[
-                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
+                'flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
                 activeTab === 'lenguaje'
-                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
+                  ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200/70'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
               ]"
             >
-              <BookOpen :size="14" /> Lenguaje Natural
+              <Languages :size="13" class="text-indigo-600" />
+              <span>Lenguaje Natural</span>
             </button>
             <button
               type="button"
               @click="activeTab = 'arbol'"
               :class="[
-                'flex-1 sm:flex-none px-4 py-2 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
+                'flex-1 sm:flex-none px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap',
                 activeTab === 'arbol'
-                  ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-100'
-                  : 'text-neutral-600 hover:text-neutral-900 hover:bg-white/50'
+                  ? 'bg-white text-slate-900 shadow-xs ring-1 ring-slate-200/70'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
               ]"
             >
-              <TreePine :size="14" /> Árbol de Nodos
+              <GitBranch :size="13" class="text-teal-600" />
+              <span>Árbol Sintáctico (AST)</span>
             </button>
           </div>
 
           <!-- Contenido de Pestaña 1: Formulario Simbólico -->
           <div v-show="activeTab === 'simbolos'">
-            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+            <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80">
               <FormularioInferencia
                 :isLoading="isLoading"
                 :premisasIniciales="formulaData.premisas"
@@ -313,7 +348,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
           <!-- Contenido de Pestaña 3: Árbol de Nodos (AST) -->
           <div v-show="activeTab === 'arbol'">
-            <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80">
+            <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80">
               <ArbolAST
                 :premisas="formulaData.premisas"
                 :conclusion="formulaData.conclusion"
@@ -323,7 +358,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         </div>
 
         <!-- Columna Derecha: Indicador de Resultado & Trazabilidad con Contraejemplos / Exportación -->
-        <div class="lg:col-span-6 space-y-6">
+        <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-5' : 'lg:col-span-6 space-y-5'">
           <!-- Indicador de Resultado -->
           <IndicadorResultado
             :resultado="resultado"
@@ -331,16 +366,17 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           />
 
           <!-- Panel de Trazabilidad / Análisis de la Demostración -->
-          <section class="bg-white p-6 rounded-xl shadow-sm border border-neutral-200/80 min-h-[380px]">
-            <div class="flex items-center justify-between border-b border-neutral-100 pb-4 mb-5">
-              <h2 class="text-base md:text-lg font-bold text-neutral-800 flex items-center gap-2">
-                <span>{{ resultado === 'valida' ? '⚡' : '🔍' }}</span>
-                {{ resultado === 'valida' ? 'Trazabilidad de la Demostración' : 'Análisis y Diagnóstico de la Demostración' }}
+          <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80 min-h-[380px]">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3.5 mb-4">
+              <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
+                <CheckCircle2 v-if="resultado === 'valida'" :size="16" class="text-emerald-600" />
+                <Layers v-else :size="16" class="text-blue-600" />
+                <span>{{ resultado === 'valida' ? 'Trazabilidad de la Demostración' : 'Análisis y Diagnóstico de la Demostración' }}</span>
               </h2>
               <span v-if="isLoading" class="flex items-center gap-2 text-xs font-medium text-blue-600">
-                <span class="flex h-2.5 w-2.5 relative">
+                <span class="flex h-2 w-2 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-600"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                 </span>
                 Calculando deducción...
               </span>

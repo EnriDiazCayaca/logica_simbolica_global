@@ -14,7 +14,7 @@ describe('TraductorLenguajeNatural', () => {
     expect(wrapper.text()).toContain('Interpretación en Lenguaje Natural')
     expect(wrapper.text()).toContain('P')
     expect(wrapper.text()).toContain('Q')
-    expect(wrapper.text()).toContain('Argumento Traducido:')
+    expect(wrapper.text()).toContain('Argumento Traducido en Prosa:')
     expect(wrapper.text()).toContain('Si llueve, entonces la calle se moja.')
   })
 

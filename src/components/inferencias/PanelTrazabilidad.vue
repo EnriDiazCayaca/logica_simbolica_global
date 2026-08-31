@@ -13,7 +13,14 @@ import {
   Copy,
   Check,
   FileCode2,
-  FileText
+  FileText,
+  Download,
+  ShieldAlert,
+  AlertCircle,
+  Sparkles,
+  Layers,
+  Inbox,
+  Terminal
 } from '@lucide/vue'
 import type { PasoInferencia, ErrorLogico } from '@/types/inferencias'
 import Card from '@/components/ui/Card.vue'
@@ -271,6 +278,22 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
     console.error('Error al copiar al portapapeles:', err)
   }
 }
+
+const descargarArchivo = (tipo: 'markdown' | 'latex') => {
+  const contenido = tipo === 'markdown' ? generarMarkdownAcademico.value : generarLatexAcademico.value
+  const nombreArchivo = tipo === 'markdown' ? 'demostracion_logica.md' : 'demostracion_logica.tex'
+  const mimeType = tipo === 'markdown' ? 'text/markdown;charset=utf-8' : 'text/x-tex;charset=utf-8'
+
+  const blob = new Blob([contenido], { type: mimeType })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = nombreArchivo
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -282,38 +305,40 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
   >
     <!-- CASO A: INFERENCIA INVÁLIDA (Diagnóstico formal con Contraejemplo) -->
     <div v-if="props.esInvalido && props.errorLogico" class="space-y-4">
-      <div class="p-5 bg-orange-50/80 border border-orange-200 rounded-xl shadow-xs space-y-4">
+      <div class="p-4 sm:p-5 bg-amber-50/60 border border-amber-200/80 rounded-2xl shadow-xs space-y-3.5">
         <!-- Encabezado del Diagnóstico -->
-        <div class="flex items-start gap-3 border-b border-orange-200/80 pb-3.5">
-          <div class="p-2 bg-orange-100 text-orange-700 rounded-lg flex-shrink-0">
-            <AlertOctagon :size="20" />
+        <div class="flex items-start gap-3 border-b border-amber-200/60 pb-3">
+          <div class="p-2 bg-amber-100 text-amber-800 rounded-xl flex-shrink-0">
+            <AlertOctagon :size="18" />
           </div>
           <div>
-            <span class="text-[11px] font-bold text-orange-600 uppercase tracking-wider">
+            <span class="text-[10px] font-bold text-amber-700 uppercase tracking-wider">
               Diagnóstico del Fallo
             </span>
-            <h3 class="text-base font-extrabold text-orange-950">
+            <h3 class="text-sm sm:text-base font-bold text-amber-950">
               {{ props.errorLogico.titulo }}
             </h3>
           </div>
         </div>
 
         <!-- Partición 1: Detalle del Problema Detectado -->
-        <div class="space-y-1.5 text-xs text-orange-900 bg-white/80 p-3 rounded-lg border border-orange-100">
-          <span class="font-bold uppercase tracking-wider text-[10px] text-orange-700 block">
-            📋 Análisis de las premisas:
+        <div class="space-y-1 text-xs text-amber-950 bg-white/90 p-3 rounded-xl border border-amber-100/80 shadow-2xs">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-amber-800 flex items-center gap-1">
+            <FileText :size="11" class="text-amber-700" />
+            <span>Análisis:</span>
           </span>
-          <p class="leading-relaxed">
+          <p class="leading-relaxed text-slate-700">
             {{ props.errorLogico.mensaje }}
           </p>
         </div>
 
         <!-- Partición 2: ¿Por qué falla el razonamiento? -->
-        <div class="space-y-1.5 text-xs text-neutral-800 bg-white/80 p-3 rounded-lg border border-orange-100">
-          <span class="font-bold uppercase tracking-wider text-[10px] text-neutral-600 block flex items-center gap-1">
-            <span>❌</span> ¿Por qué falla este razonamiento?
+        <div class="space-y-1 text-xs text-slate-800 bg-white/90 p-3 rounded-xl border border-amber-100/80 shadow-2xs">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-rose-700 flex items-center gap-1">
+            <AlertCircle :size="11" class="text-rose-600" />
+            <span>¿Por qué falla este razonamiento?</span>
           </span>
-          <p class="leading-relaxed text-neutral-700">
+          <p class="leading-relaxed text-slate-700">
             {{ props.errorLogico.porQueFalla }}
           </p>
         </div>
@@ -321,43 +346,45 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
         <!-- Partición 3: Contraejemplo Semántico Matemático (Si existe) -->
         <div
           v-if="props.errorLogico.contraejemplo"
-          class="space-y-2.5 text-xs bg-red-50/90 p-3.5 rounded-lg border border-red-200"
+          class="space-y-2 text-xs bg-rose-50/80 p-3.5 rounded-xl border border-rose-200/80 shadow-2xs"
         >
-          <div class="flex items-center justify-between">
-            <span class="font-bold uppercase tracking-wider text-[10px] text-red-700 flex items-center gap-1.5">
-              <span>🛑</span> Contraejemplo que refuta la validez:
+          <div class="flex items-center justify-between flex-wrap gap-1">
+            <span class="font-bold uppercase tracking-wider text-[10px] text-rose-800 flex items-center gap-1.5">
+              <ShieldAlert :size="12" class="text-rose-600" />
+              <span>Contraejemplo que refuta la validez:</span>
             </span>
-            <span class="text-[10px] font-mono bg-red-100 text-red-800 px-1.5 py-0.5 rounded font-bold">
+            <span class="text-[10px] font-mono bg-rose-100 text-rose-800 px-1.5 py-0.5 rounded font-bold">
               Premisas = V | Conclusión = F
             </span>
           </div>
 
           <!-- Asignación de variables -->
-          <div class="flex flex-wrap gap-2 pt-1">
+          <div class="flex flex-wrap gap-1.5 pt-0.5">
             <div
               v-for="(val, vNombre) in props.errorLogico.contraejemplo.valores"
               :key="vNombre"
-              class="flex items-center gap-1 px-2.5 py-1 bg-white rounded-md border border-red-200 font-mono text-xs shadow-2xs"
+              class="flex items-center gap-1 px-2 py-0.5 bg-white rounded-lg border border-rose-200 font-mono text-xs shadow-2xs"
             >
-              <strong class="text-neutral-800">{{ vNombre }}</strong>
-              <span class="text-neutral-400">=</span>
-              <span :class="val ? 'text-emerald-700 font-bold' : 'text-red-600 font-bold'">
+              <strong class="text-slate-800">{{ vNombre }}</strong>
+              <span class="text-slate-400">=</span>
+              <span :class="val ? 'text-emerald-700 font-bold' : 'text-rose-600 font-bold'">
                 {{ val ? 'Verdadero (V)' : 'Falso (F)' }}
               </span>
             </div>
           </div>
 
-          <p class="text-[11px] text-red-900/90 leading-normal pt-1 italic">
-            Bajo esta asignación concreta de valores de verdad, todas las premisas se cumplen simultáneamente como verdaderas, pero la conclusión resulta falsa. Por lo tanto, el argumento es formalmente inválido.
+          <p class="text-[11px] text-rose-900/90 leading-relaxed pt-0.5 italic">
+            Con esta asignación, todas las premisas son verdaderas pero la conclusión resulta falsa; el argumento queda formalmente refutado.
           </p>
         </div>
 
         <!-- Partición 4: ¿Cómo corregir el argumento? -->
-        <div class="space-y-1.5 text-xs text-blue-900 bg-blue-50/80 p-3 rounded-lg border border-blue-100">
-          <span class="font-bold uppercase tracking-wider text-[10px] text-blue-700 block flex items-center gap-1">
-            <span>💡</span> ¿Cómo solucionarlo o deducirlo válidamente?
+        <div class="space-y-1 text-xs text-blue-950 bg-blue-50/80 p-3 rounded-xl border border-blue-100/80 shadow-2xs">
+          <span class="font-bold uppercase tracking-wider text-[10px] text-blue-700 flex items-center gap-1">
+            <Sparkles :size="11" class="text-blue-600" />
+            <span>Sugerencia de corrección:</span>
           </span>
-          <p class="leading-relaxed text-blue-950">
+          <p class="leading-relaxed text-slate-700">
             {{ props.errorLogico.sugerencia }}
           </p>
         </div>
@@ -367,64 +394,89 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
     <!-- CASO B: INFERENCIA VÁLIDA CON PASOS DEMOSTRADOS -->
     <div v-else-if="props.pasos && props.pasos.length > 0" class="space-y-4">
       <!-- Barra de Exportación Académica -->
-      <div class="flex items-center justify-between p-2.5 bg-neutral-100/80 rounded-xl border border-neutral-200 text-xs">
-        <span class="font-semibold text-neutral-600 flex items-center gap-1.5">
-          <span>🎓</span> Formato Académico:
+      <div class="flex flex-wrap items-center justify-between gap-2 p-2 bg-slate-100/80 rounded-xl border border-slate-200 text-xs">
+        <span class="font-semibold text-slate-600 flex items-center gap-1.5 text-xs">
+          <FileCode2 :size="13" class="text-slate-500" />
+          <span>Exportar:</span>
         </span>
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-1.5">
+          <!-- Copiar Markdown -->
           <button
             type="button"
             @click="copiarPortapapeles('markdown')"
             title="Copiar demostración en Markdown"
-            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-colors cursor-pointer text-xs"
+            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
           >
-            <component :is="copiadoTipo === 'markdown' ? Check : FileText" :size="13" :class="copiadoTipo === 'markdown' ? 'text-emerald-600' : ''" />
-            <span>{{ copiadoTipo === 'markdown' ? '¡Copiado MD!' : 'Copiar Markdown' }}</span>
+            <component :is="copiadoTipo === 'markdown' ? Check : FileText" :size="12" :class="copiadoTipo === 'markdown' ? 'text-emerald-600' : ''" />
+            <span>{{ copiadoTipo === 'markdown' ? '¡Copiado MD!' : 'Copiar MD' }}</span>
           </button>
+
+          <!-- Descargar Markdown -->
+          <button
+            type="button"
+            @click="descargarArchivo('markdown')"
+            title="Descargar archivo .md"
+            class="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
+          >
+            <Download :size="12" class="text-blue-600" />
+            <span>.md</span>
+          </button>
+
+          <!-- Copiar LaTeX -->
           <button
             type="button"
             @click="copiarPortapapeles('latex')"
             title="Copiar demostración en LaTeX"
-            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-neutral-50 text-neutral-700 font-medium rounded-lg border border-neutral-300 shadow-2xs transition-colors cursor-pointer text-xs"
+            class="inline-flex items-center gap-1 px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
           >
-            <component :is="copiadoTipo === 'latex' ? Check : FileCode2" :size="13" :class="copiadoTipo === 'latex' ? 'text-emerald-600' : ''" />
+            <component :is="copiadoTipo === 'latex' ? Check : FileCode2" :size="12" :class="copiadoTipo === 'latex' ? 'text-emerald-600' : ''" />
             <span>{{ copiadoTipo === 'latex' ? '¡Copiado LaTeX!' : 'Copiar LaTeX' }}</span>
+          </button>
+
+          <!-- Descargar LaTeX -->
+          <button
+            type="button"
+            @click="descargarArchivo('latex')"
+            title="Descargar archivo .tex para Overleaf"
+            class="inline-flex items-center gap-1 px-2 py-1 bg-white hover:bg-slate-50 text-slate-700 font-medium rounded-lg border border-slate-200 shadow-2xs transition-all active:scale-95 cursor-pointer text-xs"
+          >
+            <Download :size="12" class="text-indigo-600" />
+            <span>.tex</span>
           </button>
         </div>
       </div>
 
-      <!-- Tarjetas de Pasos de Demostración -->
+      <!-- Tarjetas de Pasos de Demostración con Estilo Timeline -->
       <TransitionGroup name="fade" tag="div" class="space-y-3">
-        <Card
+        <div
           v-for="paso in props.pasos"
           :key="paso.paso"
-          hoverable
+          class="p-4 bg-white rounded-xl border border-slate-200/80 hover:border-blue-300 shadow-2xs transition-all space-y-2.5"
           role="listitem"
-          class="transition-all border border-neutral-200/80"
         >
-          <div class="flex items-start gap-3.5">
-            <!-- Número de paso (Estilo Formal: Línea global) -->
+          <div class="flex items-start gap-3">
+            <!-- Número de paso (Línea global formal) -->
             <div
-              class="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white shadow-xs"
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-xs font-bold text-white shadow-2xs font-mono"
               aria-hidden="true"
             >
               {{ props.premisasOriginales.length ? props.premisasOriginales.length + paso.paso : paso.paso }}
             </div>
 
-            <div class="min-w-0 flex-1 space-y-2.5">
+            <div class="min-w-0 flex-1 space-y-1.5">
               <!-- Encabezado del paso: Regla y botón de acordeón -->
               <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="flex flex-wrap items-center gap-2">
-                  <Badge variant="blue">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/70">
                     {{ paso.regla }}
-                  </Badge>
+                  </span>
 
                   <!-- Premisas usadas en este paso -->
                   <div v-if="paso.premisas?.length" class="flex flex-wrap gap-1">
                     <span
                       v-for="(premisa, pIndex) in paso.premisas"
                       :key="pIndex"
-                      class="rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 border border-neutral-200/60"
+                      class="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600 border border-slate-200/70"
                     >
                       {{ premisa }}
                     </span>
@@ -438,22 +490,22 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
                   @click="togglePaso(paso.paso)"
                   :aria-expanded="Boolean(pasosAbiertos[paso.paso])"
                   :title="pasosAbiertos[paso.paso] ? 'Ocultar desglose detallado' : 'Ver desglose detallado'"
-                  class="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-700 hover:text-blue-900 bg-blue-50/80 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition-colors border border-blue-200/70 cursor-pointer"
+                  class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-700 hover:text-blue-900 bg-blue-50 hover:bg-blue-100/80 px-2.5 py-0.5 rounded-lg transition-all border border-blue-200/70 cursor-pointer active:scale-95"
                 >
-                  <HelpCircle :size="13" />
+                  <HelpCircle :size="12" />
                   <span>{{ pasosAbiertos[paso.paso] ? 'Ocultar desglose' : '¿Cómo se deduce?' }}</span>
                   <ChevronDown
-                    :size="14"
+                    :size="12"
                     class="transition-transform duration-200"
                     :class="{ 'rotate-180': pasosAbiertos[paso.paso] }"
                   />
                 </button>
               </div>
 
-              <!-- Conclusión del paso (foco de atención) -->
+              <!-- Conclusión del paso (Fórmula Deducida) -->
               <div class="flex items-center gap-2 pt-0.5">
-                <span class="text-neutral-400 font-serif text-base">&there4;</span>
-                <p class="font-mono text-sm md:text-base font-bold text-neutral-900 break-words">
+                <span class="text-blue-600 font-serif text-base font-bold select-none">&there4;</span>
+                <p class="font-mono text-sm md:text-base font-bold text-slate-900 break-words tracking-wide">
                   {{ paso.conclusion }}
                 </p>
               </div>
@@ -462,60 +514,68 @@ const copiarPortapapeles = async (tipo: 'markdown' | 'latex') => {
               <Transition name="desplegar">
                 <div
                   v-if="pasosAbiertos[paso.paso]"
-                  class="mt-3 p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-3 shadow-2xs text-xs"
+                  class="mt-2.5 p-3.5 bg-slate-50/80 border border-slate-200 rounded-xl space-y-2.5 shadow-2xs text-xs"
                 >
                   <!-- 1. Premisas Base Involucradas -->
-                  <div v-if="paso.detalle?.premisasBase?.length" class="space-y-1.5">
-                    <span class="font-bold text-neutral-500 uppercase tracking-wider text-[10px] block">
-                      📌 Premisas base utilizadas:
+                  <div v-if="paso.detalle?.premisasBase?.length" class="space-y-1">
+                    <span class="font-bold text-slate-500 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <Layers :size="11" />
+                      <span>Premisas base utilizadas:</span>
                     </span>
-                    <div class="grid grid-cols-1 gap-1.5">
+                    <div class="grid grid-cols-1 gap-1">
                       <div
                         v-for="(pBase, pbIdx) in paso.detalle.premisasBase"
                         :key="pbIdx"
-                        class="flex items-center justify-between p-2 bg-white rounded-lg border border-neutral-200/70 text-xs"
+                        class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200 text-xs"
                       >
                         <div class="flex items-center gap-2">
-                          <span class="font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded text-[11px]">
+                          <span class="font-bold text-blue-700 bg-blue-50 px-1.5 py-0.5 rounded text-[10px] border border-blue-100">
                             Línea {{ pBase.linea }}
                           </span>
-                          <code class="font-mono font-bold text-neutral-800">{{ pBase.expresion }}</code>
+                          <code class="font-mono font-bold text-slate-800">{{ pBase.expresion }}</code>
                         </div>
-                        <span class="text-[11px] text-neutral-500 italic">{{ pBase.rol }}</span>
+                        <span class="text-[10px] text-slate-500 italic">{{ pBase.rol }}</span>
                       </div>
                     </div>
                   </div>
 
                   <!-- 2. Justificación Lógica de la Regla -->
-                  <div v-if="paso.detalle?.reglaJustificacion" class="space-y-1 p-2.5 bg-blue-50/70 rounded-lg border border-blue-100/80">
-                    <span class="font-bold text-blue-800 uppercase tracking-wider text-[10px] block">
-                      ⚙️ Regla aplicada: {{ paso.detalle.reglaNombre }} {{ paso.detalle.reglaAlias ? `(${paso.detalle.reglaAlias})` : '' }}
+                  <div v-if="paso.detalle?.reglaJustificacion" class="space-y-1 p-2.5 bg-blue-50/70 rounded-lg border border-blue-200/60">
+                    <span class="font-bold text-blue-800 uppercase tracking-wider text-[10px] flex items-center gap-1">
+                      <Terminal :size="11" />
+                      <span>Regla aplicada: {{ paso.detalle.reglaNombre }} {{ paso.detalle.reglaAlias ? `(${paso.detalle.reglaAlias})` : '' }}</span>
                     </span>
-                    <p class="text-neutral-700 text-xs leading-relaxed whitespace-pre-line">
+                    <p class="text-slate-700 text-xs leading-relaxed whitespace-pre-line">
                       {{ paso.detalle.reglaJustificacion }}
                     </p>
                   </div>
 
                   <!-- 3. Deducción Resultante -->
-                  <div class="flex items-center gap-1.5 text-xs font-semibold text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200/60">
-                    <CheckCircle2 :size="14" class="text-emerald-600 flex-shrink-0" />
+                  <div class="flex items-center gap-2 text-xs font-bold text-emerald-800 bg-emerald-50/80 p-2 rounded-lg border border-emerald-200/70">
+                    <CheckCircle2 :size="14" class="text-emerald-600 shrink-0" />
                     <span>Resultado: {{ paso.detalle?.conclusionDeducida || paso.explicacion }}</span>
                   </div>
                 </div>
               </Transition>
             </div>
           </div>
-        </Card>
+        </div>
       </TransitionGroup>
     </div>
 
     <!-- Estado vacío / Inicial -->
-    <p
-      v-else
-      class="py-8 text-center text-sm text-neutral-500"
-    >
-      Aún no hay pasos de deducción para mostrar. Ingresa las premisas y presiona <strong>Demostrar Inferencia</strong>.
-    </p>
+    <div v-else class="py-12 text-center space-y-2 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200 p-6">
+      <div class="flex justify-center">
+        <Inbox :size="28" class="text-slate-400 stroke-[1.5]" />
+      </div>
+      <p class="text-sm font-semibold text-slate-700">
+        Aún no hay pasos de deducción para mostrar.
+        <span class="sr-only">Aún no hay pasos de deducción para mostrar.</span>
+      </p>
+      <p class="text-xs text-slate-500 max-w-sm mx-auto">
+        Ingresa premisas y conclusión, luego pulsa <strong>Demostrar Inferencia</strong> para ver el paso a paso.
+      </p>
+    </div>
   </section>
 </template>
 

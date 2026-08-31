@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { AlertTriangle, Check, X, Compass } from '@lucide/vue'
+import { AlertTriangle, CheckCircle2, XCircle, Compass } from '@lucide/vue'
 import type { ResultadoInferencia } from '@/types/inferencias'
-import Card from '@/components/ui/Card.vue'
 
 interface Props {
   resultado: ResultadoInferencia
@@ -18,40 +17,45 @@ interface EstadoVisual {
   clasesIcono: string
   clasesTitulo: string
   clasesBorde: string
+  clasesFondo: string
 }
 
 const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> = {
   valida: {
-    icono: Check,
+    icono: CheckCircle2,
     titulo: 'Inferencia válida (Demostrada)',
-    descripcion: 'La conclusión se deduce correctamente de las premisas mediante deducción directa.',
-    clasesIcono: 'bg-green-600',
-    clasesTitulo: 'text-green-700',
-    clasesBorde: 'border-l-green-600'
+    descripcion: 'La conclusión se deduce correctamente de las premisas mediante derivación formal.',
+    clasesIcono: 'bg-emerald-600 text-white',
+    clasesTitulo: 'text-emerald-950',
+    clasesBorde: 'border-emerald-200 ring-1 ring-emerald-500/10',
+    clasesFondo: 'bg-gradient-to-r from-emerald-50/90 via-emerald-50/40 to-white'
   },
   invalida: {
-    icono: X,
+    icono: XCircle,
     titulo: 'Inferencia inválida (Refutada)',
-    descripcion: 'La conclusión no se sigue de las premisas. Se encontró un contraejemplo explícito que falsea el argumento.',
-    clasesIcono: 'bg-red-600',
-    clasesTitulo: 'text-red-700',
-    clasesBorde: 'border-l-red-600'
+    descripcion: 'El argumento no es válido. Se determinó un contraejemplo explícito que falsea la inferencia.',
+    clasesIcono: 'bg-rose-600 text-white',
+    clasesTitulo: 'text-rose-950',
+    clasesBorde: 'border-rose-200 ring-1 ring-rose-500/10',
+    clasesFondo: 'bg-gradient-to-r from-rose-50/90 via-rose-50/40 to-white'
   },
   no_demostrable_directa: {
     icono: Compass,
     titulo: 'Inferencia válida (Método indirecto requerido)',
-    descripcion: 'El argumento es lógicamente válido (sin contraejemplos), pero su prueba formal requiere técnicas avanzadas como Reducción al Absurdo o Prueba Condicional.',
-    clasesIcono: 'bg-indigo-600',
-    clasesTitulo: 'text-indigo-700',
-    clasesBorde: 'border-l-indigo-600'
+    descripcion: 'Argumento válido sin contraejemplos. Requiere métodos indirectos (Absurdo o Prueba Condicional).',
+    clasesIcono: 'bg-indigo-600 text-white',
+    clasesTitulo: 'text-indigo-950',
+    clasesBorde: 'border-indigo-200 ring-1 ring-indigo-500/10',
+    clasesFondo: 'bg-gradient-to-r from-indigo-50/90 via-indigo-50/40 to-white'
   },
   error: {
     icono: AlertTriangle,
     titulo: 'Error de sintaxis o procesamiento',
-    descripcion: 'Ocurrió un problema al evaluar la inferencia.',
-    clasesIcono: 'bg-amber-600',
-    clasesTitulo: 'text-amber-700',
-    clasesBorde: 'border-l-amber-600'
+    descripcion: 'Ocurrió un problema al evaluar la expresión lógica.',
+    clasesIcono: 'bg-amber-600 text-white',
+    clasesTitulo: 'text-amber-950',
+    clasesBorde: 'border-amber-200 ring-1 ring-amber-500/10',
+    clasesFondo: 'bg-gradient-to-r from-amber-50/90 via-amber-50/40 to-white'
   }
 }
 
@@ -71,34 +75,34 @@ const descripcion = computed<string>(() => {
 
 <template>
   <Transition name="aparecer">
-    <Card
+    <div
       v-if="estado"
       role="status"
       aria-live="polite"
-      class="border-l-4"
-      :class="estado.clasesBorde"
+      class="p-4 sm:p-5 rounded-2xl border shadow-xs transition-all duration-300 relative overflow-hidden"
+      :class="[estado.clasesBorde, estado.clasesFondo]"
     >
-      <div class="flex items-center gap-4 sm:gap-5">
+      <div class="flex items-start gap-3.5 sm:gap-4">
         <div
           :class="[
-            'flex h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0 items-center justify-center rounded-full text-white shadow-xs',
+            'flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl shadow-xs',
             estado.clasesIcono
           ]"
           aria-hidden="true"
         >
-          <component :is="estado.icono" :size="26" :stroke-width="2.5" />
+          <component :is="estado.icono" :size="22" :stroke-width="2" />
         </div>
 
-        <div class="min-w-0">
-          <p :class="['text-xl sm:text-2xl font-bold tracking-tight', estado.clasesTitulo]">
+        <div class="min-w-0 flex-1">
+          <h3 :class="['text-sm sm:text-base font-bold tracking-tight leading-snug', estado.clasesTitulo]">
             {{ estado.titulo }}
-          </p>
-          <p v-if="descripcion" class="mt-0.5 text-xs sm:text-sm text-neutral-600 leading-snug">
+          </h3>
+          <p v-if="descripcion" class="mt-0.5 text-xs text-slate-600 leading-relaxed">
             {{ descripcion }}
           </p>
         </div>
       </div>
-    </Card>
+    </div>
   </Transition>
 </template>
 
