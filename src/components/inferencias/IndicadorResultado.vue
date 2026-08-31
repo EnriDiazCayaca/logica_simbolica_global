@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { AlertTriangle, Check, X, Compass } from '@lucide/vue'
+import { AlertTriangle, CheckCircle2, XCircle, Compass } from '@lucide/vue'
 import type { ResultadoInferencia } from '@/types/inferencias'
-import Card from '@/components/ui/Card.vue'
 
 interface Props {
   resultado: ResultadoInferencia
@@ -23,40 +22,40 @@ interface EstadoVisual {
 
 const ESTADOS: Record<Exclude<ResultadoInferencia, 'pendiente'>, EstadoVisual> = {
   valida: {
-    icono: Check,
+    icono: CheckCircle2,
     titulo: 'Inferencia válida (Demostrada)',
     descripcion: 'La conclusión se deduce correctamente de las premisas mediante derivación formal.',
-    clasesIcono: 'bg-emerald-600 shadow-emerald-600/30',
-    clasesTitulo: 'text-emerald-800',
-    clasesBorde: 'border-l-emerald-600',
-    clasesFondo: 'bg-gradient-to-r from-emerald-50/80 to-white'
+    clasesIcono: 'bg-emerald-600 text-white',
+    clasesTitulo: 'text-emerald-950',
+    clasesBorde: 'border-emerald-200 ring-1 ring-emerald-500/10',
+    clasesFondo: 'bg-gradient-to-r from-emerald-50/90 via-emerald-50/40 to-white'
   },
   invalida: {
-    icono: X,
+    icono: XCircle,
     titulo: 'Inferencia inválida (Refutada)',
     descripcion: 'El argumento no es válido. Se determinó un contraejemplo explícito que falsea la inferencia.',
-    clasesIcono: 'bg-rose-600 shadow-rose-600/30',
-    clasesTitulo: 'text-rose-800',
-    clasesBorde: 'border-l-rose-600',
-    clasesFondo: 'bg-gradient-to-r from-rose-50/80 to-white'
+    clasesIcono: 'bg-rose-600 text-white',
+    clasesTitulo: 'text-rose-950',
+    clasesBorde: 'border-rose-200 ring-1 ring-rose-500/10',
+    clasesFondo: 'bg-gradient-to-r from-rose-50/90 via-rose-50/40 to-white'
   },
   no_demostrable_directa: {
     icono: Compass,
     titulo: 'Inferencia válida (Método indirecto requerido)',
     descripcion: 'Argumento válido sin contraejemplos. Requiere métodos indirectos (Absurdo o Prueba Condicional).',
-    clasesIcono: 'bg-indigo-600 shadow-indigo-600/30',
-    clasesTitulo: 'text-indigo-800',
-    clasesBorde: 'border-l-indigo-600',
-    clasesFondo: 'bg-gradient-to-r from-indigo-50/80 to-white'
+    clasesIcono: 'bg-indigo-600 text-white',
+    clasesTitulo: 'text-indigo-950',
+    clasesBorde: 'border-indigo-200 ring-1 ring-indigo-500/10',
+    clasesFondo: 'bg-gradient-to-r from-indigo-50/90 via-indigo-50/40 to-white'
   },
   error: {
     icono: AlertTriangle,
     titulo: 'Error de sintaxis o procesamiento',
     descripcion: 'Ocurrió un problema al evaluar la expresión lógica.',
-    clasesIcono: 'bg-amber-600 shadow-amber-600/30',
-    clasesTitulo: 'text-amber-800',
-    clasesBorde: 'border-l-amber-600',
-    clasesFondo: 'bg-gradient-to-r from-amber-50/80 to-white'
+    clasesIcono: 'bg-amber-600 text-white',
+    clasesTitulo: 'text-amber-950',
+    clasesBorde: 'border-amber-200 ring-1 ring-amber-500/10',
+    clasesFondo: 'bg-gradient-to-r from-amber-50/90 via-amber-50/40 to-white'
   }
 }
 
@@ -80,25 +79,25 @@ const descripcion = computed<string>(() => {
       v-if="estado"
       role="status"
       aria-live="polite"
-      class="p-5 sm:p-6 rounded-3xl border shadow-sm transition-all duration-300 relative overflow-hidden"
+      class="p-4 sm:p-5 rounded-2xl border shadow-xs transition-all duration-300 relative overflow-hidden"
       :class="[estado.clasesBorde, estado.clasesFondo]"
     >
-      <div class="flex items-start sm:items-center gap-4 sm:gap-5">
+      <div class="flex items-start gap-3.5 sm:gap-4">
         <div
           :class="[
-            'flex h-13 w-13 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl text-white shadow-md ring-4 ring-white/80',
+            'flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl shadow-xs',
             estado.clasesIcono
           ]"
           aria-hidden="true"
         >
-          <component :is="estado.icono" :size="28" :stroke-width="2.5" />
+          <component :is="estado.icono" :size="22" :stroke-width="2" />
         </div>
 
         <div class="min-w-0 flex-1">
-          <h3 :class="['text-lg sm:text-xl font-extrabold tracking-tight leading-snug', estado.clasesTitulo]">
+          <h3 :class="['text-sm sm:text-base font-bold tracking-tight leading-snug', estado.clasesTitulo]">
             {{ estado.titulo }}
           </h3>
-          <p v-if="descripcion" class="mt-1 text-xs sm:text-sm text-slate-600 leading-relaxed">
+          <p v-if="descripcion" class="mt-0.5 text-xs text-slate-600 leading-relaxed">
             {{ descripcion }}
           </p>
         </div>

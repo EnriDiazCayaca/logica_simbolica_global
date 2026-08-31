@@ -4,7 +4,18 @@ import { parsearExpresion, normalizarExpresion } from '@/lib/solver/parser'
 import { META_OPERADOR, COLOR_NODO, estadisticasNodo } from '@/lib/solver/astVisual'
 import type { NodoExpresion } from '@/lib/solver/types'
 import NodoArbol from './NodoArbol.vue'
-import { Maximize2, Network, X, ZoomIn, ZoomOut, RotateCcw } from '@lucide/vue'
+import {
+  Maximize2,
+  Network,
+  X,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  GitBranch,
+  Sparkles,
+  AlertTriangle,
+  Info
+} from '@lucide/vue'
 
 interface Props {
   premisas: string[]
@@ -126,35 +137,37 @@ watch(
 </script>
 
 <template>
-  <div class="space-y-6">
-    <div class="border-b border-slate-100 pb-4">
-      <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-        <span>🌳</span> Árbol de Derivación Sintáctica (AST)
+  <div class="space-y-5">
+    <div class="border-b border-slate-100 pb-3.5">
+      <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+        <GitBranch :size="18" class="text-teal-600" />
+        <span>Árbol de Derivación Sintáctica (AST)</span>
       </h3>
-      <p class="text-xs text-slate-500 mt-1">
+      <p class="text-xs text-slate-500 mt-0.5">
         Estructura jerárquica de la deducción: nodo raíz, ramas por premisa y conclusión, operadores y variables proposicionales.
       </p>
     </div>
 
     <!-- Leyenda de operadores -->
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-1.5">
       <span
         v-for="op in leyenda"
         :key="op.corto"
-        class="inline-flex items-center gap-1.5 rounded-xl border px-2.5 py-1 text-[11px] font-bold shadow-2xs transition-all hover:scale-105 select-none"
+        class="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-[11px] font-semibold shadow-2xs select-none"
         :class="op.clase"
       >
-        <span class="text-sm font-black leading-none font-serif">{{ op.simbolo }}</span>
+        <span class="text-xs font-bold leading-none font-serif">{{ op.simbolo }}</span>
         <span>{{ op.nombre }}</span>
       </span>
     </div>
 
     <!-- Guía para lectura del árbol -->
-    <div class="rounded-2xl bg-sky-50/80 border border-sky-200/90 px-4 py-3 text-xs text-sky-950 leading-relaxed shadow-2xs space-y-1">
-      <p class="font-bold flex items-center gap-1.5 text-sky-900">
-        <span>💡</span> Interpretación del árbol:
+    <div class="rounded-xl bg-sky-50/70 border border-sky-200/80 px-3.5 py-2.5 text-xs text-sky-950 leading-relaxed shadow-2xs space-y-1">
+      <p class="font-bold flex items-center gap-1.5 text-sky-900 text-xs">
+        <Info :size="12" class="text-sky-700" />
+        <span>Interpretación del árbol:</span>
       </p>
-      <ul class="list-disc pl-5 space-y-0.5 text-sky-900/90 text-[11px]">
+      <ul class="list-disc pl-4 space-y-0.5 text-sky-900/90 text-[11px]">
         <li><strong>Nodo raíz:</strong> representa la deducción completa.</li>
         <li><strong>Ramas principales:</strong> premisas individuales (P1, P2…) y conclusión (∴).</li>
         <li><strong>Nodos y hojas:</strong> operadores lógicos como conectores y letras como variables.</li>
@@ -164,9 +177,9 @@ watch(
     <!-- Aviso de ejemplo cuando no hay entrada -->
     <div
       v-if="modelo.esDemo"
-      class="flex items-start gap-2.5 rounded-2xl border border-dashed border-blue-300 bg-blue-50/70 p-3.5 text-xs text-blue-900"
+      class="flex items-start gap-2.5 rounded-xl border border-dashed border-blue-300 bg-blue-50/70 p-3 text-xs text-blue-900 shadow-2xs"
     >
-      <span class="text-lg leading-none">✨</span>
+      <Sparkles :size="14" class="text-blue-600 shrink-0 mt-0.5" />
       <span>
         Mostrando <strong>ejemplo didáctico</strong>.
         Escribe tus premisas en <strong>Simbología Formal</strong> para actualizar el árbol en tiempo real.
@@ -176,12 +189,13 @@ watch(
     <!-- Errores de sintaxis (no detienen el resto del árbol) -->
     <div
       v-if="modelo.errores.length"
-      class="space-y-1.5 rounded-2xl border border-rose-200 bg-rose-50/80 p-4 text-xs text-rose-800"
+      class="space-y-1 rounded-xl border border-rose-200 bg-rose-50/80 p-3 text-xs text-rose-800 shadow-2xs"
     >
       <p class="font-bold flex items-center gap-1.5">
-        <span>⚠️</span> Algunas proposiciones contienen errores de sintaxis:
+        <AlertTriangle :size="13" class="text-rose-600" />
+        <span>Algunas proposiciones contienen errores de sintaxis:</span>
       </p>
-      <ul class="list-disc pl-5 space-y-0.5">
+      <ul class="list-disc pl-4 space-y-0.5 text-[11px]">
         <li v-for="(err, i) in modelo.errores" :key="i">
           <code class="font-mono font-bold">{{ err.etiqueta }}</code>: {{ err.error }}
         </li>
@@ -191,28 +205,28 @@ watch(
     <!-- Estadísticas globales del diagrama & Controles de Zoom -->
     <div
       v-if="modelo.hijosRaiz.length"
-      class="flex flex-wrap items-center justify-between gap-3 text-[10px] font-semibold text-slate-500 bg-slate-50/80 p-2.5 rounded-2xl border border-slate-200/80"
+      class="flex flex-wrap items-center justify-between gap-2.5 text-[11px] text-slate-600 bg-slate-50/80 p-2 rounded-xl border border-slate-200"
     >
-      <div class="flex flex-wrap items-center gap-2">
-        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">📦 {{ modelo.total }} proposiciones</span>
-        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">⦿ {{ modelo.stats.nodos }} nodos</span>
-        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">↕ prof. máx {{ modelo.stats.profundidad }}</span>
-        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">◍ {{ modelo.stats.variables }} variables</span>
-        <span class="rounded-lg bg-white px-2.5 py-1 border border-slate-200 shadow-2xs">⚇ {{ modelo.stats.operadores }} conectivos</span>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <span class="rounded-lg bg-white px-2 py-0.5 border border-slate-200 shadow-2xs font-mono font-medium">{{ modelo.total }} proposiciones</span>
+        <span class="rounded-lg bg-white px-2 py-0.5 border border-slate-200 shadow-2xs font-mono font-medium">{{ modelo.stats.nodos }} nodos</span>
+        <span class="rounded-lg bg-white px-2 py-0.5 border border-slate-200 shadow-2xs font-mono font-medium">prof. máx {{ modelo.stats.profundidad }}</span>
+        <span class="rounded-lg bg-white px-2 py-0.5 border border-slate-200 shadow-2xs font-mono font-medium">{{ modelo.stats.variables }} variables</span>
+        <span class="rounded-lg bg-white px-2 py-0.5 border border-slate-200 shadow-2xs font-mono font-medium">{{ modelo.stats.operadores }} conectivos</span>
       </div>
 
       <!-- Controles de Zoom -->
-      <div class="flex items-center gap-1 bg-white rounded-xl p-1 border border-slate-200 shadow-2xs">
+      <div class="flex items-center gap-1 bg-white rounded-lg p-0.5 border border-slate-200 shadow-2xs">
         <button
           type="button"
           @click="reducirZoom"
           title="Reducir zoom"
           :disabled="escala <= 0.6"
-          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <ZoomOut :size="14" />
+          <ZoomOut :size="13" />
         </button>
-        <span class="px-2 font-mono text-[10px] font-bold text-slate-700 select-none">
+        <span class="px-1.5 font-mono text-[10px] font-bold text-slate-700 select-none">
           {{ Math.round(escala * 100) }}%
         </span>
         <button
@@ -220,15 +234,15 @@ watch(
           @click="aumentarZoom"
           title="Aumentar zoom"
           :disabled="escala >= 1.6"
-          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
         >
-          <ZoomIn :size="14" />
+          <ZoomIn :size="13" />
         </button>
         <button
           type="button"
           @click="reiniciarZoom"
-          title="Reiniciar zoom a 100%"
-          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+          title="Restablecer tamaño (100%)"
+          class="p-1 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
         >
           <RotateCcw :size="13" />
         </button>

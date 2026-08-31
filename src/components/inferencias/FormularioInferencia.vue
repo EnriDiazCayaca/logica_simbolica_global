@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch } from 'vue'
+import { Zap, AlignLeft, Target, Keyboard, CornerDownLeft, ArrowRight, Sparkles } from '@lucide/vue'
 import type { InferenciaRequest } from '@/types/inferencias'
 import { normalizarExpresion } from '@/lib/solver/parser'
 import Button from '@/components/ui/Button.vue'
@@ -203,7 +204,8 @@ const handleSubmit = () => {
     <div class="space-y-2 pb-2 border-b border-slate-100">
       <div class="flex items-center justify-between">
         <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-          <span>⚡</span> Ejemplos rápidos:
+          <Zap :size="12" class="text-amber-500" />
+          <span>Ejemplos rápidos:</span>
         </span>
         <span class="text-[10px] text-slate-400">Clic para cargar</span>
       </div>
@@ -216,8 +218,8 @@ const handleSubmit = () => {
           class="px-2.5 py-1 text-[11px] font-semibold rounded-lg border transition-all cursor-pointer select-none active:scale-95 shadow-2xs flex items-center gap-1.5"
           :class="[
             ej.tipo === 'valido'
-              ? 'bg-blue-50/80 border-blue-200/90 text-blue-700 hover:bg-blue-100 hover:border-blue-300'
-              : 'bg-amber-50/80 border-amber-200/90 text-amber-800 hover:bg-amber-100 hover:border-amber-300'
+              ? 'bg-blue-50/70 border-blue-200/80 text-blue-700 hover:bg-blue-100 hover:border-blue-300'
+              : 'bg-amber-50/70 border-amber-200/80 text-amber-800 hover:bg-amber-100 hover:border-amber-300'
           ]"
         >
           <span
@@ -233,7 +235,8 @@ const handleSubmit = () => {
     <div class="space-y-1.5">
       <div class="flex justify-between items-center">
         <label for="premisas" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-          <span>📋</span> Premisas
+          <AlignLeft :size="13" class="text-slate-500" />
+          <span>Premisas</span>
         </label>
         <button
           v-if="premisasText || conclusionText"
@@ -255,7 +258,7 @@ const handleSubmit = () => {
         rows="4"
         :disabled="isLoading"
         placeholder="Ej: P → Q&#10;P"
-        class="w-full font-mono text-base rounded-2xl border border-slate-200 px-4 py-3 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-white focus:bg-white transition-all shadow-xs leading-relaxed"
+        class="w-full font-mono text-sm sm:text-base rounded-xl border border-slate-200 px-3.5 py-2.5 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-slate-50 focus:bg-white transition-all shadow-xs leading-relaxed"
       ></textarea>
       <p class="text-[11px] text-slate-400 italic">Una premisa por línea. Admite símbolos (∧, ∨, →, ¬) o palabras clave (Y, O, ENTONCES, NO).</p>
     </div>
@@ -263,10 +266,11 @@ const handleSubmit = () => {
     <!-- Campo de Conclusión -->
     <div class="space-y-1.5">
       <label for="conclusion" class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-        <span>🎯</span> Conclusión
+        <Target :size="13" class="text-blue-600" />
+        <span>Conclusión</span>
       </label>
       <div class="relative flex items-center">
-        <span class="absolute left-3.5 text-blue-600 font-serif font-bold text-lg select-none pointer-events-none">
+        <span class="absolute left-3 text-blue-600 font-serif font-bold text-base select-none pointer-events-none">
           &there4;
         </span>
         <input
@@ -280,16 +284,17 @@ const handleSubmit = () => {
           type="text"
           :disabled="isLoading"
           placeholder="Ej: Q"
-          class="w-full font-mono text-base rounded-2xl border border-slate-200 pl-8 pr-4 py-2.5 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-white focus:bg-white transition-all shadow-xs leading-relaxed"
+          class="w-full font-mono text-sm sm:text-base rounded-xl border border-slate-200 pl-7 pr-3.5 py-2 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-slate-50 focus:bg-white transition-all shadow-xs leading-relaxed"
         />
       </div>
     </div>
 
     <!-- Teclado Simbólico Estructurado (2 filas fijas simétricas) -->
-    <div class="p-3 bg-slate-100/80 rounded-2xl border border-slate-200/90 space-y-2.5">
+    <div class="p-3 bg-slate-100/70 rounded-xl border border-slate-200 space-y-2.5">
       <div class="flex items-center justify-between px-0.5">
-        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-          ⌨️ Teclado Simbólico
+        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+          <Keyboard :size="12" class="text-slate-400" />
+          <span>Teclado Simbólico</span>
         </span>
         <span class="text-[10px] text-slate-400 italic">
           (en cursor)
@@ -304,7 +309,7 @@ const handleSubmit = () => {
           type="button"
           @mousedown.prevent
           @click="insertarSimbolo(op)"
-          class="h-9 flex items-center justify-center bg-white hover:bg-slate-50 hover:border-blue-400 text-slate-800 font-bold text-sm sm:text-base rounded-xl border border-slate-200 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
+          class="h-8.5 flex items-center justify-center bg-white hover:bg-slate-50 hover:border-blue-400 text-slate-800 font-bold text-sm sm:text-base rounded-lg border border-slate-200 shadow-2xs active:scale-95 transition-all cursor-pointer select-none leading-none"
         >
           {{ op }}
         </button>
@@ -312,20 +317,20 @@ const handleSubmit = () => {
 
       <!-- Fila 2: Variables a la izquierda y Botón Salto a la derecha -->
       <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-200/80">
-        <!-- Grupo de Variables: P, Q, R, S | A, B, C, D con espacio vertical adecuado -->
-        <div class="flex items-center gap-1 overflow-x-auto py-1 px-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent [scrollbar-width:thin] min-h-[38px]">
+        <!-- Grupo de Variables: P, Q, R, S | A, B, C, D -->
+        <div class="flex items-center gap-1 overflow-x-auto py-0.5 px-0.5 scrollbar-thin scrollbar-thumb-slate-300 scrollbar-track-transparent [scrollbar-width:thin]">
           <button
             v-for="v in GRUPO_VARS_1"
             :key="v"
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7 w-7 sm:w-7.5 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
 
-          <span class="text-slate-300 select-none px-1 text-xs flex-shrink-0">|</span>
+          <span class="text-slate-300 select-none px-0.5 text-xs flex-shrink-0">|</span>
 
           <button
             v-for="v in GRUPO_VARS_2"
@@ -333,7 +338,7 @@ const handleSubmit = () => {
             type="button"
             @mousedown.prevent
             @click="insertarSimbolo(v)"
-            class="h-7.5 w-7.5 sm:w-8 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
+            class="h-7 w-7 sm:w-7.5 sm:h-7.5 flex items-center justify-center bg-white hover:bg-blue-50 text-blue-700 font-bold text-xs sm:text-sm rounded-lg border border-slate-200 shadow-2xs hover:border-blue-400 active:scale-95 transition-all cursor-pointer flex-shrink-0 select-none leading-none"
           >
             {{ v }}
           </button>
@@ -347,9 +352,9 @@ const handleSubmit = () => {
             @mousedown.prevent
             @click="insertarSimbolo('\n')"
             title="Insertar salto de línea en premisas"
-            class="h-7.5 px-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
+            class="h-7 px-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-lg shadow-2xs active:scale-95 transition-all cursor-pointer whitespace-nowrap select-none flex items-center gap-1"
           >
-            <span>↵</span>
+            <CornerDownLeft :size="11" />
             <span>Salto</span>
           </button>
         </div>
@@ -361,10 +366,10 @@ const handleSubmit = () => {
       <button
         type="submit"
         :disabled="isFormEmpty || isLoading"
-        class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-2xl shadow-md shadow-blue-600/25 hover:shadow-lg hover:shadow-blue-600/35 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 text-sm"
+        class="w-full sm:w-auto px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-xl shadow-xs hover:shadow-sm active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 text-xs sm:text-sm"
       >
         <span v-if="isLoading" class="flex items-center gap-2">
-          <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <svg class="animate-spin h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
@@ -372,7 +377,7 @@ const handleSubmit = () => {
         </span>
         <span v-else class="flex items-center gap-1.5">
           <span>Demostrar Inferencia</span>
-          <span>&rarr;</span>
+          <ArrowRight :size="14" />
         </span>
       </button>
     </div>
