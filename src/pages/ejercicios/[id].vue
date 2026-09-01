@@ -326,10 +326,28 @@ const tituloCategoria = computed(() => {
             </span>
           </div>
           <h1 class="text-2xl font-bold text-neutral-900 mt-1 mb-1">{{ ejercicio.titulo }}</h1>
-          <p class="text-sm text-neutral-500">
-            <span aria-hidden="true">{{ puntosDificultad[ejercicio.nivel] }}</span>
-            Nivel: <strong class="text-neutral-700 font-semibold">{{ etiquetasDificultad[ejercicio.nivel] }}</strong>
-          </p>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="text-xs text-neutral-500 font-medium">Nivel de dificultad:</span>
+            <span
+              :class="[
+                'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border',
+                ejercicio.nivel === 'facil' && 'bg-emerald-50 text-emerald-700 border-emerald-200',
+                ejercicio.nivel === 'medio' && 'bg-amber-50 text-amber-800 border-amber-200',
+                ejercicio.nivel === 'dificil' && 'bg-rose-50 text-rose-700 border-rose-200',
+              ]"
+            >
+              <span
+                :class="[
+                  ejercicio.nivel === 'facil' && 'text-emerald-600',
+                  ejercicio.nivel === 'medio' && 'text-amber-600',
+                  ejercicio.nivel === 'dificil' && 'text-rose-600',
+                ]"
+              >
+                {{ puntosDificultad[ejercicio.nivel] }}
+              </span>
+              {{ etiquetasDificultad[ejercicio.nivel] }}
+            </span>
+          </div>
           <p class="text-neutral-600 mt-2 leading-relaxed">{{ ejercicio.descripcionCorta }}</p>
         </Card>
 
