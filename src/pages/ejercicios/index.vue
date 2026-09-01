@@ -94,7 +94,7 @@ function irAEjercicio(id: string) {
           <div>
             <div class="flex items-center justify-between gap-2 mb-1">
               <h3 class="text-base font-bold text-neutral-900">{{ ex.titulo }}</h3>
-              <span v-if="ex.fuente" class="text-[10px] text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[130px]" :title="ex.fuente">
+              <span v-if="ex.fuente" class="text-[10px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[190px] border border-neutral-200" :title="ex.fuente">
                 📖 {{ ex.fuente }}
               </span>
             </div>
