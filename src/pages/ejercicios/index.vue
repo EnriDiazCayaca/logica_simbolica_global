@@ -90,17 +90,24 @@ function irAEjercicio(id: string) {
 
       <!-- Exercise grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <Card v-for="ex in ejerciciosFiltrados" :key="ex.id" hoverable>
-          <h3 class="text-base font-bold text-neutral-900 mb-2">{{ ex.titulo }}</h3>
-          <p class="text-[11px] font-bold tracking-wide text-blue-600 mb-2 uppercase">
-            {{ ex.categoria }}
-          </p>
-          <p class="text-sm text-neutral-500 mb-3">
-            Nivel: <span aria-hidden="true">{{ puntosDificultad[ex.nivel] }}</span>
-            {{ etiquetasDificultad[ex.nivel] }}
-          </p>
-          <p class="text-sm text-neutral-500 mb-4 flex-1">{{ ex.descripcionCorta }}</p>
-          <Button variant="primary" size="sm" class="w-full" @click="irAEjercicio(ex.id)">
+        <Card v-for="ex in ejerciciosFiltrados" :key="ex.id" hoverable class="flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <h3 class="text-base font-bold text-neutral-900">{{ ex.titulo }}</h3>
+              <span v-if="ex.fuente" class="text-[10px] text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[130px]" :title="ex.fuente">
+                📖 {{ ex.fuente }}
+              </span>
+            </div>
+            <p class="text-[11px] font-bold tracking-wide text-blue-600 mb-2 uppercase">
+              {{ ex.categoria }}
+            </p>
+            <p class="text-sm text-neutral-500 mb-3">
+              Nivel: <span aria-hidden="true">{{ puntosDificultad[ex.nivel] }}</span>
+              {{ etiquetasDificultad[ex.nivel] }}
+            </p>
+            <p class="text-sm text-neutral-600 mb-4">{{ ex.descripcionCorta }}</p>
+          </div>
+          <Button variant="primary" size="sm" class="w-full mt-auto" @click="irAEjercicio(ex.id)">
             Resolver
           </Button>
         </Card>

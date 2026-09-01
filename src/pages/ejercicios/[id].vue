@@ -151,8 +151,13 @@ const tituloCategoria = computed(() => {
       <template v-else>
         <!-- Header -->
         <Card>
-          <Badge variant="blue">{{ tituloCategoria }}</Badge>
-          <h1 class="text-2xl font-bold text-neutral-900 mt-3 mb-1">{{ ejercicio.titulo }}</h1>
+          <div class="flex items-center justify-between flex-wrap gap-2 mb-2">
+            <Badge variant="blue">{{ tituloCategoria }}</Badge>
+            <span v-if="ejercicio.fuente" class="text-xs font-medium text-neutral-600 bg-neutral-100 px-2.5 py-1 rounded-md border border-neutral-200">
+              📖 {{ ejercicio.fuente }}
+            </span>
+          </div>
+          <h1 class="text-2xl font-bold text-neutral-900 mt-1 mb-1">{{ ejercicio.titulo }}</h1>
           <p class="text-sm text-neutral-500">
             <span aria-hidden="true">{{ puntosDificultad[ejercicio.nivel] }}</span>
             Nivel: {{ etiquetasDificultad[ejercicio.nivel] }}
@@ -167,8 +172,12 @@ const tituloCategoria = computed(() => {
             Genera la tabla de verdad para la proposición indicada y verifica los resultados.
           </p>
           <Button @click="verificarRespuesta">Verificar tabla</Button>
-          <div v-if="respuestaEnviada" class="mt-4 p-4 rounded-lg bg-emerald-50 text-emerald-700 text-sm font-semibold">
-            Tabla verificada correctamente.
+          <div v-if="respuestaEnviada" class="mt-4 p-4 rounded-lg bg-emerald-50 text-emerald-800 text-sm">
+            <div class="font-semibold text-emerald-700 mb-1">Tabla verificada correctamente.</div>
+            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-emerald-200">
+              <strong class="text-emerald-900">Resolución y Análisis Lógico:</strong><br />
+              {{ ejercicio.explicacion }}
+            </p>
           </div>
         </Card>
 
@@ -201,11 +210,14 @@ const tituloCategoria = computed(() => {
             Verificar
           </Button>
           <div v-if="respuestaEnviada" :class="[
-            'mt-4 p-4 rounded-lg text-sm font-semibold',
-            esCorrecta ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+            'mt-4 p-4 rounded-lg text-sm',
+            esCorrecta ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'
           ]">
-            {{ esCorrecta ? '¡Correcto!' : 'Incorrecto.' }}
-            <p class="font-normal mt-1">{{ ejercicio.explicacion }}</p>
+            <div class="font-semibold">{{ esCorrecta ? '¡Correcto!' : 'Incorrecto.' }}</div>
+            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-neutral-200/60">
+              <strong>Resolución y Análisis:</strong><br />
+              {{ ejercicio.explicacion }}
+            </p>
           </div>
         </Card>
 
@@ -238,11 +250,14 @@ const tituloCategoria = computed(() => {
             Verificar
           </Button>
           <div v-if="respuestaEnviada" :class="[
-            'mt-4 p-4 rounded-lg text-sm font-semibold',
-            esCorrecta ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+            'mt-4 p-4 rounded-lg text-sm',
+            esCorrecta ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'
           ]">
-            {{ esCorrecta ? '¡Correcto!' : 'Incorrecto.' }}
-            <p class="font-normal mt-1">{{ ejercicio.explicacion }}</p>
+            <div class="font-semibold">{{ esCorrecta ? '¡Correcto!' : 'Incorrecto.' }}</div>
+            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-neutral-200/60">
+              <strong>Resolución y Justificación de la Ley:</strong><br />
+              {{ ejercicio.explicacion }}
+            </p>
           </div>
         </Card>
 
@@ -275,10 +290,16 @@ const tituloCategoria = computed(() => {
             Verificar
           </Button>
           <div v-if="respuestaEnviada" :class="[
-            'mt-4 p-4 rounded-lg text-sm font-semibold',
-            esCorrecta ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+            'mt-4 p-4 rounded-lg text-sm',
+            esCorrecta ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'
           ]">
-            {{ esCorrecta ? '¡Correcto!' : `Incorrecto. La respuesta es: ${etiquetasClasificacion[clasificacionCorrecta(ejercicio.proposicion)]}` }}
+            <div class="font-semibold">
+              {{ esCorrecta ? '¡Correcto!' : `Incorrecto. La respuesta es: ${etiquetasClasificacion[clasificacionCorrecta(ejercicio.proposicion)]}` }}
+            </div>
+            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-neutral-200/60">
+              <strong>Demostración y Análisis Semántico:</strong><br />
+              {{ ejercicio.explicacion }}
+            </p>
           </div>
         </Card>
 
