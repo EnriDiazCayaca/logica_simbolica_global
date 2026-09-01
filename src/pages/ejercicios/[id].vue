@@ -11,7 +11,12 @@ import {
   type Ejercicio,
   type EjercicioQuiz,
 } from '@/data/exercises'
-import { parsearProposicion } from '@/lib/truth-table/evaluator'
+import {
+  parsearProposicion,
+  recolectarVariables,
+  generarFilas,
+  type FilaTabla,
+} from '@/lib/truth-table/evaluator'
 import { registrarRespuesta, marcarEjercicioCompletado, marcarQuizCompletado } from '@/store/progress'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
@@ -28,6 +33,13 @@ const preguntasQuizRespondidas = ref<boolean[]>([])
 const indiceQuizActual = ref(0)
 const puntuacionQuiz = ref(0)
 
+// Estado para tablas de verdad interactivas
+const variablesTabla = ref<string[]>([])
+const filasEsperadas = ref<FilaTabla[]>([])
+const respuestasUsuarioTabla = ref<string[]>([])
+const errorTablaIncompleta = ref(false)
+const filasResultados = ref<{ correcta: boolean; esperada: string }[]>([])
+
 onMounted(() => {
   const id = route.params.id as string
   const ex = obtenerEjercicioPorId(id)
@@ -36,28 +48,64 @@ onMounted(() => {
     if (ex.tipo === 'quiz') {
       const quizEx = ex as EjercicioQuiz
       preguntasQuizRespondidas.value = new Array(quizEx.preguntas.length).fill(false)
+    } else if (ex.tipo === 'truth-table') {
+      try {
+        const nodo = parsearProposicion(ex.proposicion)
+        const vars = recolectarVariables(nodo)
+        variablesTabla.value = vars
+        filasEsperadas.value = generarFilas(nodo, vars)
+        respuestasUsuarioTabla.value = new Array(filasEsperadas.value.length).fill('')
+        filasResultados.value = []
+      } catch (err) {
+        console.error('Error al inicializar tabla:', err)
+      }
     }
   }
 })
 
 function verificarRespuesta() {
   if (!ejercicio.value) return
-  respuestaEnviada.value = true
   const tema = claveTemaParaEjercicio(ejercicio.value)
 
-  if (ejercicio.value.tipo === 'identify') {
-    esCorrecta.value = seleccionUsuario.value === ejercicio.value.opcionCorrecta
-  } else if (ejercicio.value.tipo === 'law') {
-    esCorrecta.value = seleccionUsuario.value === ejercicio.value.opcionCorrecta
-  } else if (ejercicio.value.tipo === 'classify') {
-    const clasificacionReal = clasificacionCorrecta(ejercicio.value.proposicion)
-    esCorrecta.value = seleccionUsuario.value === clasificacionReal
-  } else if (ejercicio.value.tipo === 'truth-table') {
-    esCorrecta.value = true
+  if (ejercicio.value.tipo === 'truth-table') {
+    if (respuestasUsuarioTabla.value.some((r) => r === '')) {
+      errorTablaIncompleta.value = true
+      return
+    }
+    errorTablaIncompleta.value = false
+    respuestaEnviada.value = true
+
+    filasResultados.value = filasEsperadas.value.map((fila, idx) => {
+      const valorUsuario = respuestasUsuarioTabla.value[idx] === 'V'
+      return {
+        correcta: valorUsuario === fila.resultado,
+        esperada: fila.resultado ? 'V' : 'F',
+      }
+    })
+
+    esCorrecta.value = filasResultados.value.every((r) => r.correcta)
+  } else {
+    respuestaEnviada.value = true
+    if (ejercicio.value.tipo === 'identify') {
+      esCorrecta.value = seleccionUsuario.value === ejercicio.value.opcionCorrecta
+    } else if (ejercicio.value.tipo === 'law') {
+      esCorrecta.value = seleccionUsuario.value === ejercicio.value.opcionCorrecta
+    } else if (ejercicio.value.tipo === 'classify') {
+      const clasificacionReal = clasificacionCorrecta(ejercicio.value.proposicion)
+      esCorrecta.value = seleccionUsuario.value === clasificacionReal
+    }
   }
 
   registrarRespuesta(tema, esCorrecta.value)
   marcarEjercicioCompletado(ejercicio.value.id, tema, esCorrecta.value)
+}
+
+function reiniciarTabla() {
+  respuestasUsuarioTabla.value = new Array(filasEsperadas.value.length).fill('')
+  filasResultados.value = []
+  respuestaEnviada.value = false
+  esCorrecta.value = false
+  errorTablaIncompleta.value = false
 }
 
 function responderQuiz(opcion: string) {
@@ -165,17 +213,128 @@ const tituloCategoria = computed(() => {
           <p class="text-neutral-600 mt-2">{{ ejercicio.descripcionCorta }}</p>
         </Card>
 
-        <!-- Truth Table Exercise -->
+        <!-- Truth Table Exercise (Interactive) -->
         <Card v-if="ejercicio.tipo === 'truth-table'">
-          <h3 class="text-sm font-bold text-neutral-700 mb-4">Proposición: {{ ejercicio.proposicion }}</h3>
-          <p class="text-sm text-neutral-500 mb-4">
-            Genera la tabla de verdad para la proposición indicada y verifica los resultados.
-          </p>
-          <Button @click="verificarRespuesta">Verificar tabla</Button>
-          <div v-if="respuestaEnviada" class="mt-4 p-4 rounded-lg bg-emerald-50 text-emerald-800 text-sm">
-            <div class="font-semibold text-emerald-700 mb-1">Tabla verificada correctamente.</div>
-            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-emerald-200">
-              <strong class="text-emerald-900">Resolución y Análisis Lógico:</strong><br />
+          <div class="mb-4">
+            <h3 class="text-sm font-bold text-neutral-800">
+              Proposición a evaluar: <span class="font-mono text-blue-700 font-extrabold text-base">{{ ejercicio.proposicion }}</span>
+            </h3>
+            <p class="text-xs text-neutral-500 mt-1">
+              Completa cada fila de la tabla asignando el valor de verdad <strong>V (Verdadero)</strong> o <strong>F (Falso)</strong> que corresponde a la proposición:
+            </p>
+          </div>
+
+          <!-- Interactive Table -->
+          <div class="overflow-x-auto border border-neutral-200 rounded-xl mb-4 bg-white shadow-xs">
+            <table class="w-full text-center border-collapse">
+              <thead>
+                <tr class="bg-neutral-100 border-b border-neutral-200 text-xs font-bold text-neutral-700">
+                  <th class="py-2.5 px-3 w-10 text-neutral-400">#</th>
+                  <th v-for="v in variablesTabla" :key="v" class="py-2.5 px-4 font-mono text-neutral-800">
+                    {{ v }}
+                  </th>
+                  <th class="py-2.5 px-6 font-mono text-blue-900 bg-blue-50/70 border-l border-neutral-200">
+                    {{ ejercicio.proposicion }}
+                  </th>
+                  <th v-if="respuestaEnviada" class="py-2.5 px-3 w-32 text-neutral-600 border-l border-neutral-200">
+                    Resultado
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-100 text-sm">
+                <tr
+                  v-for="(fila, idx) in filasEsperadas"
+                  :key="idx"
+                  :class="[
+                    'transition-colors',
+                    idx % 2 === 0 ? 'bg-white' : 'bg-neutral-50/40',
+                    respuestaEnviada && filasResultados[idx]?.correcta ? 'bg-emerald-50/40' : '',
+                    respuestaEnviada && !filasResultados[idx]?.correcta ? 'bg-red-50/40' : ''
+                  ]"
+                >
+                  <td class="py-2.5 px-3 text-xs text-neutral-400 font-mono">
+                    {{ idx + 1 }}
+                  </td>
+                  <td v-for="v in variablesTabla" :key="v" class="py-2.5 px-4 font-mono font-bold">
+                    <span :class="fila.asignacion[v] ? 'text-emerald-700 font-semibold' : 'text-rose-600 font-semibold'">
+                      {{ fila.asignacion[v] ? 'V' : 'F' }}
+                    </span>
+                  </td>
+                  <td class="py-2.5 px-6 border-l border-neutral-200 bg-blue-50/20">
+                    <div class="inline-flex rounded-lg border border-neutral-200 p-1 bg-white shadow-2xs gap-1">
+                      <button
+                        type="button"
+                        :disabled="respuestaEnviada"
+                        :class="[
+                          'px-3 py-1 text-xs font-bold rounded transition-all',
+                          respuestasUsuarioTabla[idx] === 'V'
+                            ? 'bg-emerald-600 text-white shadow-xs'
+                            : 'text-neutral-600 hover:bg-neutral-100'
+                        ]"
+                        @click="respuestasUsuarioTabla[idx] = 'V'; errorTablaIncompleta = false"
+                      >
+                        V
+                      </button>
+                      <button
+                        type="button"
+                        :disabled="respuestaEnviada"
+                        :class="[
+                          'px-3 py-1 text-xs font-bold rounded transition-all',
+                          respuestasUsuarioTabla[idx] === 'F'
+                            ? 'bg-rose-600 text-white shadow-xs'
+                            : 'text-neutral-600 hover:bg-neutral-100'
+                        ]"
+                        @click="respuestasUsuarioTabla[idx] = 'F'; errorTablaIncompleta = false"
+                      >
+                        F
+                      </button>
+                    </div>
+                  </td>
+                  <td v-if="respuestaEnviada" class="py-2.5 px-3 border-l border-neutral-200 text-xs font-semibold">
+                    <span v-if="filasResultados[idx]?.correcta" class="inline-flex items-center gap-1 text-emerald-700">
+                      ✓ Correcto
+                    </span>
+                    <span v-else class="inline-flex items-center gap-1 text-red-700 font-bold">
+                      ✗ (Esperado: {{ filasResultados[idx]?.esperada }})
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Error si falta completar filas -->
+          <div v-if="errorTablaIncompleta" class="mb-4 p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold">
+            ⚠️ Por favor, selecciona V o F en cada una de las {{ filasEsperadas.length }} filas antes de verificar.
+          </div>
+
+          <!-- Botones de Acción -->
+          <div class="flex items-center gap-3">
+            <Button
+              v-if="!respuestaEnviada"
+              @click="verificarRespuesta"
+            >
+              Verificar tabla completa
+            </Button>
+            <Button
+              v-else
+              variant="secondary"
+              @click="reiniciarTabla"
+            >
+              Intentar de nuevo
+            </Button>
+          </div>
+
+          <!-- Retroalimentación de la Tabla -->
+          <div v-if="respuestaEnviada" :class="[
+            'mt-4 p-4 rounded-lg text-sm',
+            esCorrecta ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'
+          ]">
+            <div class="font-semibold text-base mb-1">
+              {{ esCorrecta ? '🎉 ¡Correcto! Has completado la tabla de verdad a la perfección.' : '⚠️ Algunas filas contienen valores incorrectos. Revisa las correcciones indicadas en rojo.' }}
+            </div>
+            <p v-if="ejercicio.explicacion" class="font-normal text-neutral-700 mt-2 pt-2 border-t border-neutral-200/60">
+              <strong class="text-neutral-900">Resolución y Análisis Lógico Paso a Paso:</strong><br />
               {{ ejercicio.explicacion }}
             </p>
           </div>
