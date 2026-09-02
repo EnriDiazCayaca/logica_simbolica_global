@@ -52,7 +52,7 @@ const equipos = [
             <p class="text-xs text-blue-100 mt-1">Leyes lógicas</p>
           </div>
           <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">30+</p>
+            <p class="text-2xl font-bold">80</p>
             <p class="text-xs text-blue-100 mt-1">Ejercicios</p>
           </div>
           <div class="bg-white/10 rounded-xl p-4">
