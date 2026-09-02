@@ -15,11 +15,12 @@ Integrantes: Aldair Querebalu · Luis Atencio · Miguel Velarde · Jesús Núñe
 
 Docente: Dr. Mardo Victor Gonzales Herrera
 Líder de Proyecto: Enrique Díaz Cayaca (EnriDiazCayaca)
+
 Lambayeque, Perú · Septiembre 2026
 Repositorio: github.com/EnriDiazCayaca/logica_simbolica_global
 
 ================================================================================
-RESUMEN (Estándar SciELO)
+RESUMEN
 ================================================================================
 Objetivo: Documentar de forma exhaustiva el diseño, la arquitectura, el código fuente y el proceso de desarrollo del módulo de Tablas de Verdad implementado por el Equipo Sinergia en el marco del proyecto colaborativo LogiLearn, correspondiente al curso Lógica Simbólica (MATG1001) de la Universidad Nacional Pedro Ruiz Gallo.
 
@@ -36,29 +37,44 @@ La lógica proposicional constituye la base formal del razonamiento matemático 
 
 El presente informe documenta el trabajo del Equipo Sinergia, responsable del módulo Tablas de Verdad dentro del proyecto colaborativo LogiLearn, desarrollado por el aula del curso Lógica Simbólica (MATG1001, Semestre 2026-I) de la Universidad Nacional Pedro Ruiz Gallo. El módulo implementa un motor lógico de propósito general, capaz de procesar entradas en múltiples notaciones, construir un árbol de sintaxis abstracta (AST), evaluar la fórmula y clasificarla semánticamente.
 
-La documentación sigue el formato de artículo técnico compatible con SciELO y está organizada en las siguientes secciones: (2) Marco Teórico, (3) Arquitectura del Sistema, (4) Explicación Microscópica del Código, (5) Manual de Usuario, (6) Evolución por Sprints, (7) Pruebas y Validación, y (8) Conclusiones.
+La documentación sigue el formato de artículo técnico compatible con SciELO y está organizada en las siguientes secciones: (2) Marco Teórico, (3) Arquitectura del Sistema, (4) Explicación Microscópica del Código, (5) Manual de Usuario, (5.A) Proceso de Diseño Colaborativo y Traspaso a Código, (6) Evolución por Sprints, (7) Pruebas y Validación, (8) Documentación de las Pestañas Complementarias, (9) Conclusiones, (10) Referencias, y Apéndices A y B.
 
 ================================================================================
 2. MARCO TEÓRICO
 ================================================================================
 2.1 Lógica Proposicional y Conectivos Lógicos:
+La lógica proposicional es un sistema formal en el que las proposiciones son entidades que pueden tomar un valor de verdad: verdadero (V) o falso (F). Los conectivos lógicos permiten combinar proposiciones atómicas para formar fórmulas compuestas. Los cinco conectivos implementados en el motor son:
 - Negación (¬ / NOT): operador unario que invierte el valor de verdad. ¬V = F; ¬F = V.
 - Conjunción (∧ / AND): verdadera si y solo si ambos operandos son verdaderos.
 - Disyunción (∨ / OR): verdadera si al menos uno de los operandos es verdadero.
 - Implicación (→ / IMPLIES): falsa únicamente cuando el antecedente es V y el consecuente es F. Equivale a ¬P ∨ Q.
 - Bicondicional (↔ / IFF): verdadera cuando ambos operandos tienen el mismo valor de verdad.
 
-2.2 Clasificación Semántica de Proposiciones:
-- Tautología: fórmula cuya columna de resultado contiene únicamente valores V (ej. P ∨ ¬P).
-- Contradicción: fórmula cuya columna de resultado contiene únicamente valores F (ej. P ∧ ¬P).
-- Contingencia: fórmula que contiene al menos un V y un F en su columna de resultado (ej. P ∧ Q).
+Tabla 1: Tablas de verdad de los cinco conectivos lógicos
+P | Q | ¬P | P ∧ Q | P ∨ Q | P → Q | P ↔ Q
+V | V |  F |   V   |   V   |   V   |   V
+V | F |  F |   F   |   V   |   F   |   F
+F | V |  V |   F   |   V   |   V   |   F
+F | F |  V |   F   |   F   |   V   |   V
+Nota. V = Verdadero, F = Falso. La implicación solo es F cuando antecedente es V y consecuente es F.
 
-2.3 Árbol de Sintaxis Abstracta (AST) y Precedencia:
+2.2 Clasificación Semántica de Proposiciones:
+Una fórmula proposicional puede clasificarse según el conjunto de sus valores de verdad bajo todas las posibles interpretaciones (Hurley, 2015):
+- Tautología: fórmula cuya columna de resultado en la tabla de verdad contiene únicamente valores V. Ejemplo clásico: P ∨ ¬P.
+- Contradicción: fórmula cuya columna de resultado contiene únicamente valores F. Ejemplo: P ∧ ¬P.
+- Contingencia: fórmula que contiene al menos un V y un F en su columna de resultado. Ejemplo: P ∧ Q.
+
+Para n variables proposicionales, la tabla de verdad tiene 2^n filas, correspondientes a las 2^n asignaciones posibles de valores de verdad.
+
+2.3 Árbol de Sintaxis Abstracta (AST):
+Un árbol de sintaxis abstracta (Abstract Syntax Tree, AST) es una representación jerárquica de la estructura sintáctica de una expresión. Cada nodo interno representa un operador lógico, y cada hoja representa una variable proposicional. El AST permite evaluar la expresión de forma recursiva, respetando la precedencia de operadores.
 La precedencia adoptada en el motor, de mayor a menor prioridad, es:
 ¬ > ∧ > ∨ > → > ↔
-Esta jerarquía garantiza que P ∧ Q → R se interprete formalmente como (P ∧ Q) → R y no como P ∧ (Q → R).
+Esta jerarquía garantiza que P ∧ Q → R se interprete como (P ∧ Q) → R y no como P ∧ (Q → R).
 
-2.4 Gramática BNF:
+2.4 Análisis Sintáctico Descendente Recursivo:
+El motor emplea un analizador sintáctico descendente recursivo (Recursive Descent Parser), técnica en la cual cada regla de la gramática libre de contexto se traduce directamente en una función recursiva.
+Figura 1. Gramática BNF del motor lógico del Equipo Sinergia:
 Expresion     ::= Bicondicional
 Bicondicional ::= Implicacion ( '<->' Implicacion )*
 Implicacion   ::= Disyuncion  ( '->'  Disyuncion )*
@@ -70,90 +86,248 @@ Primario      ::= VAR | '(' Expresion ')'
 ================================================================================
 3. ARQUITECTURA DEL SISTEMA
 ================================================================================
-3.1 Stack Tecnológico:
-- Framework UI: Vue 3 (^3.5.13) con Composition API
-- Lenguaje: TypeScript (^5.7.0) con tipado estricto
-- Bundler: Vite (^6.1.0)
-- Estilos: Tailwind CSS (^4.0.0)
-- Testing: Vitest (^4.1.10)
-- Enrutamiento: Vue Router (^4.5.0)
+3.1 Stack Tecnológico (Tabla 2):
+- Framework UI: Vue 3 (^3.5.13) - Componentes reactivos con Composition API
+- Lenguaje: TypeScript (^5.7.0) - Tipado estricto del motor lógico
+- Bundler: Vite (^6.1.0) - Servidor de desarrollo y build de producción
+- Estilos: Tailwind CSS (^4.0.0) - Utilidades CSS para la interfaz
+- Testing: Vitest (^4.1.10) - Suite de pruebas unitarias
+- Enrutamiento: Vue Router (^4.5.0) - Navegación SPA (ruta /tablas)
+- Iconos: @lucide/vue (^1.16.0) - Icono InfoIcon en la sección "¿Cómo se resolvió?"
 
-3.2 Estructura de Archivos del Módulo Sinergia:
-- src/lib/truth-table/evaluator.ts (323 líneas): Motor lógico, tokenizador, parser AST, evaluador y clasificador.
-- src/lib/truth-table/evaluator.test.ts (173 líneas): 25 pruebas unitarias del motor.
-- src/pages/tablas/index.vue (322 líneas): Vista principal interactiva.
-- src/components/layout/AppNavBar.vue (94 líneas): Encabezado global corporativo.
-- src/components/ui/ (Button.vue, Card.vue, ToggleSwitch.vue, Badge.vue).
+3.2 Estructura de Archivos del Módulo Sinergia (Tabla 3):
+- src/lib/truth-table/evaluator.ts (Motor - 323 líneas): Toda la lógica: tokenizador, parser, evaluador, clasificador.
+- src/lib/truth-table/evaluator.test.ts (Testing - 173 líneas): 25 pruebas unitarias del motor.
+- src/pages/tablas/index.vue (Interfaz - 322 líneas): Vista principal: entrada, tabla, clasificación, explicación.
+- src/components/ui/Button.vue (UI Compartida - 34 líneas): Botón reutilizable con 4 variantes.
+- src/components/ui/Card.vue (UI Compartida - 21 líneas): Contenedor visual con borde y sombra.
+- src/components/ui/ToggleSwitch.vue (UI Compartida - 34 líneas): Interruptor ON/OFF para variables activas.
+- src/components/ui/Badge.vue (UI Compartida - 24 líneas): Etiqueta de color para categorías.
+
+3.3 Diagrama de Flujo del Motor (Figura 2):
+Entrada de texto (string) -> 1. normalizar() -> 2. tokenizar() -> 3. Parser -> AST ->
+-> recolectarVar ['P','Q','R']
+-> recolectarSub [P^Q, P^Q->R]
+-> evaluar() por cada fila
+-> FilaTabla[] -> clasificar (tautología / contradicción / contingencia)
 
 ================================================================================
 4. EXPLICACIÓN MICROSCÓPICA DEL CÓDIGO
 ================================================================================
-4.1 Motor Lógico (src/lib/truth-table/evaluator.ts):
-- Tipos e Interfaces: 'VAR' | 'NOT' | 'AND' | 'OR' | 'IMPLIES' | 'IFF' modelan el AST binario/unario recursivo.
-- ErrorParseoLogico: Clase de error personalizada extendiendo Error.
-- Normalización: Expresiones regulares para unificar 15+ notaciones (Unicode, ASCII, palabras en inglés como AND, OR, NOT).
-- Tokenizador: AFD simple en O(n) que genera lista de Tokens discretos.
-- Clase Parser: Análisis descendente recursivo con peek (mirar) y consume (consumir).
-- Generador de Filas con Aritmética de Bits:
-  Para n variables, el bucle itera i de 0 a 2^n - 1. Para la variable idx, extrae el bit (n - idx - 1) mediante:
-  (i >> (n - idx - 1)) & 1 === 0  --> Asigna V si es 0, F si es 1.
-  Garantiza el orden canónico universal (V,V,V / V,V,F / ... / F,F,F).
-- Evaluación Recursiva: Semántica de Tarski con !evaluar(izquierdo) || evaluar(derecho) para la implicación.
-- Clasificación: Conteo de verdaderas y falsas en la matriz principal.
+4.1 Motor Lógico: src/lib/truth-table/evaluator.ts
+4.1.1 Tipos e Interfaces TypeScript (líneas 1–32):
+export type TipoNodo = 'VAR' | 'NOT' | 'AND' | 'OR' | 'IMPLIES' | 'IFF';
+export interface NodoExpresion {
+  tipo: TipoNodo;
+  valor?: string;
+  izquierdo?: NodoExpresion;
+  derecho?: NodoExpresion;
+}
+export type ClasificacionProposicion = 'tautologia' | 'contradiccion' | 'contingencia';
+export interface FilaTabla {
+  asignacion: Record<string, boolean>;
+  pasos: { etiqueta: string; valor: boolean }[];
+  resultado: boolean;
+}
 
-4.2 Vista Principal (src/pages/tablas/index.vue):
-- Estado reactivo con ref y reactive para variablesActivas.
-- Watcher reactivo que detecta variables en tiempo real mientras el usuario escribe.
-- Computed properties para el texto descriptivo y la explicación paso a paso.
+4.1.2 Clase de Error Personalizada (líneas 34–39):
+export class ErrorParseoLogico extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ErrorParseoLogico';
+  }
+}
+
+4.1.3 Mapa de Símbolos y Normalización (líneas 41–64):
+const MAPA_SIMBOLOS: Record<string, string> = {
+  '~': 'NOT', '!': 'NOT', '¬': 'NOT', '-': 'NOT',
+  '^': 'AND', '&': 'AND', '∧': 'AND', '.': 'AND',
+  'v': 'OR', '|': 'OR', '∨': 'OR', '+': 'OR',
+  '->': 'IMPLIES', '→': 'IMPLIES',
+  '<->': 'IFF', '↔': 'IFF',
+};
+function normalizar(input: string): string { ... }
+
+4.1.4 Tokenizador (líneas 66–85):
+Implementa un AFD lineal O(n) que genera tokens discretos y unifica variables a mayúsculas.
+
+4.1.5 Clase Parser (líneas 87–175):
+Métodos recursivos: parsearIff() -> parsearImplies() -> parsearOr() -> parsearAnd() -> parsearNot() -> parsearPrimario().
+
+4.1.6 Función recolectarVariables (líneas 177–186):
+Recorrido inorden y Set ordenado con Array.from(variables).sort().
+
+4.1.7 Función evaluar (líneas 188–203):
+switch(nodo.tipo) resolviendo NOT (!v), AND (a && b), OR (a || b), IMPLIES (!p || q), IFF (p === q).
+
+4.1.8 Función nodoATexto (líneas 205–219):
+Convierte el AST a string Unicode con paréntesis legibles.
+
+4.1.9 Función recolectarSubExpresiones (líneas 221–237):
+Recorrido post-orden para extraer subexpresiones de más internas a más externas.
+
+4.1.10 Función generarFilas (líneas 269–298):
+Para i = 0 hasta 2^n - 1:
+asignacion[v] = ((i >> (n - idx - 1)) & 1) === 0;
+
+4.2 Vista Principal: src/pages/tablas/index.vue
+- 4.2.1 Bloque <script setup> — Estado Reactivo: ref para primitivos, reactive para variablesActivas.
+- 4.2.2 Watcher Reactivo: watch(proposicion, () => { ... }, { immediate: true }) para detección en tiempo real.
+- 4.2.3 Función generarTabla: Orquestación del flujo completo de parseo, cálculo y clasificación.
+- 4.2.4 Propiedades Computadas: computed() para textoClasificacion, explicacionClasificacion y pasosExplicacion.
+
+4.3 Componentes UI Reutilizables:
+- Button.vue: 4 variantes (primary, secondary, ghost, danger) y 3 tamaños.
+- ToggleSwitch.vue: v-model personalizado con role="switch" y aria-checked.
+- Card.vue: Contenedor visual blanco con bordes redondeados y sombra.
+- Badge.vue: Etiqueta de color para clasificaciones y niveles.
 
 ================================================================================
 5. MANUAL DE USUARIO — GUÍA PASO A PASO
 ================================================================================
-5.1 Acceso:
-Navegar a la ruta /tablas en la barra de navegación superior.
+5.1 ¿Cómo Acceder al Módulo?:
+- En la nube: Navegar a la URL de GitHub Pages y hacer clic en «Tablas de Verdad».
+- En local: Ejecutar npm run dev y navegar a http://localhost:5173/tablas.
 
-5.2 Sintaxis Permitida:
-- Negación: !p, ~p, ¬p, NOT p
-- Conjunción: p & q, p ^ q, p ∧ q, p AND q
-- Disyunción: p | q, p v q, p ∨ q, p OR q
-- Implicación: p -> q, p => q, p → q, p IMPLIES q
-- Bicondicional: p <-> q, p <=> q, p ↔ q, p IFF q
+5.2 Interfaz Principal (Tabla 4):
+- Header azul: Título e instrucción breve.
+- Input de proposición: Campo de texto monoespaciado.
+- Botón "Generar tabla": Ejecuta el cálculo.
+- Panel Variables: Toggles ON/OFF por variable.
+- Panel Operadores: Botones de acceso rápido.
+- Panel Clasificación: Tautología (verde), Contradicción (rojo), Contingencia (amarillo).
+- Tabla de verdad: Grid dinámico con variables, subexpresiones y resultado final.
+- Panel "¿Cómo se resolvió?": Explicación detallada.
 
-5.3 Generación y Lectura:
-- Presionar «Generar tabla» o pulsar Enter.
-- Revisar columnas de variables, columnas intermedias de subexpresiones y columna de resultado.
-- Ver clasificación en el panel lateral: TAUTOLOGÍA (todo V), CONTRADICCIÓN (todo F), CONTINGENCIA (V y F).
-- Usar ToggleSwitch para activar/desactivar variables fijándolas en Verdadero.
-- Clic en «¿Cómo se resolvió?» para ver la explicación paso a paso.
+5.3 Notaciones Aceptadas (Tabla 5):
+- Negación: ¬, ~, !, -, NOT
+- Conjunción: ∧, ^, &, ., AND
+- Disyunción: ∨, |, +, OR
+- Implicación: →, ->, =>, IMPLIES
+- Bicondicional: ↔, <->, <=>, IFF
+
+5.4 Ejemplos de Uso Completos (Tabla 6):
+- Ejemplo 1 (Tautología): P ∨ ¬P -> TAUTOLOGÍA
+- Ejemplo 2 (Contradicción): P ∧ ¬P -> CONTRADICCIÓN
+- Ejemplo 3 (Modus Ponens): (P ∧ (P → Q)) → Q -> TAUTOLOGÍA
+- Ejemplo 4 (3 Variables): P ∧ Q → R -> 8 filas, subexpresiones P ∧ Q y (P ∧ Q) → R.
+
+================================================================================
+5.A. PROCESO DE DISEÑO COLABORATIVO Y TRASPASO A CÓDIGO
+================================================================================
+5.A.1 Organización del trabajo sin reuniones sincrónicas:
+Coordinación asíncrona mediante comentarios en Figma y mensajería, con la sublíder Alexa Benavides como directora de diseño.
+
+5.A.2 Diseño de la interfaz en Figma:
+- Paleta: azul navy (#0f2d8d), azul principal (#1a56db), azul claro (#dbeaff).
+- Tipografías: Poppins (títulos), Inter (cuerpo).
+- Componentes base reutilizables.
+
+5.A.3 De Figma al código: uso de la inspección de código:
+Inspección de propiedades CSS en Figma y definición de variables CSS globales en src/assets/main.css:
+:root {
+  --color-navy: #0f2d8d;
+  --color-blue: #1a56db;
+  --color-blue-light: #dbeaff;
+  --color-white: #ffffff;
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+5.A.4 Organización del código en componentes Vue (Tabla E.1):
+Correspondencia directa entre componentes de Figma y componentes .vue.
 
 ================================================================================
 6. REGISTRO DE EVOLUCIÓN POR SPRINTS
 ================================================================================
-- Sprint 1 (4–10 agosto 2026): Propuesta, análisis de carencias pedagógicas, wireframes y propuesta.md.
-- Sprint 2 (11–17 agosto 2026): Motor lógico en TypeScript, parser AST, algoritmo bitwise y 15 tests.
-- Sprint 3 (18–24 agosto 2026): Interfaz Vue 3 en /tablas, reactividad y componentes UI compartidos.
-- Sprint 4 (25–30 agosto 2026): Batería completa de 25 tests, depuración de casos límite (0 variables, doble negación ¬¬P) y despliegue a GitHub Pages.
+- Sprint 1 (4–10 agosto 2026): Alcance funcional, gramática formal y propuesta.md (1 archivo, 5 decisiones).
+- Sprint 2 (11–17 agosto 2026): Motor TypeScript (evaluator.ts), 323 líneas, 15 tests unitarios (100% éxito), 15+ notaciones.
+- Sprint 3 (18–24 agosto 2026): Interfaz Vue 3 (src/pages/tablas/index.vue + 4 componentes UI), 411 líneas, 6 paneles.
+- Sprint 4 (25–30 agosto 2026): Pruebas ampliadas a 25 tests, depuración de casos extremos (0 variables, doble negación), accesibilidad ARIA y deploy en GitHub Pages.
+
+Métricas Finales del Módulo (Tabla 10):
+- Total líneas: ~850 (motor + tests + vista + componentes)
+- Pruebas unitarias: 25 tests (100% aprobados)
+- Duración: 28 días (3–30 agosto 2026)
 
 ================================================================================
 7. PRUEBAS Y VALIDACIÓN
 ================================================================================
-- 25 pruebas unitarias implementadas con Vitest en evaluator.test.ts (100% de éxito).
-- Cobertura de parseo, variables, precedencia, evaluación semántica, clasificación y subexpresiones.
-- Checklist de QA Humano: navegación por teclado, contraste accesible, responsividad móvil y lector de pantalla.
+7.1 Estrategia de Pruebas: Vitest estructurado en 6 bloques describe.
+7.2 Inventario de 25 Pruebas Unitarias (Tabla 11):
+- 1-7: parsearProposicion (variables, negación, conjunción, implicación, bicondicional, errores).
+- 8: recolectarVariables (orden alfabético).
+- 9-11: nodoATexto (paréntesis y formato).
+- 12-16: evaluar (semántica booleana).
+- 17-19: clasificarProposicion (tautología, contradicción, contingencia).
+- 20-24: generarTabla (tablas completas de 1, 2, 3 variables).
+- 25: recolectarSubExpresiones (detección en post-orden).
+
+7.4 Checklist de QA Humano: Navegación por teclado, contraste en monitor, responsividad real móvil, 6+ variables (64+ filas), lector de pantalla (NVDA/VoiceOver) y fórmulas largas.
 
 ================================================================================
-8. CONCLUSIONES
+8. DOCUMENTACIÓN DE LAS PESTAÑAS COMPLEMENTARIAS
 ================================================================================
-1. Motor lógico completo: 323 líneas en TypeScript estricto con arquitectura limpia desacoplada de la UI.
-2. Soporte multilineal y multinotación: Soporta 15+ variantes de operadores lógicos.
-3. Validación y Calidad: 25/25 pruebas unitarias en verde y cero errores de compilación estática.
+8.1 Pestaña Inicio (HomeView): Punto de entrada, presentación y enlaces de navegación (src/pages/Home.vue).
+8.2 Pestaña Aprender (LearnView): Recorrido guiado en stepper de 4 pasos (Definición, Ejemplo, Ejercicio, Solución), banner de repaso inteligente y botón "Practicar ahora" (src/pages/aprender/index.vue).
+8.3 Pestaña Leyes Lógicas (LogicLawsView): Biblioteca interactiva de las 12 leyes lógicas con interfaz LeyLogica y buscador reactivo en tiempo real (src/pages/leyes-logicas/index.vue).
+8.4 Pestaña Ejercicios (ExercisesView / ExerciseRunnerView): Catálogo completo de práctica interactiva con doble filtro combinable por dificultad y tema, sincronización con query param ?tema= y feedback con OptionPill (src/pages/ejercicios/).
+8.5 Pestaña Progreso (ProgressView): Historial y estadísticas del usuario persistidas en localStorage con reactive() de Vue 3, sistema de logros reactivo y panel de progreso por tema (src/pages/progreso/index.vue).
+8.6 Flujo de Integración entre Pestañas (Figura A): Ciclo de aprendizaje cerrado articulado por el store de progreso.
 
 ================================================================================
-9. REFERENCIAS BIBLIOGRÁFICAS
+9. CONCLUSIONES Y TRABAJO FUTURO
 ================================================================================
-1. P. J. Hurley, A Concise Introduction to Logic, 13.ª ed. Cengage Learning, 2015.
-2. E. Mendelson, Introduction to Mathematical Logic, 6.ª ed. CRC Press, 2015.
-3. R. Nystrom, Crafting Interpreters: Recursive Descent Parsing, 2021.
-4. Vue.js 3 Composition API Documentation, 2024. https://vuejs.org/
-5. Vitest Testing Framework Documentation, 2024. https://vitest.dev/
-6. E. Díaz Cayaca, logica_simbolica_global: Repositorio GitHub, 2026.
+9.1 Conclusiones:
+1. Motor lógico completo: 323 líneas de TypeScript estricto con pipeline desacoplado.
+2. Soporte de 15+ notaciones.
+3. Arquitectura modular limpia.
+4. Cobertura completa de 25/25 pruebas unitarias.
+5. Experiencia pedagógica en tiempo real.
+
+9.2 Trabajo Futuro:
+- Variables de más de un carácter (p1, q2).
+- Exportación a CSV/PNG.
+- Modo quiz interactivo.
+- Verificador de equivalencias lógicas.
+- Formas normales FNC y FND.
+
+================================================================================
+10. REFERENCIAS
+================================================================================
+1. Hurley, P. J. (2015). A Concise Introduction to Logic (13.ª ed.). Cengage Learning.
+2. Mendelson, E. (2015). Introduction to Mathematical Logic (6.ª ed.). CRC Press.
+3. Nystrom, R. (2021). Crafting Interpreters — Recursive Descent Parsing.
+4. Vue.js. (2024). Vue 3 Composition API Documentation.
+5. TypeScript. (2024). TypeScript Handbook: Strict Mode.
+6. Vitest. (2024). Vitest: A Vite-native unit testing framework.
+7. Díaz Cayaca, E. (2026). logica_simbolica_global: Repositorio GitHub.
+8. González Herrera, M. V. (2026). Sílabo Lógica Simbólica MATG1001. UNPRG.
+
+================================================================================
+APÉNDICE A — GLOSARIO DE TÉRMINOS (Tabla 12)
+================================================================================
+- AST: Abstract Syntax Tree (Árbol de Sintaxis Abstracta).
+- Token: Unidad léxica mínima del proceso de tokenización.
+- Parser: Componente que construye el AST verificando la gramática.
+- Tautología: Fórmula verdadera bajo cualquier asignación.
+- Contradicción: Fórmula falsa bajo cualquier asignación.
+- Contingencia: Fórmula con valores verdaderos y falsos según la asignación.
+- Composition API: Estilo de programación de Vue 3 con ref, computed y watch.
+- SFC: Single File Component (.vue).
+- Vitest: Framework de pruebas unitarias nativo para Vite.
+- Post-orden: Recorrido de árbol que visita hijos antes que el padre.
+- Implicación material: P → Q ≡ ¬P ∨ Q. Falso solo cuando P es V y Q es F.
+- Bicondicional: P ↔ Q, verdadero cuando comparten el mismo valor de verdad.
+
+================================================================================
+APÉNDICE B — ESTRUCTURA COMPLETA DEL REPOSITORIO
+================================================================================
+Estructura del proyecto LogiLearn con los módulos del Equipo Sinergia:
+- src/lib/truth-table/ (evaluator.ts, evaluator.test.ts)
+- src/pages/tablas/ (index.vue)
+- src/pages/leyes-logicas/
+- src/pages/ejercicios/
+- src/pages/progreso/
+- src/components/layout/ (AppNavBar.vue)
+- src/components/ui/ (Button.vue, Card.vue, ToggleSwitch.vue, Badge.vue)
