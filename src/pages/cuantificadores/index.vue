@@ -9,6 +9,8 @@ import {
   type TipoCuantificador,
   type ResultadoCuantificador,
 } from '@/lib/cuantificadores/engine'
+import { solveFormula as solveFormulaLeyes } from '@/lib/cuantificadores/lawsEngine'
+import { parseDomain as parseDomainZ, ExpresionInvalidaError } from '@/lib/cuantificadores/quantifierEngine'
 import { LEYES_LOGICAS } from '@/data/logicLaws'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
@@ -17,10 +19,24 @@ import Badge from '@/components/ui/Badge.vue'
 const pestanaActiva = ref<'cuantificadores' | 'leyes'>('cuantificadores')
 
 const formulaResolver = ref('¬(A ∧ B)')
-const pasosResolucionLeyes = ref<ReturnType<typeof aplicarLeyes>>([])
+const pasosResolucionLeyes = ref<Array<{ ley: string; antes: string; despues: string }>>([])
 
 function resolverAutomatico() {
-  pasosResolucionLeyes.value = aplicarLeyes(formulaResolver.value)
+  try {
+    const steps = solveFormulaLeyes(formulaResolver.value)
+    // Mapea ProofStep (lawsEngine) → PasoResolucion sin neón (solo lógica)
+    pasosResolucionLeyes.value = steps.slice(1).map((s, i) => ({
+      ley: s.rule,
+      antes: steps[i].formula,
+      despues: s.formula,
+    }))
+    // Si solo hay Fórmula Original y no se aplicó nada, caer a aplicarLeyes clásico para compatibilidad
+    if (pasosResolucionLeyes.value.length === 0) {
+      pasosResolucionLeyes.value = aplicarLeyes(formulaResolver.value)
+    }
+  } catch {
+    pasosResolucionLeyes.value = aplicarLeyes(formulaResolver.value)
+  }
 }
 
 function cargarEjemploLeyes() {
@@ -41,7 +57,8 @@ const resultado = ref<ResultadoCuantificador | null>(null)
 
 const predicados = obtenerPredicados()
 
-const SIMBOLOS = ['∀', '∃', '∈', '→', '∧', '∨', '¬', '≡', '∴']
+const SIMBOLOS = ['∀', '∃', '∈', '→', '∧', '∨', '¬', '≡', '∴', 'Δ', '⊕']
+const errorDominio = ref('')
 
 function insertarSimbolo(sym: string) {
   if (usarExpresionLibre.value) {
@@ -52,6 +69,15 @@ function insertarSimbolo(sym: string) {
 }
 
 function evaluar() {
+  errorDominio.value = ''
+  // Validación D⊂ℤ estricta (quantifierEngine) — muestra error sin romper, sin neón
+  try {
+    parseDomainZ(dominioRaw.value)
+  } catch (e) {
+    if (e instanceof ExpresionInvalidaError) {
+      errorDominio.value = e.message
+    }
+  }
   const dominio = parsearDominio(dominioRaw.value)
 
   if (usarExpresionLibre.value) {
@@ -161,15 +187,16 @@ onMounted(() => {
 
           <!-- Dominio -->
           <Card>
-            <h3 class="text-sm font-bold text-neutral-700 mb-2">Dominio de Discurso D</h3>
+            <h3 class="text-sm font-bold text-neutral-700 mb-2">Dominio de Discurso D <span class="ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-neutral-900 text-white">D ⊂ ℤ</span></h3>
             <input
               v-model="dominioRaw"
               type="text"
               placeholder="1, 2, 3, 4, 5"
               class="w-full bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500"
             />
+            <p v-if="errorDominio" class="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">{{ errorDominio }}</p>
             <p class="text-xs text-neutral-400 mt-1">
-              Lista: <code class="text-neutral-500">1, 2, 3</code> · Rango: <code class="text-neutral-500">0 &lt; x &lt; 9</code>
+              Lista: <code class="text-neutral-500">1, 2, 3</code> · Rango: <code class="text-neutral-500">0 &lt; x &lt; 9</code> · Solo enteros ℤ
             </p>
           </Card>
 
@@ -356,15 +383,15 @@ onMounted(() => {
       <div v-if="pestanaActiva === 'leyes'" class="space-y-6">
         <!-- Resolutor interactivo -->
         <Card>
-          <h3 class="text-sm font-bold text-amber-600 mb-2">Resolver Automáticamente</h3>
+          <h3 class="text-sm font-bold text-amber-600 mb-2">Resolver Automáticamente <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-200">Δ soportado</span></h3>
           <p class="text-xs text-neutral-500 mb-3">
-            Escribe una fórmula y aplícale las leyes paso a paso (Bicondicional → Implicación → De Morgan → Doble Negación → Distribución).
+            Escribe una fórmula y aplícale las leyes paso a paso (Doble Negación → Disyunción Fuerte Δ → Bicondicional → Implicación → De Morgan → Distribución).
           </p>
           <div class="flex flex-col sm:flex-row gap-3">
             <input
               v-model="formulaResolver"
               type="text"
-              placeholder="¬(A ∧ B) ↔ C"
+              placeholder="¬(A ∧ B) ↔ C  ·  prueba: p Δ q"
               class="flex-1 bg-neutral-100 border-none rounded-xl px-4 py-2.5 text-sm font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500"
             />
             <Button class="sm:w-auto" @click="resolverAutomatico">Resolver</Button>
