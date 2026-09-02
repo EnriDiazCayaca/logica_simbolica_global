@@ -60,11 +60,10 @@ function irAEjercicio(id: string) {
           v-for="tab in tabs"
           :key="tab.id"
           :class="[
-            'flex-1 min-w-[120px] py-3 px-4 rounded-xl font-bold text-sm transition-all border shadow-2xs',
-            tab.id === 'todos' && (tabActiva === 'todos' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-blue-50/70 text-blue-900 border-blue-200/80 hover:bg-blue-100'),
-            tab.id === 'facil' && (tabActiva === 'facil' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-emerald-50/70 text-emerald-900 border-emerald-200/80 hover:bg-emerald-100'),
-            tab.id === 'medio' && (tabActiva === 'medio' ? 'bg-amber-600 text-white border-amber-600 shadow-xs' : 'bg-amber-50/70 text-amber-900 border-amber-200/80 hover:bg-amber-100'),
-            tab.id === 'dificil' && (tabActiva === 'dificil' ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-rose-50/70 text-rose-900 border-rose-200/80 hover:bg-rose-100'),
+            'flex-1 min-w-[120px] py-3 px-4 rounded-xl font-bold text-sm transition-all',
+            tabActiva === tab.id
+              ? 'bg-blue-600 text-white shadow-sm'
+              : 'bg-blue-50 text-neutral-700 hover:bg-blue-100'
           ]"
           @click="tabActiva = tab.id"
         >
@@ -91,41 +90,17 @@ function irAEjercicio(id: string) {
 
       <!-- Exercise grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-        <Card v-for="ex in ejerciciosFiltrados" :key="ex.id" hoverable class="flex flex-col justify-between">
-          <div>
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h3 class="text-base font-bold text-neutral-900">{{ ex.titulo }}</h3>
-              <span v-if="ex.fuente" class="text-[10px] text-neutral-600 bg-neutral-100 px-2 py-0.5 rounded truncate max-w-[190px] border border-neutral-200" :title="ex.fuente">
-                📖 {{ ex.fuente }}
-              </span>
-            </div>
-            <p class="text-[11px] font-bold tracking-wide text-blue-600 mb-2 uppercase">
-              {{ ex.categoria }}
-            </p>
-            <div class="flex items-center gap-1.5 mb-3">
-              <span
-                :class="[
-                  'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border',
-                  ex.nivel === 'facil' && 'bg-emerald-50 text-emerald-700 border-emerald-200',
-                  ex.nivel === 'medio' && 'bg-amber-50 text-amber-800 border-amber-200',
-                  ex.nivel === 'dificil' && 'bg-rose-50 text-rose-700 border-rose-200',
-                ]"
-              >
-                <span
-                  :class="[
-                    ex.nivel === 'facil' && 'text-emerald-600',
-                    ex.nivel === 'medio' && 'text-amber-600',
-                    ex.nivel === 'dificil' && 'text-rose-600',
-                  ]"
-                >
-                  {{ puntosDificultad[ex.nivel] }}
-                </span>
-                {{ etiquetasDificultad[ex.nivel] }}
-              </span>
-            </div>
-            <p class="text-sm text-neutral-600 mb-4">{{ ex.descripcionCorta }}</p>
-          </div>
-          <Button variant="primary" size="sm" class="w-full mt-auto" @click="irAEjercicio(ex.id)">
+        <Card v-for="ex in ejerciciosFiltrados" :key="ex.id" hoverable>
+          <h3 class="text-base font-bold text-neutral-900 mb-2">{{ ex.titulo }}</h3>
+          <p class="text-[11px] font-bold tracking-wide text-blue-600 mb-2 uppercase">
+            {{ ex.categoria }}
+          </p>
+          <p class="text-sm text-neutral-500 mb-3">
+            Nivel: <span aria-hidden="true">{{ puntosDificultad[ex.nivel] }}</span>
+            {{ etiquetasDificultad[ex.nivel] }}
+          </p>
+          <p class="text-sm text-neutral-500 mb-4 flex-1">{{ ex.descripcionCorta }}</p>
+          <Button variant="primary" size="sm" class="w-full" @click="irAEjercicio(ex.id)">
             Resolver
           </Button>
         </Card>

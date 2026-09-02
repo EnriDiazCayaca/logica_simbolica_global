@@ -53,7 +53,7 @@ Lista completa en [`CONTRIBUTORS.md`](./CONTRIBUTORS.md).
 | `/conjuntos` | Teoría de Conjuntos y Venn | Linus |
 | `/leyes-logicas` | 12 Leyes Lógicas | Compartido |
 | `/aprender` | Recorrido guiado por conceptos | Compartido |
-| `/ejercicios` | Práctica (80 ejercicios) | Compartido |
+| `/ejercicios` | Práctica (30+ ejercicios) | Compartido |
 | `/progreso` | Seguimiento y recomendaciones | Compartido |
 
 ---
