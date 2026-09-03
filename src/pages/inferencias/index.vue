@@ -214,7 +214,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           </div>
           <div>
             <h1 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
-              Demostrador de Inferencias Lógicas
+              Validez de Inferencias Lógicas
             </h1>
             <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
               Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.
