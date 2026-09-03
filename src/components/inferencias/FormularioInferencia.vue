@@ -337,7 +337,7 @@ const handleSubmit = () => {
         <!-- Gutter numerado: muestra el número de cada premisa -->
         <div
           aria-hidden="true"
-          class="select-none border-r border-slate-200 bg-slate-100/80 py-2.5 text-right pr-2 pl-2.5 text-xs font-mono text-slate-400 font-semibold whitespace-pre"
+          class="select-none border-r border-slate-200 bg-slate-100/80 py-2.5 pr-2 pl-2.5 text-xs font-mono text-slate-400 font-semibold whitespace-pre flex flex-col items-center"
           style="min-width: 2.25rem;"
         >
           <span
