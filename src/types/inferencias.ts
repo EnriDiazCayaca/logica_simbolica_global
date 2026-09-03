@@ -13,6 +13,7 @@ export interface PasoInferencia {
   regla: string
   explicacion?: string
   detalle?: ExplicacionParticionada
+  esConclusion?: boolean
 }
 
 export type ResultadoInferencia =

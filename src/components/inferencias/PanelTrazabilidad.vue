@@ -504,8 +504,8 @@ const descargarArchivo = (tipo: 'markdown' | 'latex') => {
 
               <!-- Conclusión del paso (Fórmula Deducida) -->
               <div class="flex items-center gap-2 pt-0.5">
-                <span class="text-blue-600 font-serif text-base font-bold select-none">&there4;</span>
-                <p class="font-mono text-sm md:text-base font-bold text-slate-900 break-words tracking-wide">
+                <span v-if="paso.esConclusion" class="text-blue-600 font-serif text-base font-bold select-none">&there4;</span>
+                <p :class="['font-mono text-sm md:text-base font-bold text-slate-900 break-words tracking-wide', paso.esConclusion ? '' : 'pl-0']">
                   {{ paso.conclusion }}
                 </p>
               </div>

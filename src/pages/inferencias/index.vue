@@ -154,7 +154,8 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         conclusion: p.expresionSimbolica,
         regla: p.alias || p.operacion,
         explicacion: p.explicacion,
-        detalle: p.detalle
+        detalle: p.detalle,
+        esConclusion: p.esConclusion
       }
     })
 
