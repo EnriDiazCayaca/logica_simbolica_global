@@ -54,6 +54,15 @@ const isFormEmpty = computed(() => {
   return premisasText.value.trim() === '' || conclusionText.value.trim() === ''
 })
 
+// Número de líneas de premisas activas (se muestran en la gutiera numerada)
+const totalLineasPremisas = computed(() => {
+  const lineas = premisasText.value.split('\n')
+  return lineas.length
+})
+const lineasPremisas = computed<number[]>(() => {
+  return Array.from({ length: totalLineasPremisas.value }, (_, i) => i + 1)
+})
+
 // Emitir cambios para sincronizar con el traductor de lenguaje natural
 watch([premisasText, conclusionText], () => {
   emit('update:modelValue', {
@@ -324,19 +333,29 @@ const handleSubmit = () => {
           Limpiar campos
         </button>
       </div>
-      <textarea
-        id="premisas"
-        ref="premisasRef"
-        v-model="premisasText"
-        @focus="guardarPosicionCursor('premisas')"
-        @click="guardarPosicionCursor('premisas')"
-        @keyup="guardarPosicionCursor('premisas')"
-        @select="guardarPosicionCursor('premisas')"
-        rows="4"
-        :disabled="isLoading"
-        placeholder="Ej: P → Q&#10;P"
-        class="w-full font-mono text-sm sm:text-base rounded-xl border border-slate-200 px-3.5 py-2.5 placeholder-slate-400 focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-500/10 disabled:opacity-50 disabled:cursor-not-allowed bg-slate-50/50 hover:bg-slate-50 focus:bg-white transition-all shadow-xs leading-relaxed"
-      ></textarea>
+      <div class="flex items-start rounded-xl border border-slate-200 bg-slate-50/50 focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-500/10 focus-within:bg-white transition-all shadow-xs overflow-hidden">
+        <!-- Gutter numerado: muestra el número de cada premisa -->
+        <div
+          aria-hidden="true"
+          class="select-none border-r border-slate-200 bg-slate-100/80 py-2.5 text-right pr-2 pl-2.5 text-xs font-mono text-slate-400 font-semibold leading-relaxed whitespace-pre"
+          style="min-width: 2.25rem;"
+        >
+          <div v-for="n in lineasPremisas" :key="n">{{ n }}</div>
+        </div>
+        <textarea
+          id="premisas"
+          ref="premisasRef"
+          v-model="premisasText"
+          @focus="guardarPosicionCursor('premisas')"
+          @click="guardarPosicionCursor('premisas')"
+          @keyup="guardarPosicionCursor('premisas')"
+          @select="guardarPosicionCursor('premisas')"
+          rows="4"
+          :disabled="isLoading"
+          placeholder="Ej: P → Q&#10;P"
+          class="w-full font-mono text-sm sm:text-base bg-transparent px-3.5 py-2.5 placeholder-slate-400 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed leading-relaxed resize-y"
+        ></textarea>
+      </div>
       <p class="text-[11px] text-slate-400 italic">Una premisa por línea. Admite símbolos (∧, ∨, →, ¬) o palabras clave (Y, O, ENTONCES, NO).</p>
     </div>
 
