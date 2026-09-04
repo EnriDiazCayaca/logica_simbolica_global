@@ -7,14 +7,22 @@ import {
   union, interseccion, diferencia, complemento,
   potencia, verificarPertenencia, sonDisjuntos, esSubconjunto
 } from '@/lib/sets/operations'
+import { siteContent } from '@/content'
+
+const t = siteContent.conjuntos
+const modoLiteral = t.modoLiteral
 
 // --- Estado reactivo ---
 const universoInput = ref('1, 2, 3, 4, 5, 6, 7, 8, 9, 10')
 const conjuntoAInput = ref('1, 2, 3, 4')
 const conjuntoBInput = ref('3, 4, 5, 6')
 const operacionSeleccionada = ref<string>('union')
-const potenciaTarget = ref<string>('A') // Target para Potencia P(...)
+const potenciaTarget = ref<string>('A')
 const elementoPertenencia = ref('')
+
+function labelForOp(op: any): string {
+  return modoLiteral ? op.labelLiteral : op.label
+}
 
 // --- Parseo de inputs a Set ---
 function parsearConjunto(input: string): Set<string> {
@@ -36,16 +44,8 @@ const soloU = computed(() => diferencia(U.value, union(A.value, B.value)))
 const esDisjuntoGrafico = computed(() => sonDisjuntos(A.value, B.value))
 
 // --- Opciones de Selección de Potencia P(...) ---
-const opcionesPotencia = [
-  { key: 'A', label: 'P(A)', desc: 'Conjunto Potencia' },
-  { key: 'B', label: 'P(B)', desc: 'Conjunto Potencia' },
-  { key: 'union', label: 'P(A ∪ B)', desc: 'Conjunto Potencia' },
-  { key: 'interseccion', label: 'P(A ∩ B)', desc: 'Conjunto Potencia' },
-  { key: 'diferencia-ab', label: 'P(A − B)', desc: 'Conjunto Potencia' },
-  { key: 'diferencia-ba', label: 'P(B − A)', desc: 'Conjunto Potencia' },
-  { key: 'comp-a', label: "P(A')", desc: 'Conjunto Potencia' },
-  { key: 'comp-b', label: "P(B')", desc: 'Conjunto Potencia' },
-]
+const opcionesPotencia = computed(() => t.operaciones.potenciaOpciones.map(o => ({ key: o.key, label: labelForOp(o), desc: o.desc })))
+const operaciones = computed(() => t.operaciones.items.map(o => ({ key: o.key, label: labelForOp(o), desc: o.desc })))
 
 // --- Conjunto base dinámico para Potencia ---
 const conjuntoBasePotencia = computed(() => {
@@ -88,7 +88,7 @@ const resultadoTexto = computed(() => {
   if (operacionSeleccionada.value === 'potencia') {
     const baseSet = conjuntoBasePotencia.value
     if (baseSet.size > 10) {
-      return `Advertencia: El conjunto seleccionado tiene ${baseSet.size} elementos. Calcular su potencia requeriría listar 2^${baseSet.size} = ${Math.pow(2, baseSet.size)} subconjuntos.`
+      return t.resultado.advertenciaPotencia.replace('{n}', String(baseSet.size)).replace('{n}', String(baseSet.size)).replace('{total}', String(Math.pow(2, baseSet.size)))
     }
     const p = potencia(baseSet)
     const partes: string[] = []
@@ -101,12 +101,16 @@ const resultadoTexto = computed(() => {
 })
 
 // --- Propiedades ---
-const propiedades = computed(() => [
-  { nombre: 'A ⊆ B', valor: esSubconjunto(A.value, B.value) },
-  { nombre: 'B ⊆ A', valor: esSubconjunto(B.value, A.value) },
-  { nombre: 'A = B', valor: esSubconjunto(A.value, B.value) && esSubconjunto(B.value, A.value) },
-  { nombre: 'Disjuntos', valor: sonDisjuntos(A.value, B.value) },
-])
+const propiedades = computed(() => {
+  const labels = t.propiedades.items
+  const find = (k: string) => labels.find(x => x.key === k)
+  return [
+    { nombre: modoLiteral ? (find('subAB')?.labelLiteral ?? 'A ⊆ B') : (find('subAB')?.label ?? 'A ⊆ B'), valor: esSubconjunto(A.value, B.value) },
+    { nombre: modoLiteral ? (find('subBA')?.labelLiteral ?? 'B ⊆ A') : (find('subBA')?.label ?? 'B ⊆ A'), valor: esSubconjunto(B.value, A.value) },
+    { nombre: modoLiteral ? (find('igual')?.labelLiteral ?? 'A = B') : (find('igual')?.label ?? 'A = B'), valor: esSubconjunto(A.value, B.value) && esSubconjunto(B.value, A.value) },
+    { nombre: modoLiteral ? (find('disjuntos')?.labelLiteral ?? 'Disjuntos') : (find('disjuntos')?.label ?? 'Disjuntos'), valor: sonDisjuntos(A.value, B.value) },
+  ]
+})
 
 const pertenenciaResultado = computed(() => {
   if (!elementoPertenencia.value.trim()) return null
@@ -144,28 +148,28 @@ const vennColores = computed(() => {
         interseccion: 'fill-teal-500 opacity-100',
         universo: 'fill-slate-50 stroke-slate-300'
       }
-    case 'diferencia': // A - B
+    case 'diferencia':
       return {
         soloA: 'fill-blue-400/90 stroke-blue-600',
         soloB: 'fill-indigo-50/30 stroke-indigo-300 opacity-30',
         interseccion: 'fill-white opacity-100',
         universo: 'fill-slate-50 stroke-slate-300'
       }
-    case 'diferencia-ba': // B - A
+    case 'diferencia-ba':
       return {
         soloA: 'fill-blue-50/30 stroke-blue-300 opacity-30',
         soloB: 'fill-indigo-400/90 stroke-indigo-600',
         interseccion: 'fill-white opacity-100',
         universo: 'fill-slate-50 stroke-slate-300'
       }
-    case 'complemento-a': // A' = U - A
+    case 'complemento-a':
       return {
         soloA: 'fill-white stroke-slate-300 opacity-100',
         soloB: 'fill-sky-300/70 stroke-sky-500 opacity-100',
         interseccion: 'fill-white opacity-100',
         universo: 'fill-sky-300/70 stroke-sky-500'
       }
-    case 'complemento-b': // B' = U - B
+    case 'complemento-b':
       return {
         soloA: 'fill-sky-300/70 stroke-sky-500 opacity-100',
         soloB: 'fill-white stroke-slate-300 opacity-100',
@@ -238,16 +242,6 @@ const vennColores = computed(() => {
       return base
   }
 })
-
-const operaciones = [
-  { key: 'union', label: 'A ∪ B', desc: 'Unión' },
-  { key: 'interseccion', label: 'A ∩ B', desc: 'Intersección' },
-  { key: 'diferencia', label: 'A − B', desc: 'Diferencia' },
-  { key: 'diferencia-ba', label: 'B − A', desc: 'Diferencia' },
-  { key: 'complemento-a', label: "A'", desc: 'Complemento' },
-  { key: 'complemento-b', label: "B'", desc: 'Complemento' },
-  { key: 'potencia', label: 'P( ... )', desc: 'Conjunto Potencia' },
-]
 </script>
 
 <template>
@@ -257,48 +251,48 @@ const operaciones = [
       <!-- Encabezado -->
       <div class="flex items-center justify-between">
         <router-link to="/" class="inline-flex items-center text-sm font-medium text-blue-600 hover:underline">
-          &larr; Volver al inicio
+          {{ t.navegacion.volver }}
         </router-link>
         <span class="text-xs font-semibold px-2.5 py-1 bg-slate-200 text-slate-700 rounded-full">
-          Grupo 4 — Equipo Linus
+          {{ t.navegacion.badge }}
         </span>
       </div>
 
       <!-- Título -->
       <div class="text-center space-y-1">
         <h1 class="text-3xl font-extrabold text-neutral-900 tracking-tight">
-          Teoría de Conjuntos y Diagramas de Venn
+          {{ t.header.titulo }}
         </h1>
-        <p class="text-neutral-500 text-sm">Calculadora Interactiva de Operaciones y Propiedades</p>
+        <p class="text-neutral-500 text-sm">{{ t.header.subtitulo }}</p>
       </div>
 
       <!-- Inputs -->
       <Card>
         <div class="space-y-4">
-          <h2 class="text-lg font-bold text-neutral-900 border-b border-neutral-100 pb-2">Define tus conjuntos</h2>
+          <h2 class="text-lg font-bold text-neutral-900 border-b border-neutral-100 pb-2">{{ t.define.titulo }}</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label class="block text-sm font-medium text-neutral-700 mb-1">Universo U</label>
+              <label class="block text-sm font-medium text-neutral-700 mb-1">{{ t.define.universo }}</label>
               <input
                 v-model="universoInput"
                 class="w-full px-3 py-2 border border-neutral-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
-                placeholder="1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
+                :placeholder="t.define.placeholders.universo"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-blue-700 mb-1 font-semibold">Conjunto A</label>
+              <label class="block text-sm font-medium text-blue-700 mb-1 font-semibold">{{ t.define.conjuntoA }}</label>
               <input
                 v-model="conjuntoAInput"
                 class="w-full px-3 py-2 border border-blue-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-blue-50/20"
-                placeholder="1, 2, 3, 4"
+                :placeholder="t.define.placeholders.a"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-indigo-700 mb-1 font-semibold">Conjunto B</label>
+              <label class="block text-sm font-medium text-indigo-700 mb-1 font-semibold">{{ t.define.conjuntoB }}</label>
               <input
                 v-model="conjuntoBInput"
                 class="w-full px-3 py-2 border border-indigo-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-indigo-50/20"
-                placeholder="3, 4, 5, 6"
+                :placeholder="t.define.placeholders.b"
               />
             </div>
           </div>
@@ -307,7 +301,7 @@ const operaciones = [
 
       <!-- Operaciones -->
       <Card>
-        <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">Selecciona una operación</h2>
+        <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">{{ t.operaciones.titulo }}</h2>
         <div class="flex flex-wrap gap-2">
           <Button
             v-for="op in operaciones"
@@ -323,7 +317,7 @@ const operaciones = [
         <!-- Sub-selector para Conjunto Potencia P( ... ) -->
         <div v-if="operacionSeleccionada === 'potencia'" class="mt-4 pt-3 border-t border-neutral-100 space-y-2">
           <label class="block text-xs font-bold text-neutral-700 uppercase tracking-wider">
-            Elige el conjunto base para calcular la Potencia P( ... ):
+            {{ t.operaciones.selectorPotenciaLabel }}
           </label>
           <div class="flex flex-wrap gap-2">
             <button
@@ -349,7 +343,7 @@ const operaciones = [
         <!-- Diagrama de Venn -->
         <Card>
           <div class="flex items-center justify-between mb-3 border-b border-neutral-100 pb-2">
-            <h2 class="text-lg font-bold text-neutral-900">Diagrama de Venn</h2>
+            <h2 class="text-lg font-bold text-neutral-900">{{ t.diagrama.titulo }}</h2>
           </div>
 
           <svg viewBox="0 0 400 270" class="w-full h-auto drop-shadow-xs">
@@ -363,24 +357,18 @@ const operaciones = [
 
             <!-- CASO A: CONJUNTOS DISJUNTOS (Círculos separados sin intersección) -->
             <g v-if="esDisjuntoGrafico">
-              <!-- Círculo A (izquierda) -->
               <circle
                 cx="115" cy="135" r="65"
                 :class="vennColores.soloA"
                 stroke-width="2.5"
               />
-              <!-- Círculo B (derecha) -->
               <circle
                 cx="285" cy="135" r="65"
                 :class="vennColores.soloB"
                 stroke-width="2.5"
               />
-
-              <!-- Etiquetas A y B -->
               <text x="115" y="52" text-anchor="middle" class="fill-blue-700 text-base font-extrabold select-none">A</text>
               <text x="285" y="52" text-anchor="middle" class="fill-indigo-700 text-base font-extrabold select-none">B</text>
-
-              <!-- Elementos de A y B -->
               <text x="115" y="140" text-anchor="middle" class="fill-neutral-900 text-xs font-bold select-none">
                 {{ [...soloA].join(', ') || '∅' }}
               </text>
@@ -391,21 +379,16 @@ const operaciones = [
 
             <!-- CASO B: CONJUNTOS CON INTERSECCIÓN (Círculos solapados) -->
             <g v-else>
-              <!-- Círculo Conjunto A (izquierda - Azul) -->
               <circle
                 cx="145" cy="135" r="75"
                 :class="vennColores.soloA"
                 stroke-width="2.5"
               />
-
-              <!-- Círculo Conjunto B (derecha - Púrpura/Índigo) -->
               <circle
                 cx="255" cy="135" r="75"
                 :class="vennColores.soloB"
                 stroke-width="2.5"
               />
-
-              <!-- Intersección recortada exactamente -->
               <clipPath id="clipA">
                 <circle cx="145" cy="135" r="75" />
               </clipPath>
@@ -414,23 +397,14 @@ const operaciones = [
                 :class="vennColores.interseccion"
                 clip-path="url(#clipA)"
               />
-
-              <!-- Etiquetas A y B -->
               <text x="100" y="48" class="fill-blue-700 text-base font-extrabold select-none">A</text>
               <text x="300" y="48" class="fill-indigo-700 text-base font-extrabold select-none">B</text>
-
-              <!-- Elementos dentro del diagrama -->
-              <!-- Solo A -->
               <text x="105" y="140" text-anchor="middle" class="fill-neutral-900 text-xs font-bold select-none">
                 {{ [...soloA].join(', ') }}
               </text>
-
-              <!-- Intersección (A ∩ B) -->
               <text x="200" y="140" text-anchor="middle" class="fill-neutral-900 text-xs font-extrabold select-none">
                 {{ [...ambos].join(', ') }}
               </text>
-
-              <!-- Solo B -->
               <text x="295" y="140" text-anchor="middle" class="fill-neutral-900 text-xs font-bold select-none">
                 {{ [...soloB].join(', ') }}
               </text>
@@ -448,7 +422,7 @@ const operaciones = [
         <!-- Resultado -->
         <div class="space-y-4">
           <Card>
-            <h2 class="text-lg font-bold text-neutral-900 mb-2 border-b border-neutral-100 pb-2">Resultado</h2>
+            <h2 class="text-lg font-bold text-neutral-900 mb-2 border-b border-neutral-100 pb-2">{{ t.resultado.titulo }}</h2>
             <p class="text-sm text-neutral-600 mb-2">
               <template v-if="operacionSeleccionada === 'potencia'">
                 {{ opcionesPotencia.find(p => p.key === potenciaTarget)?.desc }}:
@@ -465,16 +439,16 @@ const operaciones = [
 
             <!-- Total de subconjuntos en un recuadro independiente -->
             <div v-if="operacionSeleccionada === 'potencia'" class="mt-3 p-3 bg-blue-100/60 border border-blue-200 rounded-xl flex items-center justify-between">
-              <span class="text-xs font-bold text-blue-900">Total de Subconjuntos (2ⁿ):</span>
+              <span class="text-xs font-bold text-blue-900">{{ t.resultado.totalSubconjuntos }}</span>
               <span class="text-xs font-extrabold px-2.5 py-1 bg-blue-600 text-white rounded-lg font-mono shadow-2xs">
-                {{ totalSubconjuntos }} subconjuntos
+                {{ totalSubconjuntos }} {{ t.resultado.subconjuntosLabel }}
               </span>
             </div>
           </Card>
 
           <!-- Propiedades -->
           <Card>
-            <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">Propiedades</h2>
+            <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">{{ t.propiedades.titulo }}</h2>
             <div class="space-y-2.5">
               <div v-for="prop in propiedades" :key="prop.nombre" class="flex items-center justify-between py-1 border-b border-neutral-50 last:border-0">
                 <span class="text-sm font-medium text-neutral-700">{{ prop.nombre }}</span>
@@ -487,12 +461,12 @@ const operaciones = [
 
           <!-- Pertenencia -->
           <Card>
-            <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">Verificar pertenencia</h2>
+            <h2 class="text-lg font-bold text-neutral-900 mb-3 border-b border-neutral-100 pb-2">{{ t.pertenencia.titulo }}</h2>
             <div class="flex gap-2">
               <input
                 v-model="elementoPertenencia"
                 class="flex-1 px-3 py-2 border border-neutral-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Ingresa un elemento (ej. 3)"
+                :placeholder="t.pertenencia.placeholder"
               />
             </div>
             <div v-if="pertenenciaResultado" class="mt-3 pt-2 border-t border-neutral-100">

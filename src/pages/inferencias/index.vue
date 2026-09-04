@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type {
   InferenciaRequest,
   ResultadoInferencia,
@@ -26,6 +26,10 @@ import {
   Layers,
   ArrowLeft
 } from '@lucide/vue'
+import { siteContent } from '@/content'
+
+const t = siteContent.inferencias
+const modoLiteral = t.modoLiteral
 
 interface ItemHistorial {
   id: string
@@ -65,6 +69,9 @@ onMounted(() => {
     console.error('Error cargando historial de localStorage:', err)
   }
 })
+
+const tituloDisplay = computed(() => modoLiteral ? t.tituloLiteral : t.titulo)
+const pestanaSimbolos = computed(() => modoLiteral ? t.pestanas.simbolosLiteral : t.pestanas.simbolos)
 
 const guardarEnHistorial = (
   premisas: string[],
@@ -121,20 +128,11 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
   pasos.value = []
 
   try {
-    // 1. Parsear premisas y conclusión
     const premisasNodos = payload.premisas.map((p) => parsearExpresion(p))
     const conclusionNodo = parsearExpresion(payload.conclusion)
-
-    // 2. Pequeña pausa para feedback visual
     await new Promise((resolve) => setTimeout(resolve, 300))
-
-    // 3. Ejecutar motor (solver)
     const resultadoDemostracion = demostrarConclusion(premisasNodos, conclusionNodo)
-
-    // 4. Generar trazabilidad con el motor
     const trazabilidad = construirTrazabilidad(premisasNodos, resultadoDemostracion)
-
-    // 5. Mapear estado formal explícito (Válida demostrada, Válida método indirecto, Inválida refutada)
     if (trazabilidad.esValido) {
       resultado.value = 'valida'
     } else if (resultadoDemostracion.errorLogico?.tipo === 'DEMOSTRACION_INCOMPLETA') {
@@ -142,12 +140,9 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
     } else {
       resultado.value = 'invalida'
     }
-
     errorLogicoActual.value = resultadoDemostracion.errorLogico
-
     pasos.value = trazabilidad.pasos.map((p) => {
       const premisasMapeadas = p.lineasBase.map((l) => `Línea ${l}`)
-
       return {
         paso: p.numeroPaso,
         premisas: premisasMapeadas,
@@ -157,9 +152,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
         detalle: p.detalle
       }
     })
-
     guardarEnHistorial(payload.premisas, payload.conclusion, resultado.value)
-
     if (!trazabilidad.esValido) {
       error.value = resultadoDemostracion.errorLogico?.mensaje
     }
@@ -175,7 +168,6 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
 
 <template>
   <div class="min-h-screen bg-slate-50/70 text-slate-900 font-sans relative overflow-hidden selection:bg-blue-500/20">
-    <!-- Fondo ambiental decorativo sutil -->
     <div class="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[1000px] h-[360px] bg-gradient-to-b from-blue-500/8 via-indigo-500/5 to-transparent blur-3xl rounded-full"></div>
 
     <div class="relative max-w-6xl mx-auto p-4 sm:p-6 md:p-8 space-y-6">
@@ -192,11 +184,10 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             </router-link>
             <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 inline-flex items-center gap-1.5">
               <span class="h-1.5 w-1.5 rounded-full bg-blue-600 animate-pulse"></span>
-              <span>Hijos de Linus</span>
+              <span>{{ t.badge }}</span>
             </span>
           </div>
 
-          <!-- Botón de Historial Local -->
           <button
             v-if="historialLocal.length > 0"
             type="button"
@@ -204,7 +195,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200/80 text-xs font-semibold text-slate-700 rounded-xl border border-slate-200 transition-all cursor-pointer active:scale-95"
           >
             <History :size="13" class="text-blue-600" />
-            <span>{{ mostrarHistorial ? 'Ocultar historial' : `Historial (${historialLocal.length})` }}</span>
+            <span>{{ mostrarHistorial ? t.historial.botonOcultar : t.historial.botonMostrar.replace('{n}', String(historialLocal.length)) }}</span>
           </button>
         </div>
 
@@ -214,10 +205,10 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           </div>
           <div>
             <h1 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
-              Demostrador de Inferencias Lógicas
+              {{ tituloDisplay }}
             </h1>
             <p class="text-xs sm:text-sm text-slate-500 mt-1 max-w-3xl leading-relaxed">
-              Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.
+              {{ t.subtitulo }}
             </p>
           </div>
         </div>
@@ -236,7 +227,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
             <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
               <History :size="14" class="text-blue-600" />
-              <span>Ejercicios recientes</span>
+              <span>{{ t.historial.titulo }}</span>
             </span>
             <button
               type="button"
@@ -244,7 +235,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               class="text-[11px] font-semibold text-rose-600 hover:text-rose-800 flex items-center gap-1 cursor-pointer transition-colors"
             >
               <Trash2 :size="12" />
-              <span>Limpiar</span>
+              <span>{{ t.historial.limpiar }}</span>
             </button>
           </div>
 
@@ -264,7 +255,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
                     'bg-rose-100 text-rose-800': item.resultado === 'invalida' || item.resultado === 'error'
                   }"
                 >
-                  {{ item.resultado === 'valida' ? 'Válida' : item.resultado === 'no_demostrable_directa' ? 'Válida (Ind.)' : 'Inválida' }}
+                  {{ item.resultado === 'valida' ? t.historial.valida : item.resultado === 'no_demostrable_directa' ? t.historial.validaInd : t.historial.invalida }}
                 </span>
                 <span class="text-slate-400 font-mono text-[10px]">{{ item.fecha }}</span>
               </div>
@@ -280,9 +271,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
       </Transition>
 
       <main class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <!-- Columna Izquierda: Pestañas de Entrada (Símbolos vs Lenguaje Natural vs Árbol AST) -->
         <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-4' : 'lg:col-span-6 space-y-4'">
-          <!-- Switcher de Pestañas (Segmented Control) -->
           <div class="inline-flex items-center gap-1 p-1 bg-slate-200/70 rounded-xl border border-slate-200/80 w-full sm:w-fit overflow-x-auto">
             <button
               type="button"
@@ -295,7 +284,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               ]"
             >
               <Terminal :size="13" class="text-blue-600" />
-              <span>Simbología Formal</span>
+              <span>{{ pestanaSimbolos }}</span>
             </button>
             <button
               type="button"
@@ -308,7 +297,7 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               ]"
             >
               <Languages :size="13" class="text-indigo-600" />
-              <span>Lenguaje Natural</span>
+              <span>{{ t.pestanas.lenguaje }}</span>
             </button>
             <button
               type="button"
@@ -321,11 +310,10 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
               ]"
             >
               <GitBranch :size="13" class="text-teal-600" />
-              <span>Árbol Sintáctico (AST)</span>
+              <span>{{ t.pestanas.arbol }}</span>
             </button>
           </div>
 
-          <!-- Contenido de Pestaña 1: Formulario Simbólico -->
           <div v-show="activeTab === 'simbolos'">
             <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80">
               <FormularioInferencia
@@ -338,7 +326,6 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             </section>
           </div>
 
-          <!-- Contenido de Pestaña 2: Traductor a Lenguaje Natural -->
           <div v-show="activeTab === 'lenguaje'">
             <TraductorLenguajeNatural
               :premisas="formulaData.premisas"
@@ -346,7 +333,6 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
             />
           </div>
 
-          <!-- Contenido de Pestaña 3: Árbol de Nodos (AST) -->
           <div v-show="activeTab === 'arbol'">
             <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80">
               <ArbolAST
@@ -357,28 +343,25 @@ const procesarInferencia = async (payload: InferenciaRequest) => {
           </div>
         </div>
 
-        <!-- Columna Derecha: Indicador de Resultado & Trazabilidad con Contraejemplos / Exportación -->
         <div :class="activeTab === 'arbol' ? 'lg:col-span-12 space-y-5' : 'lg:col-span-6 space-y-5'">
-          <!-- Indicador de Resultado -->
           <IndicadorResultado
             :resultado="resultado"
             :mensaje="error"
           />
 
-          <!-- Panel de Trazabilidad / Análisis de la Demostración -->
           <section class="bg-white p-5 sm:p-6 rounded-2xl shadow-xs border border-slate-200/80 min-h-[380px]">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3.5 mb-4">
               <h2 class="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 <CheckCircle2 v-if="resultado === 'valida'" :size="16" class="text-emerald-600" />
                 <Layers v-else :size="16" class="text-blue-600" />
-                <span>{{ resultado === 'valida' ? 'Trazabilidad de la Demostración' : 'Análisis y Diagnóstico de la Demostración' }}</span>
+                <span>{{ resultado === 'valida' ? t.trazabilidad.tituloValida : t.trazabilidad.tituloInvalida }}</span>
               </h2>
               <span v-if="isLoading" class="flex items-center gap-2 text-xs font-medium text-blue-600">
                 <span class="flex h-2 w-2 relative">
                   <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                   <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                 </span>
-                Calculando deducción...
+                {{ t.trazabilidad.cargando }}
               </span>
             </div>
 

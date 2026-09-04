@@ -1,0 +1,166 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage[table,xcdraw]{xcolor}
+\definecolor{headerblue}{RGB}{15,45,140}
+\definecolor{accentblue}{RGB}{37,99,235}
+\definecolor{lightbg}{RGB}{248,249,251}
+\definecolor{bordergray}{RGB}{220,224,230}
+\definecolor{darktext}{RGB}{33,37,41}
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{commentgreen}{RGB}{40,140,70}
+\definecolor{keywordpurple}{RGB}{120,40,140}
+\definecolor{stringblue}{RGB}{20,90,160}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\graphicspath{{../public/assets/}{../public/}{./}{assets/}}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=headerblue,urlcolor=accentblue,citecolor=headerblue}
+\usepackage{booktabs,tabularx,array,enumitem,listings,caption,float,longtable}
+\usepackage{fancyhdr}
+% lastpage removed (not in basic)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{LogiLearn — Informe Técnico y Sprints}}
+\fancyhead[R]{\small UNPRG — MATG1001}
+\fancyfoot[C]{\small \thepage\ / \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\lstdefinelanguage{TypeScript}{
+  keywords={abstract,any,as,boolean,break,case,catch,class,const,continue,debugger,declare,default,delete,do,else,enum,export,extends,false,finally,for,from,function,get,if,implements,import,in,instanceof,interface,let,module,new,null,number,of,package,private,protected,public,readonly,return,set,static,string,super,switch,symbol,this,throw,true,try,type,typeof,var,void,while,with,yield},
+  keywordstyle=\color{keywordpurple}\bfseries,
+  comment=[l]{//},morecomment=[s]{/*}{*/},commentstyle=\color{commentgreen}\itshape,
+  stringstyle=\color{stringblue},morestring=[b]',morestring=[b]",
+  sensitive=true
+}
+\lstset{language=TypeScript,backgroundcolor=\color{codebg},basicstyle=\ttfamily\footnotesize\color{darktext},breaklines=true,frame=single,rulecolor=\color{bordergray},numbers=left,numberstyle=\tiny\color{gray},numbersep=8pt,showstringspaces=false,tabsize=2,extendedchars=true,literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1}
+
+\begin{document}
+
+\begin{titlepage}
+\centering
+\includegraphics[width=0.22\textwidth]{banner.jpg}\par
+\vspace{0.6cm}
+{\Large Universidad Nacional Pedro Ruiz Gallo\par}
+{\large Facultad de Ingeniería Civil, de Sistemas y de Arquitectura\par}
+{\large Escuela Profesional de Ingeniería de Sistemas\par}
+\vspace{1.0cm}
+{\Huge \bfseries\color{headerblue} LogiLearn\par}
+{\LARGE Lógica Simbólica Global\par}
+\vspace{0.4cm}
+{\large \textbf{Informe Técnico y Documentación de Sprints}\par}
+{\large Arquitectura, Motores Lógicos y Evolución 4 Semanas · 4 Equipos\par}
+\vspace{1.0cm}
+\begin{tabular}{ll}
+\textbf{Curso:} & Lógica Simbólica (MATG1001) — 2026 I, II Ciclo (3 créd.)\\
+\textbf{Docente:} & Dr. Mardo Victor Gonzales Herrera\\
+\textbf{Líder:} & Enrique Díaz Cayaca (EnriDiazCayaca)\\
+\textbf{Equipos:} & Sinergia (Tablas) · Hijos de Linus (Inferencias) · Modus Innova (Cuantificadores) · Linus (Conjuntos)\\
+\textbf{Stack:} & Vue 3 + Vite 6 + TypeScript + Tailwind v4 + Vitest (189 tests)\\
+\textbf{Repositorio:} & \url{https://github.com/EnriDiazCayaca/logica_simbolica_global}\\
+\textbf{Versión:} & 3.5 — Septiembre 2026\\
+\end{tabular}\par
+\vspace{1.1cm}
+{\small Lambayeque — Septiembre 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section{Resumen y alcance}
+LogiLearn implementa el 100\% del sílabo MATG1001 con motores reales: tablas de verdad (clasificación tautología/contradicción/contingencia), inferencias con trazabilidad y contraejemplo $2^{N}$, cuantificadores $\forall$/$\exists$ sobre $D\subset\mathbb{Z}$ con De Morgan y Δ, y conjuntos con Venn interactivo. Este informe documenta \textbf{qué} se construyó, \textbf{cómo} (arquitectura Vue 3 SFC, \texttt{src/lib/} aislado de \texttt{src/pages/}, \texttt{src/content/site.json:1} con \texttt{modoLiteral} por módulo) y \textbf{cuándo} (sprints 1→4). Fuentes unificadas: scratch \texttt{informe\_scratch\_*.pdf/.docx} de los 4 equipos + \texttt{TAREAS/04\_Deploy/sinergia/informe\_sinergia.tex:1} y \texttt{TAREAS/04\_Deploy/hijos-de-linus/informe\_los\_hijos\_de\_linus.tex:1} (PR30/32) + \texttt{TAREAS/hijos-de-linus/Instrucciones.md:1} (PR33). El Excel de edición literal fue artefacto descartable y no se documenta.
+
+\section{Marco teórico}
+\subsection{Lógica proposicional} Conectivos $\neg, \wedge, \vee, \to, \leftrightarrow$, tautología/contingencia/contradicción (Hurley), AST y precedencia $\neg > \wedge > \vee > \to > \leftrightarrow$ (\texttt{src/lib/truth-table/evaluator.ts:1}).
+\subsection{Inferencia} $\;p, p\to q \vdash q$ (MPP), $\neg q, p\to q \vdash \neg p$ (MTT), $p\to q, q\to r \vdash p\to r$ (SH) y 8 reglas más en \texttt{src/lib/transcription/translations.ts:18}.
+\subsection{Cuantificadores} $\forall x\,P(x)$ vs $\exists x\,P(x)$, $D\subset\mathbb{Z}$ finito, De Morgan $\neg\forall\equiv\exists\neg$, Δ como $(P\vee Q)\wedge\neg(P\wedge Q)$.
+\subsection{Conjuntos} $A\cup B$, $A\cap B$, $A-B$, $A^{c}$, $A\triangle B$, $P(A)=2^{|A|}$, De Morgan conjuntista $(A\cup B)^{c}=A^{c}\cap B^{c}$ (\texttt{src/lib/sets/operations.ts:1}).
+
+\section{Marco tecnológico}
+\begin{center}\begin{tabular}{lll}\toprule Tecnología & Rol & Ver.\\\midrule Vue 3 & SFC \texttt{.vue} Composition API & 3.5\\ Vite & Bundler + dev server & 6.x\\ TypeScript & Tipado strict & 5.x\\ Tailwind v4 & Estilos + \texttt{@tailwindcss/vite} & 4.x\\ Vue Router & Rutas & 4.x\\ Vitest + happy-dom & 189 tests & 4.x\\ \bottomrule\end{tabular}\end{center}
+Deploy GitHub Pages (\texttt{vite.config.ts:7} \texttt{base:/logica\_simbolica\_global/}) + Netlify previews por PR. Tipado estático eliminó errores en motores. Contenido externalizado: \texttt{src/content/site.json:1} \texttt{src/content/types.ts:1} con \texttt{modoLiteral} por módulo (home/aprender/tablas/cuantificadores/conjuntos/inferencias/leyes) — permite al profesor elegir símbolo vs literal sin tocar Vue.
+
+\section{Metodología y organización (4 equipos)}
+\begin{center}\begin{tabular}{llll}\toprule Equipo & Sublíder & Tema & Carpeta\\\midrule Sinergia & Alexa & Tablas Verdad & \texttt{src/pages/tablas} + \texttt{src/lib/truth-table}\\ Hijos de Linus & Arom & Inferencias & \texttt{src/pages/inferencias} + \texttt{src/lib/solver}\\ Modus Innova & Cristian & Cuantificadores & \texttt{src/pages/cuantificadores} + \texttt{src/lib/cuantificadores}\\ Linus & Jordy & Conjuntos & \texttt{src/pages/conjuntos} + \texttt{src/lib/sets}\\ \bottomrule\end{tabular}\end{center}
+GitFlow por feature branch + PR revisado por líder; integración en \texttt{main} (\texttt{1dc32cb}, \texttt{a74100c}) tras \#28/#29 sin neón. TAREAS como evidencia: \texttt{TAREAS/01\_Propuesta}→\texttt{04\_Deploy} por equipo/sprint, \texttt{MAPA.md:1} y \texttt{CRONOGRAMA.md:1} (4 semanas). Pruebas: 175→189, distribución Tablas 39, Inferencias 24, Cuantificadores 30, Conjuntos 14, Solver 22, UI 46.
+
+\section{Arquitectura del software}
+\texttt{src/lib/} (motores puros, testeables) separado de \texttt{src/pages/} (SFC) y \texttt{src/components/ui/} (Button/Card/Badge). Router \texttt{src/router/index.ts:1}, store progreso \texttt{localStorage}. Contenido: \texttt{src/content/site.json:1} centraliza todos los textos visibles (hero, tarjetas, definiciones conectores con \texttt{simboloLiteral}, leyes con \texttt{formulasLiteral}, inferencias \texttt{tituloLiteral} etc.) y es consumido vía \texttt{siteContent} en cada página (ej \texttt{src/pages/Home.vue:1} usa \texttt{c.hero.titulo}). Scripts \texttt{scripts/content-*.mjs:1} generan/aplican \texttt{content/EDITAR\_PROFESOR.xlsx:1} (descartable).
+
+\section{Implementación microscópica por módulo}
+
+\subsection{Tablas de Verdad — Sinergia}
+Parser recursivo descendente (\texttt{parsearProposicion}), \texttt{recolectarVariables}, \texttt{generarFilas} $2^{n}$, \texttt{clasificarProposicion} en \texttt{src/lib/truth-table/evaluator.ts:1} (39 tests). UI \texttt{src/pages/tablas/index.vue:1} con \texttt{OPERADORES} y \texttt{ToggleSwitch} por variable.
+\begin{lstlisting}[caption={evaluator — núcleo}]
+export function clasificarProposicion(nodo: NodoExpresion): {clasificacion: Clasificacion; filas: Fila[]}
+const vars = recolectarVariables(nodo); // P,Q,R
+const filas = generarFilas(nodo, vars); // 2^n asignaciones
+const vals = filas.map(f=>f.resultado);
+return vals.every(v=>v) ? 'tautologia' : vals.every(v=>!v) ? 'contradiccion' : 'contingencia';
+\end{lstlisting}
+
+\subsection{Inferencias — Hijos de Linus}
+Solver forward-chaining + evaluador $2^{N}$ en \texttt{src/lib/solver/solver.ts:1} y \texttt{parser.ts:1}, trazabilidad \texttt{src/lib/trazabilidad/historial.ts:1} con \texttt{paso.numeroPaso, lineasBase, explicacion}. UI \texttt{src/pages/inferencias/index.vue:1} con \texttt{FormularioInferencia.vue:1}, \texttt{TraductorLenguajeNatural.vue:1}, \texttt{ArbolAST.vue:1} (\texttt{astVisual.ts:1} O(N)). Soporta 11 reglas y export \texttt{LaTeX/Markdown} (\texttt{PanelTrazabilidad.vue:1}).
+\begin{lstlisting}[caption={solver — demostrarConclusion}]
+const premisasNodos = premisas.map(p=>parsearExpresion(p));
+const res = demostrarConclusion(premisasNodos, conclusionNodo);
+const traz = construirTrazabilidad(premisasNodos, res);
+// res.errorLogico.tipo = 'DEMOSTRACION_INCOMPLETA' -> 'no_demostrable_directa'
+\end{lstlisting}
+
+\subsection{Cuantificadores — Modus Innova}
+\texttt{src/lib/cuantificadores/engine.ts:1} (\texttt{evaluarCuantificador}), \texttt{quantifierEngine.ts:1} (\texttt{parseDomain} estricto $D\subset\mathbb{Z}$), \texttt{lawsEngine.ts:1} (\texttt{solveFormula} pipeline). UI \texttt{src/pages/cuantificadores/index.vue:1} con dos pestañas, dominio \texttt{1,2,3} o \texttt{0<x<9}, testigo/contraejemplo, De Morgan cuantificadores.
+\begin{lstlisting}[caption={engine — evaluarCuantificador}]
+export function evaluarCuantificador(tipo: 'forall'|'exists', dominio: string[], fn:(x:string)=>boolean): Resultado {
+  const traz = dominio.map(x=>({elemento:x, resultado: fn(x)}));
+  const ok = tipo==='forall' ? traz.every(t=>t.resultado) : traz.some(t=>t.resultado);
+  return {resultado: ok, trazabilidad: traz, deMorgan: {original, negado}};
+}
+\end{lstlisting}
+
+\subsection{Conjuntos — Linus}
+\texttt{src/lib/sets/operations.ts:1} (\texttt{union, interseccion, diferencia, complemento, potencia} con 14 tests) y Venn SVG con \texttt{clipPath} (\texttt{src/pages/conjuntos/index.vue:350}). Sub-selector \texttt{P(A)...P(B')} con \texttt{vennColores} por operación.
+\begin{lstlisting}[caption={sets — potencia}]
+export function potencia<T>(c: Set<T>): Set<Set<T>> {
+  const arr=[...c]; const n=arr.length; const out=new Set<Set<T>>();
+  for(let m=0;m<1<<n;m++){ const s=new Set<T>(); for(let i=0;i<n;i++) if(m>>i &1) s.add(arr[i]); out.add(s); }
+  return out; // 2^n subconjuntos
+}
+\end{lstlisting}
+
+\subsection{Transversal: Aprender / Leyes / Ejercicios}
+\texttt{src/pages/aprender/index.vue:10} con \texttt{CONECTORES} desde \texttt{site.json} (definición formal \texttt{p→q≡¬p∨q}), \texttt{src/data/logicLaws.ts:1} re-exporta \texttt{site.leyes} (12 leyes con \texttt{formulasLiteral}), \texttt{src/data/exercises.ts:1} (80 ejercicios).
+
+\section{Evolución por sprints (4 semanas)}
+\subsection{Sprint 1 — Propuesta} Wireframes Figma, \texttt{TAREAS/01\_Propuesta/*/propuesta.md:1}, decisión stack Vue 3.
+\subsection{Sprint 2 — Motores} Implementación \texttt{src/lib/*}, tests iniciales, PRs \#8 \#14 \#15, integración PR \#16 \texttt{feat/integrate-sinergia-modus}.
+\subsection{Sprint 3/3.5 — UI} Componentes \texttt{src/components/ui/}, \texttt{AppNavBar.vue:1}, \texttt{Home.vue:1} con hero y equipos, pulido Hijos de Linus (numerar premisas, título — migrado a \texttt{site.json}).
+\subsection{Sprint 4 — Calidad y Deploy} 189 tests, \texttt{vue-tsc --noEmit}, \texttt{vite build}, Pages \texttt{dist/index.html:1}, Netlify previews. Informes scratch de cada equipo (68p Linus, 36p Sinergia, 18p Modus) unificados aquí.
+
+\section{Pruebas, calidad y evidencias}
+\texttt{vitest run} 189/189, \texttt{vue-tsc} 0 errores. Tabla TAREAS: \texttt{TAREAS/02\_Motor/guia.md:1}, \texttt{TAREAS/03\_UI/guia.md:1}, \texttt{TAREAS/04\_Deploy/guia.md:1} con assets \texttt{banner.jpg:1}. Cada PR con checklist \texttt{type-check} y branding azul \texttt{rounded-xl blue-600}.
+
+\section{Resultados y limitaciones}
+100\% sílabo con motores verificables. Limitaciones: dominios finitos, predicados libres seguros, inferencia no demuestra teoremas arbitrarios. Futuro: exportación LaTeX tablas, modo profesor con calificación, FOL completo, tutor adaptativo por \texttt{store/progress.ts:1}.
+
+\section{Conclusiones}
+La separación \texttt{lib} vs \texttt{pages} y el contenido externalizado (\texttt{site.json}) permitieron colaboración sin colisiones y edición docente sin código. La metodología PR + tests garantizó calidad y trazabilidad 4 semanas 4 equipos.
+
+\begin{thebibliography}{9}
+\bibitem{silabo} UNPRG (2026). Sílabo MATG1001.
+\bibitem{copi} Copi \& Cohen (2009). Introducción a la lógica.
+\bibitem{vue} Vue.js (2026). \url{https://vuejs.org}
+\bibitem{vite} Vite (2026). \url{https://vitejs.dev}
+\end{thebibliography}
+
+\appendix
+\section{Código fuente relevante (extractos)}
+\textit{Listings completos en repo: \texttt{src/lib/}, \texttt{src/pages/}, \texttt{src/content/site.json:1}.}
+
+\section{Actas y evidencias TAREAS}
+Evidencia organizada por semanas en \texttt{TAREAS/01\_Propuesta}→\texttt{04\_Deploy}, \texttt{MAPA.md:1}, \texttt{CONTRIBUTORS.md:1}.
+
+\end{document}

@@ -1,21 +1,13 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { siteContent } from '@/content'
 
-const modulos = [
-  { id: 'tablas', nombre: 'Tablas de Verdad', desc: 'Genera tablas de verdad, clasifica tautologías, contradicciones y contingencias.' },
-  { id: 'inferencias', nombre: 'Inferencias', desc: 'Valida reglas de inferencia con trazabilidad y diagnóstico paso a paso.' },
-  { id: 'cuantificadores', nombre: 'Cuantificadores', desc: 'Evalúa ∀ y ∃, aplica De Morgan y resuelve fórmulas de predicados.' },
-  { id: 'conjuntos', nombre: 'Conjuntos', desc: 'Operaciones de teoría de conjuntos y diagramas de Venn interactivos.' },
-  { id: 'aprender', nombre: 'Aprender', desc: 'Recorrido guiado por conceptos con verificación en vivo.' },
-  { id: 'progreso', nombre: 'Progreso', desc: 'Sigue tu avance, precisión y temas recomendados.' },
-]
-
-const equipos = [
-  { nombre: 'Sinergia', sub: 'Alexa', miembros: 'Aldair, Smith, Miguel Velarde, Jesús Núñez', tema: 'Tablas de Verdad' },
-  { nombre: 'Los Hijos de Linus', sub: 'Arom', miembros: 'Centurión, Morocho, Altamirano, Mio, Mauricio', tema: 'Inferencias' },
-  { nombre: 'Modus Innova', sub: 'Cristian', miembros: 'Danuska, Marlon, Guillermo, Noemí, Julio', tema: 'Cuantificadores' },
-  { nombre: 'Linus', sub: 'Jordy', miembros: 'Nio, Mike, Sergio, Fer, Alejandro', tema: 'Conjuntos' },
-]
+const c = siteContent.home
+const modulos = c.modulos
+const equipos = c.sobreNosotros.equipos
+const hero = c.hero
+const explora = c.explora
+const sobre = c.sobreNosotros
 </script>
 
 <template>
@@ -24,40 +16,26 @@ const equipos = [
     <div class="bg-gradient-to-r from-[#0F2D8C] to-blue-700 text-white">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
         <span class="inline-block px-3 py-1 bg-white/15 text-blue-100 text-xs font-semibold rounded-full uppercase tracking-wider mb-5">
-          LogiLearn · Lógica Simbólica Global
+          {{ hero.badge }}
         </span>
         <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">
-          Aprende Lógica Simbólica de forma visual e interactiva
+          {{ hero.titulo }}
         </h1>
         <p class="mt-5 text-lg text-blue-100 max-w-2xl leading-relaxed">
-          Una plataforma colaborativa, gratuita y de código abierto donde cualquier persona
-          construye, practica y domina la lógica proposicional, los cuantificadores y la teoría
-          de conjuntos con motores reales, ejercicios y seguimiento de progreso.
+          {{ hero.descripcion }}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
-          <RouterLink to="/aprender" class="px-5 py-2.5 bg-white text-[#0F2D8C] font-semibold rounded-xl hover:bg-blue-50 transition-colors">
-            Empezar a aprender
+          <RouterLink :to="hero.ctaPrimario.to" class="px-5 py-2.5 bg-white text-[#0F2D8C] font-semibold rounded-xl hover:bg-blue-50 transition-colors">
+            {{ hero.ctaPrimario.label }}
           </RouterLink>
-          <RouterLink to="/tablas" class="px-5 py-2.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors">
-            Probar tablas de verdad
+          <RouterLink :to="hero.ctaSecundario.to" class="px-5 py-2.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20 transition-colors">
+            {{ hero.ctaSecundario.label }}
           </RouterLink>
         </div>
         <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">4</p>
-            <p class="text-xs text-blue-100 mt-1">Módulos interactivos</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">12</p>
-            <p class="text-xs text-blue-100 mt-1">Leyes lógicas</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">80</p>
-            <p class="text-xs text-blue-100 mt-1">Ejercicios</p>
-          </div>
-          <div class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">100%</p>
-            <p class="text-xs text-blue-100 mt-1">Sílabo cubierto</p>
+          <div v-for="s in hero.stats" :key="s.label" class="bg-white/10 rounded-xl p-4">
+            <p class="text-2xl font-bold">{{ s.valor }}</p>
+            <p class="text-xs text-blue-100 mt-1">{{ s.label }}</p>
           </div>
         </div>
       </div>
@@ -66,8 +44,8 @@ const equipos = [
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
       <!-- Módulos -->
       <div>
-        <h2 class="text-2xl font-bold text-neutral-900 mb-2">Explora la plataforma</h2>
-        <p class="text-neutral-500 mb-6">Cada módulo es un motor real que evalúa tus fórmulas.</p>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-2">{{ explora.titulo }}</h2>
+        <p class="text-neutral-500 mb-6">{{ explora.subtitulo }}</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           <RouterLink
             v-for="m in modulos"
@@ -78,7 +56,7 @@ const equipos = [
             <h3 class="text-lg font-bold text-neutral-800 group-hover:text-blue-700">{{ m.nombre }}</h3>
             <p class="text-neutral-500 text-sm mt-2 leading-relaxed">{{ m.desc }}</p>
             <span class="mt-4 inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-800">
-              Abrir <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
+              {{ explora.textoAbrir }} <span class="ml-1 group-hover:translate-x-1 transition-transform">→</span>
             </span>
           </RouterLink>
         </div>
@@ -86,20 +64,20 @@ const equipos = [
 
       <!-- Sobre Nosotros: 50% "nosotros" -->
       <div>
-        <h2 class="text-2xl font-bold text-neutral-900 mb-2">Sobre Nosotros</h2>
+        <h2 class="text-2xl font-bold text-neutral-900 mb-2">{{ sobre.titulo }}</h2>
         <p class="text-neutral-500 mb-6">
-          Proyecto construido colaborativamente por el aula, para el aula.
+          {{ sobre.subtitulo }}
         </p>
 
         <div class="bg-white border border-neutral-200 rounded-xl shadow-sm p-6 mb-6">
-          <h3 class="text-sm font-bold uppercase tracking-wide text-blue-700 mb-3">Marco académico</h3>
+          <h3 class="text-sm font-bold uppercase tracking-wide text-blue-700 mb-3">{{ sobre.marcoTitulo }}</h3>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-sm text-neutral-700">
-            <li><span class="font-semibold">Universidad:</span> Nacional Pedro Ruiz Gallo</li>
-            <li><span class="font-semibold">Escuela:</span> Ingeniería de Sistemas</li>
-            <li><span class="font-semibold">Curso:</span> Lógica Simbólica (MATG1001)</li>
-            <li><span class="font-semibold">Semestre:</span> 2026 I · II Ciclo</li>
-            <li><span class="font-semibold">Créditos:</span> 3</li>
-            <li><span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera</li>
+            <li><span class="font-semibold">Universidad:</span> {{ sobre.marco.universidad }}</li>
+            <li><span class="font-semibold">Escuela:</span> {{ sobre.marco.escuela }}</li>
+            <li><span class="font-semibold">Curso:</span> {{ sobre.marco.curso }}</li>
+            <li><span class="font-semibold">Semestre:</span> {{ sobre.marco.semestre }}</li>
+            <li><span class="font-semibold">Créditos:</span> {{ sobre.marco.creditos }}</li>
+            <li><span class="font-semibold">Docente:</span> {{ sobre.marco.docente }}</li>
           </ul>
         </div>
 
@@ -115,24 +93,24 @@ const equipos = [
         </div>
 
         <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-5 text-sm text-blue-900">
-          <p><span class="font-semibold">Líder de proyecto:</span> Enrique (EnriDiazCayaca)</p>
-          <p class="mt-1"><span class="font-semibold">Docente:</span> Dr. Mardo Victor Gonzales Herrera — mgonzalesh@unprg.edu.pe</p>
+          <p><span class="font-semibold">{{ sobre.infoExtra.liderLabel }}</span> {{ sobre.infoExtra.liderValor }}</p>
+          <p class="mt-1"><span class="font-semibold">{{ sobre.infoExtra.docenteLabel }}</span> {{ sobre.infoExtra.docenteValor }}</p>
           <p class="mt-1">
-            La lista completa de contribuidores está en <code class="font-semibold">CONTRIBUTORS.md</code>.
+            {{ sobre.infoExtra.contribuidoresNota }} <code class="font-semibold">CONTRIBUTORS.md</code>.
             Repositorio del proyecto:
             <a
-              href="https://github.com/EnriDiazCayaca/logica_simbolica_global"
+              :href="sobre.infoExtra.repoUrl"
               target="_blank"
               rel="noopener"
               class="underline font-semibold hover:text-blue-700"
-            >github.com/EnriDiazCayaca/logica_simbolica_global</a>.
+            >{{ sobre.infoExtra.repoLabel }}</a>.
           </p>
         </div>
       </div>
     </div>
 
     <footer class="border-t border-neutral-200 py-8 text-center text-sm text-neutral-400">
-      LogiLearn · Proyecto de Aula 2026 · Universidad Nacional Pedro Ruiz Gallo
+      {{ c.footer }}
     </footer>
   </section>
 </template>

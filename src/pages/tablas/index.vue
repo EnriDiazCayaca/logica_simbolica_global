@@ -17,18 +17,19 @@ import {
   type ClasificacionProposicion,
   type NodoExpresion,
 } from '@/lib/truth-table/evaluator'
+import { siteContent } from '@/content'
+
+const t = siteContent.tablas
 
 const proposicion = ref('P ∧ Q → R')
 const errorMessage = ref('')
 const mostrarExplicacion = ref(false)
 
-const OPERADORES = [
-  { simbolo: '∧', etiqueta: 'AND' },
-  { simbolo: '∨', etiqueta: 'OR' },
-  { simbolo: '¬', etiqueta: 'NOT' },
-  { simbolo: '→', etiqueta: 'IMPL' },
-  { simbolo: '↔', etiqueta: 'BICOND' },
-]
+const OPERADORES = t.operadores.map(o => ({
+  simbolo: t.modoLiteral ? o.literal : o.simbolo,
+  etiqueta: o.etiqueta,
+  original: o.simbolo
+}))
 
 interface ResultadoTabla {
   formula: string
@@ -92,28 +93,18 @@ function generarTabla() {
     errorMessage.value =
       err instanceof ErrorParseoLogico
         ? err.message
-        : 'No se pudo interpretar la proposición. Revisa la sintaxis.'
+        : t.input.errorFallback
   }
 }
 
 const textoClasificacion = computed(() => {
   if (!clasificacion.value) return ''
-  const mapa: Record<ClasificacionProposicion, string> = {
-    tautologia: 'TAUTOLOGÍA',
-    contradiccion: 'CONTRADICCIÓN',
-    contingencia: 'CONTINGENCIA',
-  }
-  return mapa[clasificacion.value]
+  return t.clasificacion[clasificacion.value].etiqueta
 })
 
 const explicacionClasificacion = computed(() => {
   if (!clasificacion.value) return ''
-  const mapa: Record<ClasificacionProposicion, string> = {
-    tautologia: 'Es verdadera (V) en absolutamente todas las combinaciones posibles de valores de verdad.',
-    contradiccion: 'Es falsa (F) en absolutamente todas las combinaciones posibles de valores de verdad.',
-    contingencia: 'Su valor de verdad depende de la combinación: en algunas es V y en otras es F.',
-  }
-  return mapa[clasificacion.value]
+  return t.clasificacion[clasificacion.value].explicacion
 })
 
 const pasosExplicacion = computed(() => {
@@ -144,25 +135,25 @@ generarTabla()
     <div class="max-w-6xl mx-auto space-y-6">
       <!-- Header -->
       <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-6">
-        <h1 class="text-2xl font-bold">Tablas de Verdad</h1>
-        <p class="text-blue-100 text-sm mt-1">Analiza expresiones de lógica proposicional</p>
+        <h1 class="text-2xl font-bold">{{ t.header.titulo }}</h1>
+        <p class="text-blue-100 text-sm mt-1">{{ t.header.subtitulo }}</p>
       </div>
 
       <!-- Input Card -->
       <Card>
         <label for="proposition" class="block text-sm font-semibold text-neutral-700 mb-2">
-          Ingresa una proposición lógica
+          {{ t.input.label }}
         </label>
         <input
           id="proposition"
           v-model="proposicion"
           type="text"
           class="w-full bg-neutral-100 border-none rounded-xl px-5 py-4 text-2xl text-center font-mono text-neutral-900 focus:outline-2 focus:outline-blue-500 transition-all"
-          placeholder="Ej: P ∧ Q → R"
+          :placeholder="t.input.placeholder"
           @keyup.enter="generarTabla"
         />
         <div class="mt-4 flex justify-center">
-          <Button @click="generarTabla">Generar tabla</Button>
+          <Button @click="generarTabla">{{ t.input.boton }}</Button>
         </div>
         <p v-if="errorMessage" class="mt-3 text-red-600 text-sm font-semibold text-center">
           {{ errorMessage }}
@@ -173,7 +164,7 @@ generarTabla()
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Variables -->
         <Card>
-          <h3 class="text-sm font-bold text-neutral-700 mb-4">Variables</h3>
+          <h3 class="text-sm font-bold text-neutral-700 mb-4">{{ t.info.variablesTitulo }}</h3>
           <div class="space-y-3">
             <ToggleSwitch
               v-for="v in variablesDetectadas"
@@ -182,21 +173,21 @@ generarTabla()
               :label="v"
             />
             <p v-if="variablesDetectadas.length === 0" class="text-sm text-neutral-400">
-              Escribe una proposición para detectar variables.
+              {{ t.info.variablesVacio }}
             </p>
           </div>
         </Card>
 
         <!-- Operadores -->
         <Card>
-          <h3 class="text-sm font-bold text-neutral-700 mb-4">Operadores lógicos</h3>
+          <h3 class="text-sm font-bold text-neutral-700 mb-4">{{ t.info.operadoresTitulo }}</h3>
           <div class="grid grid-cols-3 gap-2">
             <button
               v-for="op in OPERADORES"
               :key="op.simbolo"
               type="button"
               class="border border-neutral-200 rounded-lg py-2 px-1 text-center hover:border-blue-400 hover:bg-blue-50 transition-all"
-              @click="insertarOperador(op.simbolo)"
+              @click="insertarOperador(op.original)"
             >
               <span class="block text-lg font-bold text-blue-600">{{ op.simbolo }}</span>
               <span class="block text-[9px] text-neutral-400 mt-0.5">{{ op.etiqueta }}</span>
@@ -214,8 +205,8 @@ generarTabla()
               clasificacion === 'contingencia' && 'bg-amber-50',
             ]"
           >
-            <h3 class="text-sm font-bold text-neutral-700 mb-2">Clasificación</h3>
-            <p class="text-xs text-neutral-500 mb-1">La proposición es una:</p>
+            <h3 class="text-sm font-bold text-neutral-700 mb-2">{{ t.info.clasificacionTitulo }}</h3>
+            <p class="text-xs text-neutral-500 mb-1">{{ t.info.clasificacionPrefijo }}</p>
             <p
               :class="[
                 'text-xl font-extrabold tracking-wide',
@@ -229,9 +220,9 @@ generarTabla()
             <p class="text-xs text-neutral-500 mt-1 leading-relaxed">{{ explicacionClasificacion }}</p>
             <hr class="my-3 border-neutral-200" />
             <p class="text-sm text-neutral-700">
-              Es verdadera (V) en
+              {{ t.info.verdaderasEn }}
               <strong>{{ conteoClasificacion?.verdaderas }} de {{ conteoClasificacion?.total }}</strong>
-              combinaciones posibles.
+              {{ t.info.combinaciones }}
             </p>
           </div>
         </Card>
@@ -239,7 +230,7 @@ generarTabla()
 
       <!-- Truth Table -->
       <Card v-if="resultado">
-        <h3 class="text-sm font-bold text-neutral-700 mb-4">Tabla de verdad</h3>
+        <h3 class="text-sm font-bold text-neutral-700 mb-4">{{ t.tablaTitulo }}</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-center text-sm">
             <thead>
@@ -292,29 +283,27 @@ generarTabla()
       <Card v-if="resultado">
         <div class="flex items-center gap-2 mb-3">
           <InfoIcon class="w-5 h-5 text-blue-600" />
-          <h3 class="text-sm font-bold text-neutral-700">¿Cómo se resolvió?</h3>
+          <h3 class="text-sm font-bold text-neutral-700">{{ t.explicacion.titulo }}</h3>
         </div>
         <ol class="list-decimal list-inside text-sm text-neutral-700 space-y-1 mb-4">
           <li v-for="paso in pasosExplicacion" :key="paso.index">{{ paso.texto }}</li>
           <li v-if="pasosExplicacion.length === 0">
-            La expresión ya es una variable simple, así que su valor se toma directamente.
+            {{ t.explicacion.vacio }}
           </li>
         </ol>
         <button
           class="border border-blue-600 text-blue-600 rounded-lg px-4 py-2 text-sm font-semibold inline-flex items-center gap-2 hover:bg-blue-50 transition-all"
           @click="mostrarExplicacion = !mostrarExplicacion"
         >
-          {{ mostrarExplicacion ? 'Ocultar explicación' : 'Ver explicación paso a paso' }}
+          {{ mostrarExplicacion ? t.explicacion.ocultarBtn : t.explicacion.verBtn }}
         </button>
         <div v-if="mostrarExplicacion" class="mt-4 text-sm text-neutral-500 bg-neutral-50 rounded-lg p-4 leading-relaxed">
-          Primero se evalúan las subexpresiones más internas y luego se combinan siguiendo la precedencia:
-          ¬ &gt; ∧ &gt; ∨ &gt; → &gt; ↔. Cada fila de la tabla repite este proceso con una combinación distinta
-          de valores de verdad para las variables activas.
+          {{ t.explicacion.detalle }}
         </div>
       </Card>
 
       <p class="text-center text-sm text-neutral-400 bg-white rounded-xl py-3 px-4">
-        Puedes activar o desactivar variables y usar los operadores para construir tu proposición.
+        {{ t.explicacion.footer }}
       </p>
     </div>
   </section>

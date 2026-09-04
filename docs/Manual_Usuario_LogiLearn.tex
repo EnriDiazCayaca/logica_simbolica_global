@@ -1,0 +1,175 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm]{geometry}
+\usepackage{microtype}
+\usepackage[table,xcdraw]{xcolor}
+\definecolor{headerblue}{RGB}{15,45,140}
+\definecolor{accentblue}{RGB}{37,99,235}
+\definecolor{lightbg}{RGB}{248,249,251}
+\definecolor{bordergray}{RGB}{220,224,230}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\graphicspath{{../public/assets/}{../public/}{./}{assets/}}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=headerblue,urlcolor=accentblue,citecolor=headerblue}
+\usepackage{booktabs,tabularx,array,enumitem,caption,float,longtable}
+\usepackage{fancyhdr}
+% lastpage removed (not in basic)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textsc{LogiLearn — Manual de Usuario}}
+\fancyhead[R]{\small UNPRG — MATG1001}
+\fancyfoot[C]{\small \thepage\ / \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.2pt}
+
+\begin{document}
+
+% PORTADA
+\begin{titlepage}
+\centering
+\includegraphics[width=0.22\textwidth]{banner.jpg}\par
+\vspace{0.6cm}
+{\Large Universidad Nacional Pedro Ruiz Gallo\par}
+{\large Facultad de Ingeniería Civil, de Sistemas y de Arquitectura\par}
+{\large Escuela Profesional de Ingeniería de Sistemas\par}
+\vspace{1.0cm}
+{\Huge \bfseries\color{headerblue} LogiLearn\par}
+{\LARGE Lógica Simbólica Global\par}
+\vspace{0.4cm}
+{\large \textbf{Manual de Usuario} — Plataforma Web Interactiva\par}
+{\large 4 Módulos · 4 Equipos · 100\% Sílabo MATG1001\par}
+\vspace{1.1cm}
+\begin{tabular}{ll}
+\textbf{Curso:} & Lógica Simbólica (MATG1001) — 2026 I, II Ciclo (3 créd.)\\
+\textbf{Docente:} & Dr. Mardo Victor Gonzales Herrera — mgonzalesh@unprg.edu.pe\\
+\textbf{Líder proyecto:} & Enrique Díaz Cayaca (EnriDiazCayaca)\\
+\textbf{Equipos:} & Sinergia (Tablas) · Hijos de Linus (Inferencias) · Modus Innova (Cuantificadores) · Linus (Conjuntos)\\
+\textbf{Versión:} & 3.5 — Septiembre 2026\\
+\textbf{Repositorio:} & \url{https://github.com/EnriDiazCayaca/logica_simbolica_global}\\
+\textbf{Producción:} & \url{https://EnriDiazCayaca.github.io/logica_simbolica_global/}\\
+\end{tabular}\par
+\vspace{1.2cm}
+{\small Lambayeque, Perú — Septiembre 2026\par}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\section*{Resumen}
+Este manual unifica en un solo documento los manuales de los cuatro equipos (Sinergia, Hijos de Linus, Modus Innova, Linus) y los scratch \texttt{informe\_scratch\_*.pdf/.docx} entregados. Cada capítulo es autocontenido: requisitos, acceso, interfaz paso a paso, teclado simbólico, ejemplos y resolución de problemas. No contiene código ni artefactos internos (el Excel de edición literal fue descartable y no se documenta aquí). Está pensado para estudiantes y docente sin conocimientos de Git.
+
+\textbf{Palabras clave:} lógica simbólica, tablas de verdad, inferencias, cuantificadores, conjuntos, manual de usuario, UNPRG.
+
+\section{Introducción y acceso}
+\subsection{¿Qué es LogiLearn?}
+Plataforma web colaborativa, gratuita y open-source donde cada tema del sílabo es un motor verificable: tablas de verdad con clasificación, inferencias con trazabilidad, cuantificadores $\forall$/$\exists$ sobre $D\subset\mathbb{Z}$ y conjuntos con Venn interactivo, más recorridos guiados \texttt{/aprender} y seguimiento \texttt{/progreso}.
+
+\subsection{Requisitos y acceso}
+Navegador moderno (Chrome/Firefox/Edge/Safari), sin instalación. Local: \texttt{npm install \&\& npm run dev → http://localhost:5173}. Producción: GitHub Pages (ver portada) y previews Netlify por PR.
+
+\subsection{Navegación global}
+\texttt{/} Inicio (hero + Sobre Nosotros) · \texttt{/aprender} · \texttt{/tablas} · \texttt{/leyes-logicas} · \texttt{/ejercicios} · \texttt{/progreso} · \texttt{/cuantificadores} · \texttt{/conjuntos} · \texttt{/inferencias}. Navbar \texttt{AppNavBar.vue:1} con marca \texttt{LogiLearn} y 6 enlaces (\texttt{global.nav} en \texttt{src/content/site.json:8}).
+
+% --- SINERGIA ---
+\section{Módulo Tablas de Verdad — Equipo Sinergia}
+\textit{Fuente: \texttt{informe\_scratch\_sinergia.pdf} (36p) + \texttt{TAREAS/04\_Deploy/sinergia/informe\_sinergia.tex} (431 líneas SciELO) + \texttt{src/pages/tablas/index.vue:1}.}
+
+\subsection{Objetivo}
+Generar tablas de verdad, clasificar tautologías/contradicciones/contingencias y trazar subexpresiones para cualquier fórmula proposicional.
+
+\subsection{Interfaz paso a paso}
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+\item \textbf{Header:} \texttt{Tablas de Verdad — Analiza expresiones de lógica proposicional} (\texttt{tablas.header}).
+\item \textbf{Input:} etiqueta \texttt{Ingresa una proposición lógica}, placeholder \texttt{Ej: P ∧ Q → R}, botón \texttt{Generar tabla} (\texttt{tablas.input}). Soporta \texttt{∧ ∨ ¬ → ↔} y alias ASCII (\texttt{\&\&, ||, !, ->, <->}).
+\item \textbf{Teclado:} 5 operadores (\texttt{∧ AND, ∨ OR, ¬ NOT, → IMPL, ↔ BICOND}) en \texttt{tablas.operadores}. Cada botón inserta el símbolo en el input.
+\item \textbf{Variables:} panel \texttt{Variables} con \texttt{ToggleSwitch} por variable detectada (\texttt{recolectarVariables} en \texttt{src/lib/truth-table/evaluator.ts:1}). Desactivar una variable la excluye de la tabla (útil para 3+ variables).
+\item \textbf{Clasificación:} \texttt{TAUTOLOGÍA} (todo V), \texttt{CONTRADICCIÓN} (todo F), \texttt{CONTINGENCIA} (mixto) con explicación (\texttt{tablas.clasificacion}) y conteo \texttt{verdaderas/total}.
+\item \textbf{Tabla:} columnas variables + subexpresiones + Resultado (V/F en verde/rojo). Scroll horizontal en móvil.
+\item \textbf{¿Cómo se resolvió?:} lista \texttt{Se evaluó la subexpresión (...) obteniendo V/F} por precedencia $\neg > \wedge > \vee > \to > \leftrightarrow$ (\texttt{tablas.explicacion.detalle}).
+\end{enumerate}
+
+\subsection{Ejemplos}
+\texttt{P ∨ ¬P} → TAUTOLOGÍA (1 variable, 2 filas). \texttt{P ∧ ¬P} → CONTRADICCIÓN. \texttt{P → Q} → CONTINGENCIA (75\% casos). Probar \texttt{P ∧ Q → R} del ejemplo inicial.
+
+\subsection{Problemas comunes}
+Sintaxis: revisar paréntesis. Variables: usar mayúsculas \texttt{P,Q,R}. Si tabla vacía, pulsa \texttt{Generar tabla} o Enter.
+
+% --- HIJOS DE LINUS ---
+\section{Módulo Inferencias — Equipo Hijos de Linus}
+\textit{Fuente: \texttt{informe\_scratch\_hijosdelinus.pdf} (14p) + \texttt{TAREAS/hijos-de-linus/Instrucciones.md:1} (807 líneas, PR33) + \texttt{TAREAS/04\_Deploy/hijos-de-linus/informe\_los\_hijos\_de\_linus.tex:1} (27K) + \texttt{src/pages/inferencias/index.vue:1}.}
+
+\subsection{Objetivo}
+Validar si una conclusión se deduce de premisas (11 reglas: Modus Ponens/Tollens, Silogismo Hipotético/Disyuntivo, Adición, Simplificación, Conjunción, Dilema, etc. — \texttt{REGLAS} en \texttt{src/lib/transcription/translations.ts:18}) con trazabilidad paso a paso y contraejemplo si es inválida.
+
+\subsection{Pestañas}
+\textbf{Simbología Formal} (default, título \texttt{Demostrador} o \texttt{Validador} según \texttt{inferencias.modoLiteral}), \textbf{Lenguaje Natural} (traductor \texttt{src/components/inferencias/TraductorLenguajeNatural.vue:1} con mapa \texttt{p→"Llueve"}), \textbf{Árbol Sintáctico (AST)} (\texttt{src/components/inferencias/ArbolAST.vue:1} con zoom).
+
+\subsection{Uso}
+1. En \texttt{FormularioInferencia.vue:1} escribe premisas numeradas y conclusión (ej: \texttt{P → Q, P ⊢ Q}).
+2. Pulsa \texttt{Demostrar}. Indicador \texttt{IndicadorResultado.vue:1} muestra \texttt{Válida / Inválida / Válida (Ind.)}.
+3. \texttt{PanelTrazabilidad.vue:1} lista \texttt{Línea 2: P → Q (MPP)} con \texttt{Línea 1}. Exporta a \texttt{LaTeX/Markdown} en 1 clic.
+4. Historial local (\texttt{localStorage} \texttt{lhdl\_historial\_inferencias:56}) con 6 recientes y botón \texttt{Historial (N)}.
+
+\subsection{AST}
+Nodos \texttt{variable/NO/Y/O/ENTONCES/SI\_Y\_SOLO\_SI}. Cada transformación registra \texttt{changedChunk} para resaltado no-neón.
+
+\subsection{FAQ breve}
+\textit{¿Por qué inválida?} Mira \texttt{Análisis y Diagnóstico} — da asignación que refuta (\texttt{2\textsuperscript{N}} combinaciones). \textit{¿Símbolos?} Teclado \texttt{∧ ∨ ¬ → ↔ Δ ⊕}.
+
+% --- MODUS INNOVA ---
+\section{Módulo Cuantificadores — Equipo Modus Innova (QuantifiWeb v3.5)}
+\textit{Fuente: \texttt{informe\_scratch\_modusinnova.pdf} (18p) + \texttt{informe\_scratch\_modusinnova\_2.docx:1} (monografía enciclopédica) + \texttt{src/pages/cuantificadores/index.vue:1} + \texttt{lawsEngine.ts/quantifierEngine.ts}.}
+
+\subsection{Objetivo}
+Evaluar $\forall$/$\exists$ sobre $D\subset\mathbb{Z}$ finito y reescribir fórmulas de predicados (Δ soportado).
+
+\subsection{Pestaña Cuantificadores}
+Header \texttt{Cuantificadores Lógicos — Evalúa para todo y existe sobre dominios finitos} (o \texttt{∀∃} si \texttt{modoLiteral=false}). Selector \texttt{Para todo / Existe} (vs \texttt{∀/∃}), dominio \texttt{D ⊂ ℤ} (placeholder \texttt{1,2,3,4,5} o rango \texttt{0 < x < 9}), predicado \texttt{P(x)} con toggle \texttt{Libre} (\texttt{x \% 2 === 0}). Símbolos rápidos \texttt{∀ ∃ ∈ → ∧ ∨ ¬ ≡ ∴ Δ ⊕} (literal: \texttt{para todo, existe, pertenece a...}). Botones \texttt{Evaluar}, \texttt{Ejemplo simple}, \texttt{Ejemplo rango}. Resultado \texttt{VERDADERO/FALSO} + \texttt{Contraejemplo/Testigo} + tabla trazabilidad por elemento + De Morgan \texttt{¬∀ ≡ ∃¬}.
+
+\subsection{Pestaña Distribución y Leyes}
+Resolutor \texttt{Resolver Automáticamente} (Δ soportado) con pipeline \texttt{Doble Negación → Δ → Bicondicional → Implicación → De Morgan → Distribución} (\texttt{solveFormulaLeyes}). Input \texttt{¬(A ∧ B) ↔ C} → pasos \texttt{Antes/Después} + \texttt{Resultado final}. Catálogo 12 leyes de \texttt{src/data/logicLaws.ts:1} (\texttt{src/content/site.json:600}).
+
+\subsection{Ejemplos}
+\texttt{∀x∈\{2,4,6\} esPar} → V, sin contraejemplo. \texttt{∃x∈\{1,3,5\} x\%2==0} → F. Rango \texttt{0<x<9} con \texttt{x\%2==0} → F (contraejemplo 1).
+
+% --- LINUS ---
+\section{Módulo Conjuntos — Equipo Linus}
+\textit{Fuente: \texttt{informe\_scratch\_linus.pdf} (7p) + \texttt{informe\_scratch\_linus\_2.pdf:1} (68p, TOC 12 capítulos) + \texttt{src/pages/conjuntos/index.vue:1} + \texttt{src/lib/sets/operations.ts:1}.}
+
+\subsection{Objetivo}
+Calculadora de \texttt{U, A, B} con \texttt{∪ ∩ − \textquotesingle\  P()} y Venn interactivo con regiones exactas (\texttt{clipPath}) y modo disjunto/intersección.
+
+\subsection{Uso}
+Header \texttt{Teoría de Conjuntos y Diagramas de Venn — Calculadora Interactiva}. Inputs \texttt{Universo U / Conjunto A / B} (placeholders \texttt{1..10 / 1..4 / 3..6}). Operaciones: \texttt{A ∪ B, A ∩ B, A−B, B−A, A', B', P(...)} con sub-selector \texttt{P(A), P(B), P(A∪B)...}. Diagrama SVG 400×270 con \texttt{vennColores} por operación. Resultado en \texttt{\{\}} monoespaciado + \texttt{Total 2ⁿ subconjuntos} si \texttt{P()}. Propiedades \texttt{A⊆B, B⊆A, A=B, Disjuntos} (badge Sí/No). Pertenencia \texttt{∈A/∉A}.
+
+\subsection{Potencia}
+Si \texttt{|base|>10} advierte \texttt{Advertencia: ... 2ⁿ = ... subconjuntos} (\texttt{conjuntos.resultado.advertenciaPotencia}). Lista \texttt{\{ \{φ\}, \{1\}, ... \}}.
+
+% --- APRENDER / LEYES / EJERCICIOS / PROGRESO ---
+\section{Módulos transversales}
+\subsection{Aprender}
+\texttt{/aprender} — Recorrido \texttt{Definición → Ejemplo → Ejercicio → Solución} por 5 conectores (\texttt{¬ ∧ ∨ → ↔} con \texttt{simboloLiteral} si \texttt{modoLiteral}) y 12 leyes. Repaso inteligente (\texttt{temasDebiles}) y verificación viva \texttt{p ∧ p ≡ p} con asignación alternada.
+
+\subsection{Leyes Lógicas}
+\texttt{/leyes-logicas} — 12 leyes (Idempotencia ... Definición) con buscador, fórmula \texttt{p ∧ p ≡ p} y variante literal si \texttt{leyesPage.modoLiteral}.
+
+\subsection{Ejercicios y Progreso}
+\texttt{/ejercicios} — 80 ejercicios universitarios (identificación, tablas, leyes, quiz) con \texttt{[id].vue:1} trazabilidad. \texttt{/progreso} — store \texttt{localStorage} con precisión y recomendación.
+
+\section{Resolución de problemas y FAQ}
+\begin{itemize}[leftmargin=*]
+\item \textbf{No carga tabla:} revisa \texttt{→} vs \texttt{->}, paréntesis, variables activas.
+\item \textbf{Inferencias marca inválida siempre:} revisa \texttt{⊢} y premisas numeradas; usa ejemplo rápido.
+\item \textbf{Cuantificadores error D⊂ℤ:} dominio debe ser enteros (\texttt{1,2,3} o \texttt{0<x<9}), no reales.
+\item \textbf{Venn vacío:} define \texttt{U} antes que \texttt{A,B}.
+\item \textbf{Deploy:} producción GitHub Pages \texttt{/logica\_simbolica\_global/} + previews Netlify por PR.
+\end{itemize}
+
+\section*{Glosario}
+Tautología, contradicción, contingencia, AST, Modus Ponens/Tollens, $\forall$/$\exists$, $D\subset\mathbb{Z}$, $A\triangle B$ (diferencia simétrica), Venn, $P(A)$ (potencia).
+
+\end{document}

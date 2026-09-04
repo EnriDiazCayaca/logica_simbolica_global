@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "content:gen": "node scripts/content-generate.mjs",
+    "content:validate": "node scripts/content-validate.mjs",
+    "content:apply": "node scripts/content-apply.mjs"
   },
   "dependencies": {
     "@lucide/vue": "^1.16.0",
@@ -25,6 +28,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vue/language-server": "^3.3.10",
     "@vue/test-utils": "^2.4.11",
+    "exceljs": "^4.4.0",
     "happy-dom": "^20.11.6",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",

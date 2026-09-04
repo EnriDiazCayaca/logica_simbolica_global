@@ -1,20 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { siteContent } from '@/content'
 
-interface NavLink {
-  label: string
-  to: string
-}
-
-const navLinks: NavLink[] = [
-  { label: 'Inicio', to: '/' },
-  { label: 'Aprender', to: '/aprender' },
-  { label: 'Tablas de verdad', to: '/tablas' },
-  { label: 'Leyes lógicas', to: '/leyes-logicas' },
-  { label: 'Ejercicios', to: '/ejercicios' },
-  { label: 'Progreso', to: '/progreso' },
-]
+const navLinks = siteContent.global.nav
 
 const route = useRoute()
 
@@ -34,6 +23,8 @@ function closeMobileMenu() {
 }
 
 watch(() => route.fullPath, () => closeMobileMenu())
+
+const marca = siteContent.global.marca
 </script>
 
 <template>
@@ -48,8 +39,8 @@ watch(() => route.fullPath, () => closeMobileMenu())
           </svg>
         </div>
         <div class="leading-none">
-          <span class="text-white text-sm font-semibold">Logi<strong class="font-extrabold">Learn</strong></span>
-          <span class="block text-blue-200 text-[10px] mt-0.5">Leyes lógicas y tablas de verdad</span>
+          <span class="text-white text-sm font-semibold">{{ marca.titulo }}<strong class="font-extrabold">{{ marca.tituloResaltado }}</strong></span>
+          <span class="block text-blue-200 text-[10px] mt-0.5">{{ marca.subtitulo }}</span>
         </div>
       </RouterLink>
 

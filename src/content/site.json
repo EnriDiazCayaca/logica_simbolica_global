@@ -1,0 +1,736 @@
+{
+  "global": {
+    "marca": {
+      "titulo": "Logi",
+      "tituloResaltado": "Learn",
+      "subtitulo": "Leyes lógicas y tablas de verdad"
+    },
+    "nav": [
+      {
+        "label": "Inicio",
+        "to": "/"
+      },
+      {
+        "label": "Aprender",
+        "to": "/aprender"
+      },
+      {
+        "label": "Tablas de verdad",
+        "to": "/tablas"
+      },
+      {
+        "label": "Leyes lógicas",
+        "to": "/leyes-logicas"
+      },
+      {
+        "label": "Ejercicios",
+        "to": "/ejercicios"
+      },
+      {
+        "label": "Progreso",
+        "to": "/progreso"
+      }
+    ],
+    "footer": "LogiLearn · Proyecto de Aula 2026 · Universidad Nacional Pedro Ruiz Gallo"
+  },
+  "home": {
+    "modoLiteral": false,
+    "hero": {
+      "badge": "LogiLearn · Lógica Simbólica Global",
+      "titulo": "Aprende Lógica Simbólica de forma visual e interactiva",
+      "descripcion": "Una plataforma colaborativa, gratuita y de código abierto donde cualquier persona construye, practica y domina la lógica proposicional, los cuantificadores y la teoría de conjuntos con motores reales, ejercicios y seguimiento de progreso.",
+      "ctaPrimario": {
+        "label": "Empezar a aprender",
+        "to": "/aprender"
+      },
+      "ctaSecundario": {
+        "label": "Probar tablas de verdad",
+        "to": "/tablas"
+      },
+      "stats": [
+        {
+          "valor": "4",
+          "label": "Módulos interactivos"
+        },
+        {
+          "valor": "12",
+          "label": "Leyes lógicas"
+        },
+        {
+          "valor": "80",
+          "label": "Ejercicios"
+        },
+        {
+          "valor": "100%",
+          "label": "Sílabo cubierto"
+        }
+      ]
+    },
+    "explora": {
+      "titulo": "Explora la plataforma",
+      "subtitulo": "Cada módulo es un motor real que evalúa tus fórmulas.",
+      "textoAbrir": "Abrir"
+    },
+    "sobreNosotros": {
+      "titulo": "Sobre Nosotros",
+      "subtitulo": "Proyecto construido colaborativamente por el aula, para el aula.",
+      "marcoTitulo": "Marco académico",
+      "marco": {
+        "universidad": "Nacional Pedro Ruiz Gallo",
+        "escuela": "Ingeniería de Sistemas",
+        "curso": "Lógica Simbólica (MATG1001)",
+        "semestre": "2026 I · II Ciclo",
+        "creditos": "3",
+        "docente": "Dr. Mardo Victor Gonzales Herrera"
+      },
+      "equiposTitulo": "Equipos",
+      "equipos": [
+        {
+          "nombre": "Sinergia",
+          "sub": "Alexa",
+          "miembros": "Aldair, Smith, Miguel Velarde, Jesús Núñez",
+          "tema": "Tablas de Verdad"
+        },
+        {
+          "nombre": "Los Hijos de Linus",
+          "sub": "Arom",
+          "miembros": "Centurión, Morocho, Altamirano, Mio, Mauricio",
+          "tema": "Inferencias"
+        },
+        {
+          "nombre": "Modus Innova",
+          "sub": "Cristian",
+          "miembros": "Danuska, Marlon, Guillermo, Noemí, Julio",
+          "tema": "Cuantificadores"
+        },
+        {
+          "nombre": "Linus",
+          "sub": "Jordy",
+          "miembros": "Nio, Mike, Sergio, Fer, Alejandro",
+          "tema": "Conjuntos"
+        }
+      ],
+      "infoExtra": {
+        "liderLabel": "Líder de proyecto:",
+        "liderValor": "Enrique (EnriDiazCayaca)",
+        "docenteLabel": "Docente:",
+        "docenteValor": "Dr. Mardo Victor Gonzales Herrera — mgonzalesh@unprg.edu.pe",
+        "contribuidoresNota": "La lista completa de contribuidores está en",
+        "repoUrl": "https://github.com/EnriDiazCayaca/logica_simbolica_global",
+        "repoLabel": "github.com/EnriDiazCayaca/logica_simbolica_global"
+      }
+    },
+    "footer": "LogiLearn · Proyecto de Aula 2026 · Universidad Nacional Pedro Ruiz Gallo",
+    "modulos": [
+      {
+        "id": "tablas",
+        "nombre": "Tablas de Verdad",
+        "desc": "Genera tablas de verdad, clasifica tautologías, contradicciones y contingencias."
+      },
+      {
+        "id": "inferencias",
+        "nombre": "Inferencias",
+        "desc": "Valida reglas de inferencia con trazabilidad y diagnóstico paso a paso."
+      },
+      {
+        "id": "cuantificadores",
+        "nombre": "Cuantificadores",
+        "desc": "Evalúa ∀ y ∃, aplica De Morgan y resuelve fórmulas de predicados."
+      },
+      {
+        "id": "conjuntos",
+        "nombre": "Conjuntos",
+        "desc": "Operaciones de teoría de conjuntos y diagramas de Venn interactivos."
+      },
+      {
+        "id": "aprender",
+        "nombre": "Aprender",
+        "desc": "Recorrido guiado por conceptos con verificación en vivo."
+      },
+      {
+        "id": "progreso",
+        "nombre": "Progreso",
+        "desc": "Sigue tu avance, precisión y temas recomendados."
+      }
+    ]
+  },
+  "aprender": {
+    "modoLiteral": false,
+    "titulo": "Aprender",
+    "subtitulo": "Explora un concepto paso a paso: definición → ejemplo → ejercicio → solución.",
+    "etiquetasGrupo": {
+      "conector": "Conectores básicos",
+      "ley": "Leyes lógicas"
+    },
+    "pasos": [
+      "Definición",
+      "Ejemplo",
+      "Ejercicio",
+      "Solución"
+    ],
+    "repaso": {
+      "titulo": "Repaso inteligente",
+      "recomendacionPrefix": "Te conviene reforzar",
+      "precisionLabel": "precisión actual",
+      "reforzarPrefix": "Reforzar:",
+      "practicarBtn": "Practicar ahora"
+    },
+    "lista": {
+      "vistoLabel": "✔"
+    },
+    "detalle": {
+      "notacionLabel": "Notación:"
+    },
+    "emptyLeyes": "No hay ejercicio interactivo emparejado para esta ley. Practica en la sección de ejercicios.",
+    "conectores": [
+      {
+        "id": "c-negacion",
+        "titulo": "Negación",
+        "simbolo": "¬",
+        "simboloLiteral": "no",
+        "definicion": "Invierte el valor de verdad de una proposición. Si p es verdadera, ¬p es falsa, y viceversa.",
+        "definicionFormal": "¬p es verdadera iff p es falsa.",
+        "proposicion": "¬p",
+        "proposicionLiteral": "no p"
+      },
+      {
+        "id": "c-conjuncion",
+        "titulo": "Conjunción",
+        "simbolo": "∧",
+        "simboloLiteral": "y",
+        "definicion": "Une dos proposiciones y solo es verdadera cuando ambas lo son. Basta con que una sea falsa para que toda la conjunción sea falsa.",
+        "definicionFormal": "p ∧ q ≡ V iff p ≡ V y q ≡ V.",
+        "proposicion": "p ∧ q",
+        "proposicionLiteral": "p y q"
+      },
+      {
+        "id": "c-disyuncion",
+        "titulo": "Disyunción",
+        "simbolo": "∨",
+        "simboloLiteral": "o",
+        "definicion": "Une dos proposiciones y es verdadera si al menos una de ellas lo es. Solo es falsa cuando ambas son falsas.",
+        "definicionFormal": "p ∨ q ≡ F iff p ≡ F y q ≡ F.",
+        "proposicion": "p ∨ q",
+        "proposicionLiteral": "p o q"
+      },
+      {
+        "id": "c-condicional",
+        "titulo": "Condicional",
+        "simbolo": "→",
+        "simboloLiteral": "entonces",
+        "definicion": "Expresa \"si p entonces q\". Solo es falsa cuando el antecedente (p) es verdadero y el consecuente (q) es falso.",
+        "definicionFormal": "p → q ≡ ¬p ∨ q; falsa solo si p ≡ V y q ≡ F.",
+        "proposicion": "p → q",
+        "proposicionLiteral": "si p entonces q"
+      },
+      {
+        "id": "c-bicondicional",
+        "titulo": "Bicondicional",
+        "simbolo": "↔",
+        "simboloLiteral": "si y solo si",
+        "definicion": "Expresa \"p si y solo si q\". Es verdadera cuando ambas proposiciones tienen el mismo valor de verdad.",
+        "definicionFormal": "p ↔ q ≡ (p → q) ∧ (q → p); V iff p ≡ q.",
+        "proposicion": "p ↔ q",
+        "proposicionLiteral": "p si y solo si q"
+      }
+    ]
+  },
+  "tablas": {
+    "modoLiteral": false,
+    "header": {
+      "titulo": "Tablas de Verdad",
+      "subtitulo": "Analiza expresiones de lógica proposicional"
+    },
+    "input": {
+      "label": "Ingresa una proposición lógica",
+      "placeholder": "Ej: P ∧ Q → R",
+      "boton": "Generar tabla",
+      "errorFallback": "No se pudo interpretar la proposición. Revisa la sintaxis."
+    },
+    "operadores": [
+      {
+        "simbolo": "∧",
+        "literal": "y",
+        "etiqueta": "AND"
+      },
+      {
+        "simbolo": "∨",
+        "literal": "o",
+        "etiqueta": "OR"
+      },
+      {
+        "simbolo": "¬",
+        "literal": "no",
+        "etiqueta": "NOT"
+      },
+      {
+        "simbolo": "→",
+        "literal": "entonces",
+        "etiqueta": "IMPL"
+      },
+      {
+        "simbolo": "↔",
+        "literal": "sii",
+        "etiqueta": "BICOND"
+      }
+    ],
+    "info": {
+      "variablesTitulo": "Variables",
+      "variablesVacio": "Escribe una proposición para detectar variables.",
+      "operadoresTitulo": "Operadores lógicos",
+      "clasificacionTitulo": "Clasificación",
+      "clasificacionPrefijo": "La proposición es una:",
+      "verdaderasEn": "Es verdadera (V) en",
+      "combinaciones": "combinaciones posibles."
+    },
+    "clasificacion": {
+      "tautologia": {
+        "etiqueta": "TAUTOLOGÍA",
+        "explicacion": "Es verdadera (V) en absolutamente todas las combinaciones posibles de valores de verdad."
+      },
+      "contradiccion": {
+        "etiqueta": "CONTRADICCIÓN",
+        "explicacion": "Es falsa (F) en absolutamente todas las combinaciones posibles de valores de verdad."
+      },
+      "contingencia": {
+        "etiqueta": "CONTINGENCIA",
+        "explicacion": "Su valor de verdad depende de la combinación: en algunas es V y en otras es F."
+      }
+    },
+    "tablaTitulo": "Tabla de verdad",
+    "explicacion": {
+      "titulo": "¿Cómo se resolvió?",
+      "verBtn": "Ver explicación paso a paso",
+      "ocultarBtn": "Ocultar explicación",
+      "detalle": "Primero se evalúan las subexpresiones más internas y luego se combinan siguiendo la precedencia: ¬ > ∧ > ∨ > → > ↔. Cada fila de la tabla repite este proceso con una combinación distinta de valores de verdad para las variables activas.",
+      "vacio": "La expresión ya es una variable simple, así que su valor se toma directamente.",
+      "footer": "Puedes activar o desactivar variables y usar los operadores para construir tu proposición."
+    }
+  },
+  "cuantificadores": {
+    "modoLiteral": false,
+    "header": {
+      "titulo": "Cuantificadores Lógicos",
+      "subtitulo": "Evalúa cuantificadores ∀ y ∃ sobre dominios finitos",
+      "subtituloLiteral": "Evalúa cuantificadores para todo y existe sobre dominios finitos",
+      "icono": "∀∃"
+    },
+    "pestanas": {
+      "cuantificadores": "∀∃ Cuantificadores",
+      "cuantificadoresLiteral": "Cuantificadores (para todo / existe)",
+      "leyes": "⇔ Distribución y Leyes"
+    },
+    "panelCuantificador": {
+      "titulo": "Cuantificador Lógico",
+      "universal": "Universal",
+      "universalLiteral": "Para todo",
+      "existencial": "Existencial",
+      "existencialLiteral": "Existe"
+    },
+    "dominio": {
+      "titulo": "Dominio de Discurso D",
+      "badge": "D ⊂ ℤ",
+      "placeholder": "1, 2, 3, 4, 5",
+      "ayuda": "Lista: 1, 2, 3 · Rango: 0 < x < 9 · Solo enteros ℤ",
+      "errorPrefix": ""
+    },
+    "predicado": {
+      "titulo": "Predicado P(x)",
+      "libreLabel": "Libre",
+      "placeholder": "x % 2 === 0",
+      "ayuda": "Usa x como variable. Operadores: %, ===, !==, &&, ||"
+    },
+    "simbolosTitulo": "Símbolos Rápidos",
+    "simbolos": [
+      "∀",
+      "∃",
+      "∈",
+      "→",
+      "∧",
+      "∨",
+      "¬",
+      "≡",
+      "∴",
+      "Δ",
+      "⊕"
+    ],
+    "simbolosLiteral": [
+      "para todo",
+      "existe",
+      "pertenece a",
+      "entonces",
+      "y",
+      "o",
+      "no",
+      "equivale a",
+      "por lo tanto",
+      "diferencia simétrica",
+      "o exclusivo"
+    ],
+    "botones": {
+      "evaluar": "Evaluar Cuantificador",
+      "ejemploSimple": "Ejemplo simple",
+      "ejemploRango": "Ejemplo rango"
+    },
+    "resultado": {
+      "verdadero": "VERDADERO (V)",
+      "falso": "FALSO (F)",
+      "contraejemplo": "Contraejemplo: x = {x} hace que P({x}) sea Falso.",
+      "testigo": "Testigo: x = {x} satisface P({x}).",
+      "formulaUniversal": "∀x P(x)",
+      "formulaExistencial": "∃x P(x)",
+      "formulaUniversalLiteral": "para todo x, P(x)",
+      "formulaExistencialLiteral": "existe x tal que P(x)"
+    },
+    "trazabilidad": {
+      "titulo": "Trazabilidad por Elemento",
+      "elemento": "Elemento x",
+      "evaluacion": "Evaluación",
+      "resultado": "Resultado"
+    },
+    "deMorgan": {
+      "titulo": "Leyes de De Morgan para Cuantificadores"
+    },
+    "resolutor": {
+      "titulo": "Resolutor Paso a Paso"
+    },
+    "leyesHeader": {
+      "titulo": "Resolver Automáticamente",
+      "badge": "Δ soportado",
+      "descripcion": "Escribe una fórmula y aplícale las leyes paso a paso (Doble Negación → Disyunción Fuerte Δ → Bicondicional → Implicación → De Morgan → Distribución).",
+      "placeholder": "¬(A ∧ B) ↔ C  ·  prueba: p Δ q",
+      "botonResolver": "Resolver",
+      "botonEjemplo": "Ejemplo",
+      "vacio": "No se identificaron leyes aplicables a la expresión ingresada.",
+      "resultadoFinal": "Resultado final:"
+    }
+  },
+  "conjuntos": {
+    "modoLiteral": false,
+    "navegacion": {
+      "volver": "← Volver al inicio",
+      "badge": "Grupo 4 — Equipo Linus"
+    },
+    "header": {
+      "titulo": "Teoría de Conjuntos y Diagramas de Venn",
+      "subtitulo": "Calculadora Interactiva de Operaciones y Propiedades"
+    },
+    "define": {
+      "titulo": "Define tus conjuntos",
+      "universo": "Universo U",
+      "conjuntoA": "Conjunto A",
+      "conjuntoB": "Conjunto B",
+      "placeholders": {
+        "universo": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
+        "a": "1, 2, 3, 4",
+        "b": "3, 4, 5, 6"
+      }
+    },
+    "operaciones": {
+      "titulo": "Selecciona una operación",
+      "selectorPotenciaLabel": "Elige el conjunto base para calcular la Potencia P( ... ):",
+      "items": [
+        {
+          "key": "union",
+          "label": "A ∪ B",
+          "labelLiteral": "A unión B",
+          "desc": "Unión"
+        },
+        {
+          "key": "interseccion",
+          "label": "A ∩ B",
+          "labelLiteral": "A intersección B",
+          "desc": "Intersección"
+        },
+        {
+          "key": "diferencia",
+          "label": "A − B",
+          "labelLiteral": "A menos B",
+          "desc": "Diferencia"
+        },
+        {
+          "key": "diferencia-ba",
+          "label": "B − A",
+          "labelLiteral": "B menos A",
+          "desc": "Diferencia"
+        },
+        {
+          "key": "complemento-a",
+          "label": "A'",
+          "labelLiteral": "complemento de A",
+          "desc": "Complemento"
+        },
+        {
+          "key": "complemento-b",
+          "label": "B'",
+          "labelLiteral": "complemento de B",
+          "desc": "Complemento"
+        },
+        {
+          "key": "potencia",
+          "label": "P( ... )",
+          "labelLiteral": "conjunto potencia de ...",
+          "desc": "Conjunto Potencia"
+        }
+      ],
+      "potenciaOpciones": [
+        {
+          "key": "A",
+          "label": "P(A)",
+          "labelLiteral": "potencia de A",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "B",
+          "label": "P(B)",
+          "labelLiteral": "potencia de B",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "union",
+          "label": "P(A ∪ B)",
+          "labelLiteral": "potencia de A unión B",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "interseccion",
+          "label": "P(A ∩ B)",
+          "labelLiteral": "potencia de A intersección B",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "diferencia-ab",
+          "label": "P(A − B)",
+          "labelLiteral": "potencia de A menos B",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "diferencia-ba",
+          "label": "P(B − A)",
+          "labelLiteral": "potencia de B menos A",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "comp-a",
+          "label": "P(A')",
+          "labelLiteral": "potencia del complemento de A",
+          "desc": "Conjunto Potencia"
+        },
+        {
+          "key": "comp-b",
+          "label": "P(B')",
+          "labelLiteral": "potencia del complemento de B",
+          "desc": "Conjunto Potencia"
+        }
+      ]
+    },
+    "diagrama": {
+      "titulo": "Diagrama de Venn"
+    },
+    "resultado": {
+      "titulo": "Resultado",
+      "totalSubconjuntos": "Total de Subconjuntos (2ⁿ):",
+      "subconjuntosLabel": "subconjuntos",
+      "advertenciaPotencia": "Advertencia: El conjunto seleccionado tiene {n} elementos. Calcular su potencia requeriría listar 2^{n} = {total} subconjuntos."
+    },
+    "propiedades": {
+      "titulo": "Propiedades",
+      "items": [
+        {
+          "key": "subAB",
+          "label": "A ⊆ B",
+          "labelLiteral": "A subconjunto de B"
+        },
+        {
+          "key": "subBA",
+          "label": "B ⊆ A",
+          "labelLiteral": "B subconjunto de A"
+        },
+        {
+          "key": "igual",
+          "label": "A = B",
+          "labelLiteral": "A igual a B"
+        },
+        {
+          "key": "disjuntos",
+          "label": "Disjuntos",
+          "labelLiteral": "Disjuntos"
+        }
+      ]
+    },
+    "pertenencia": {
+      "titulo": "Verificar pertenencia",
+      "placeholder": "Ingresa un elemento (ej. 3)"
+    }
+  },
+  "inferencias": {
+    "modoLiteral": false,
+    "badge": "Hijos de Linus",
+    "titulo": "Demostrador de Inferencias Lógicas",
+    "tituloLiteral": "Validador de Inferencias Lógicas",
+    "subtitulo": "Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.",
+    "pestanas": {
+      "simbolos": "Simbología Formal",
+      "simbolosLiteral": "Notación formal",
+      "lenguaje": "Lenguaje Natural",
+      "arbol": "Árbol Sintáctico (AST)"
+    },
+    "historial": {
+      "botonMostrar": "Historial ({n})",
+      "botonOcultar": "Ocultar historial",
+      "titulo": "Ejercicios recientes",
+      "limpiar": "Limpiar",
+      "valida": "Válida",
+      "validaInd": "Válida (Ind.)",
+      "invalida": "Inválida"
+    },
+    "trazabilidad": {
+      "tituloValida": "Trazabilidad de la Demostración",
+      "tituloInvalida": "Análisis y Diagnóstico de la Demostración",
+      "cargando": "Calculando deducción..."
+    }
+  },
+  "leyesPage": {
+    "modoLiteral": false,
+    "titulo": "Leyes Lógicas",
+    "subtitulo": "Consulta y aprende las reglas fundamentales de la lógica proposicional.",
+    "placeholder": "Buscar una ley lógica...",
+    "empty": "No se encontraron leyes que coincidan con \"{q}\"."
+  },
+  "leyes": [
+    {
+      "id": 1,
+      "nombre": "Ley de Idempotencia",
+      "descripcion": "Cualquier proposición operada consigo misma (mediante conjunción o disyunción) es equivalente a la proposición original.",
+      "descripcionFormal": "Para toda proposición p: p ∧ p ≡ p y p ∨ p ≡ p.",
+      "formulas": [
+        "p ∧ p ≡ p",
+        "p ∨ p ≡ p"
+      ],
+      "formulasLiteral": [
+        "p y p equivale a p",
+        "p o p equivale a p"
+      ]
+    },
+    {
+      "id": 2,
+      "nombre": "Ley Asociativa",
+      "descripcion": "Cuando tienes tres o más proposiciones unidas por el mismo operador lógico, el orden en el que agrupes las operaciones usando paréntesis no altera el valor de verdad final.",
+      "descripcionFormal": "Para todo p,q,r: (p ∧ q) ∧ r ≡ p ∧ (q ∧ r).",
+      "formulas": [
+        "(p ∧ q) ∧ r ≡ p ∧ (q ∧ r)",
+        "(p ∨ q) ∨ r ≡ p ∨ (q ∨ r)",
+        "(p ↔ q) ↔ r ≡ p ↔ (q ↔ r)"
+      ]
+    },
+    {
+      "id": 3,
+      "nombre": "Ley Conmutativa",
+      "descripcion": "El orden en el que se combinan dos proposiciones mediante los operadores de conjunción (Y), disyunción (O) o disyunción fuerte no altera el valor de verdad de la proposición final.",
+      "descripcionFormal": "p ∧ q ≡ q ∧ p.",
+      "formulas": [
+        "p ∧ q ≡ q ∧ p",
+        "p ∨ q ≡ q ∨ p",
+        "p ↔ q ≡ q ↔ p"
+      ]
+    },
+    {
+      "id": 4,
+      "nombre": "Ley Distributiva",
+      "descripcion": "Un operador lógico fuera de un paréntesis se distribuye sobre cada uno de los elementos dentro de él.",
+      "descripcionFormal": "p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r).",
+      "formulas": [
+        "p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r)",
+        "p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)",
+        "p → (q ∧ r) ≡ (p → q) ∧ (p → r)",
+        "p → (q ∨ r) ≡ (p → q) ∨ (p → r)"
+      ]
+    },
+    {
+      "id": 5,
+      "nombre": "Ley de Absorción",
+      "descripcion": "Una proposición combinada mediante conjunción y disyunción con otra proposición repetida se reduce simplemente a esta última.",
+      "descripcionFormal": "p ∧ (p ∨ q) ≡ p.",
+      "formulas": [
+        "p ∧ (p ∨ q) ≡ p",
+        "p ∨ (p ∧ q) ≡ p"
+      ]
+    },
+    {
+      "id": 6,
+      "nombre": "Ley de Complemento",
+      "descripcion": "Al combinar una proposición con su negación se obtiene un valor absoluto.",
+      "descripcionFormal": "p ∧ ¬p ≡ F; p ∨ ¬p ≡ V; ¬¬p ≡ p.",
+      "formulas": [
+        "¬¬p ≡ p",
+        "p ∧ ¬p ≡ F ≡ ¬p ∧ p",
+        "p ∨ ¬p ≡ V ≡ ¬p ∨ p",
+        "p → p ≡ V, p ↔ p ≡ V",
+        "¬(p ∧ ¬p) ≡ V",
+        "¬V ≡ F, ¬F ≡ V"
+      ]
+    },
+    {
+      "id": 7,
+      "nombre": "Ley de Identidad",
+      "descripcion": "Al combinar una proposición con un valor de verdad constante, esta conserva su valor original o se absorbe por la constante.",
+      "descripcionFormal": "p ∧ V ≡ p; p ∨ F ≡ p.",
+      "formulas": [
+        "p ∧ V ≡ p ≡ V ∧ p",
+        "p ∧ F ≡ F ≡ F ∧ p",
+        "p ∨ V ≡ V ≡ V ∨ p",
+        "p ∨ F ≡ p ≡ F ∨ p"
+      ]
+    },
+    {
+      "id": 8,
+      "nombre": "Ley de Morgan",
+      "descripcion": "La negación de una operación lógica cambia los operadores al distribuirse.",
+      "descripcionFormal": "¬(p ∧ q) ≡ ¬p ∨ ¬q.",
+      "formulas": [
+        "¬(p ∧ q) ≡ ¬p ∨ ¬q",
+        "¬(p ∨ q) ≡ ¬p ∧ ¬q"
+      ]
+    },
+    {
+      "id": 9,
+      "nombre": "Ley de Expansión Booleana",
+      "descripcion": "Puedes añadir una variable cualquiera a una proposición sin alterar su valor original, sumando su versión verdadera y su versión falsa.",
+      "descripcionFormal": "p ≡ p ∧ (q ∨ ¬q).",
+      "formulas": [
+        "p ≡ p ∧ (q ∨ ¬q)",
+        "p ≡ p ∨ (q ∧ ¬q)"
+      ]
+    },
+    {
+      "id": 10,
+      "nombre": "Ley de Trasposición",
+      "descripcion": "Una implicación condicional equivale a invertir el orden de las proposiciones negándolas ambas.",
+      "descripcionFormal": "p → q ≡ ¬q → ¬p.",
+      "formulas": [
+        "p → q ≡ ¬q → ¬p"
+      ]
+    },
+    {
+      "id": 11,
+      "nombre": "Ley de Exportación",
+      "descripcion": "Tener dos condiciones juntas para lograr un resultado es lo mismo que cumplir la primera y que esta te condicione a cumplir la segunda.",
+      "descripcionFormal": "(p ∧ q) → r ≡ p → (q → r).",
+      "formulas": [
+        "(p ∧ q) → r ≡ p → (q → r)"
+      ]
+    },
+    {
+      "id": 12,
+      "nombre": "Leyes de Definición",
+      "descripcion": "Reglas para traducir operadores complejos en combinaciones equivalentes de los conectores básicos.",
+      "descripcionFormal": "p → q ≡ ¬p ∨ q; p ↔ q ≡ (p → q) ∧ (q → p).",
+      "formulas": [
+        "p → q ≡ ¬p ∨ q",
+        "p ↔ q ≡ (p → q) ∧ (q → p)",
+        "p ↔ q ≡ (¬p ∨ q) ∧ (¬q ∨ p)",
+        "p ▲ q ≡ (p ∨ q) ∧ ¬(p ∧ q)"
+      ]
+    }
+  ]
+}

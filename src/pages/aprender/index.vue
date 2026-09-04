@@ -8,8 +8,11 @@ import { LEYES_LOGICAS, type LeyLogica } from '@/data/logicLaws'
 import { ejercicios, type EjercicioIdentificar, type EjercicioLey, type ClaveTema } from '@/data/exercises'
 import { parsearProposicion, evaluar, recolectarVariables, ErrorParseoLogico } from '@/lib/truth-table/evaluator'
 import { registrarRespuesta, temaRecomendado, temasDebiles, type ProgresoTema } from '@/store/progress'
+import { siteContent } from '@/content'
 
 const router = useRouter()
+const t = siteContent.aprender
+const modoLiteral = t.modoLiteral
 
 // ── Catálogo de conceptos ────────────────────────────────────────────
 
@@ -22,36 +25,20 @@ interface Concepto {
   simbolo?: string
   definicion: string
   proposicion: string
+  proposicionDisplay: string
   tema: ClaveTema
 }
 
-const CONECTORES: Concepto[] = [
-  {
-    id: 'c-negacion', grupo: 'conector', titulo: 'Negación', simbolo: '¬',
-    definicion: 'Invierte el valor de verdad de una proposición. Si p es verdadera, ¬p es falsa, y viceversa.',
-    proposicion: '¬p', tema: 'identificacion',
-  },
-  {
-    id: 'c-conjuncion', grupo: 'conector', titulo: 'Conjunción', simbolo: '∧',
-    definicion: 'Une dos proposiciones y solo es verdadera cuando ambas lo son. Basta con que una sea falsa para que toda la conjunción sea falsa.',
-    proposicion: 'p ∧ q', tema: 'identificacion',
-  },
-  {
-    id: 'c-disyuncion', grupo: 'conector', titulo: 'Disyunción', simbolo: '∨',
-    definicion: 'Une dos proposiciones y es verdadera si al menos una de ellas lo es. Solo es falsa cuando ambas son falsas.',
-    proposicion: 'p ∨ q', tema: 'identificacion',
-  },
-  {
-    id: 'c-condicional', grupo: 'conector', titulo: 'Condicional', simbolo: '→',
-    definicion: 'Expresa "si p entonces q". Solo es falsa cuando el antecedente (p) es verdadero y el consecuente (q) es falso.',
-    proposicion: 'p → q', tema: 'identificacion',
-  },
-  {
-    id: 'c-bicondicional', grupo: 'conector', titulo: 'Bicondicional', simbolo: '↔',
-    definicion: 'Expresa "p si y solo si q". Es verdadera cuando ambas proposiciones tienen el mismo valor de verdad.',
-    proposicion: 'p ↔ q', tema: 'identificacion',
-  },
-]
+const CONECTORES: Concepto[] = t.conectores.map(c => ({
+  id: c.id,
+  grupo: 'conector' as GrupoConcepto,
+  titulo: c.titulo,
+  simbolo: modoLiteral ? c.simboloLiteral : c.simbolo,
+  definicion: c.definicion,
+  proposicion: c.proposicion,
+  proposicionDisplay: modoLiteral ? c.proposicionLiteral : c.proposicion,
+  tema: 'identificacion' as ClaveTema,
+}))
 
 const LEYES_CONCEPTOS: Concepto[] = LEYES_LOGICAS.map((ley: LeyLogica) => ({
   id: `ley-${ley.id}`,
@@ -59,6 +46,7 @@ const LEYES_CONCEPTOS: Concepto[] = LEYES_LOGICAS.map((ley: LeyLogica) => ({
   titulo: ley.nombre,
   definicion: ley.descripcion,
   proposicion: ley.formulas[0],
+  proposicionDisplay: (modoLiteral && (ley as any).formulasLiteral?.[0]) ? (ley as any).formulasLiteral[0] : ley.formulas[0],
   tema: 'leyes-logicas' as ClaveTema,
 }))
 
@@ -67,7 +55,9 @@ const conceptos: Concepto[] = [...CONECTORES, ...LEYES_CONCEPTOS]
 function formulasLey(concepto: Concepto): string[] {
   if (concepto.grupo !== 'ley') return []
   const ley = LEYES_LOGICAS.find((l) => `ley-${l.id}` === concepto.id)
-  return ley?.formulas ?? []
+  if (!ley) return []
+  if (modoLiteral && (ley as any).formulasLiteral) return (ley as any).formulasLiteral as string[]
+  return ley.formulas
 }
 
 // ── Emparejamiento con banco de ejercicios ───────────────────────────
@@ -146,12 +136,12 @@ function construirEjemploConector(concepto: Concepto): EjemploConector {
   vars.forEach((v, idx) => { asignacion[v] = idx % 2 === 0 })
   const resultado = evaluar(ast, asignacion)
   const textoAsignacion = vars.map((v) => `${v.toLowerCase()} = ${asignacion[v] ? 'Verdadero' : 'Falso'}`).join(', ')
-  return { proposicion: concepto.proposicion, textoAsignacion, resultado }
+  return { proposicion: concepto.proposicionDisplay, textoAsignacion, resultado }
 }
 
 // ── Estado de navegación ─────────────────────────────────────────────
 
-const etiquetaGrupo: Record<GrupoConcepto, string> = { conector: 'Conectores básicos', ley: 'Leyes lógicas' }
+const etiquetaGrupo: Record<GrupoConcepto, string> = { conector: t.etiquetasGrupo.conector, ley: t.etiquetasGrupo.ley }
 const grupoActivo = ref<GrupoConcepto>('conector')
 const conceptoSeleccionadoId = ref<string | null>(CONECTORES[0]?.id ?? null)
 const paso = ref(1)
@@ -241,32 +231,32 @@ function practicarRecomendacion(t: ProgresoTema) {
 <template>
   <section class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold text-neutral-900 mb-2">Aprender</h1>
+      <h1 class="text-3xl font-bold text-neutral-900 mb-2">{{ t.titulo }}</h1>
       <p class="text-neutral-500 text-sm mb-6 max-w-xl">
-        Explora un concepto paso a paso: definición → ejemplo → ejercicio → solución.
+        {{ t.subtitulo }}
       </p>
 
       <!-- Repaso inteligente -->
       <div v-if="temaRecomendado || temasDebiles.length > 0" class="bg-neutral-900 text-white rounded-xl p-5 mb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div class="flex-1">
-          <p class="font-bold text-sm mb-1">Repaso inteligente</p>
+          <p class="font-bold text-sm mb-1">{{ t.repaso.titulo }}</p>
           <p v-if="temaRecomendado" class="text-sm text-neutral-300">
-            Te conviene reforzar <strong class="text-white">{{ temaRecomendado.etiqueta }}</strong>
-            <span v-if="temaRecomendado.total > 0"> (precisión actual: {{ temaRecomendado.precision }}%)</span>.
+            {{ t.repaso.recomendacionPrefix }} <strong class="text-white">{{ temaRecomendado.etiqueta }}</strong>
+            <span v-if="temaRecomendado.total > 0"> ({{ t.repaso.precisionLabel }}: {{ temaRecomendado.precision }}%)</span>.
           </p>
           <div v-if="temasDebiles.length > 0" class="flex flex-wrap gap-2 mt-2">
             <button
-              v-for="t in temasDebiles"
-              :key="t.clave"
+              v-for="td in temasDebiles"
+              :key="td.clave"
               class="bg-white/10 rounded-full px-3 py-1 text-xs font-semibold hover:bg-white/20 transition-colors"
-              @click="practicarRecomendacion(t)"
+              @click="practicarRecomendacion(td)"
             >
-              Reforzar: {{ t.etiqueta }} · {{ t.precision }}%
+              {{ t.repaso.reforzarPrefix }} {{ td.etiqueta }} · {{ td.precision }}%
             </button>
           </div>
         </div>
         <Button v-if="temaRecomendado" size="sm" @click="practicarRecomendacion(temaRecomendado)">
-          Practicar ahora
+          {{ t.repaso.practicarBtn }}
         </Button>
       </div>
 
@@ -313,7 +303,7 @@ function practicarRecomendacion(t: ProgresoTema) {
           <!-- Pasos -->
           <div class="flex flex-wrap gap-2 mb-4">
             <button
-              v-for="(etiqueta, idx) in ['Definición', 'Ejemplo', 'Ejercicio', 'Solución']"
+              v-for="(etiqueta, idx) in t.pasos"
               :key="etiqueta"
               type="button"
               :class="[
@@ -334,7 +324,7 @@ function practicarRecomendacion(t: ProgresoTema) {
               <li v-for="f in formulasLey(conceptoSeleccionado)" :key="f" class="font-mono">{{ f }}</li>
             </ul>
             <p v-else class="text-xs text-neutral-400">
-              Notación: <code class="bg-blue-100 px-1.5 py-0.5 rounded font-bold">{{ conceptoSeleccionado.proposicion }}</code>
+              {{ t.detalle.notacionLabel }} <code class="bg-blue-100 px-1.5 py-0.5 rounded font-bold">{{ conceptoSeleccionado.proposicionDisplay }}</code>
             </p>
           </div>
 
@@ -390,7 +380,7 @@ function practicarRecomendacion(t: ProgresoTema) {
             <template v-else-if="verificacionViva">
               <p class="text-sm text-neutral-700 mb-3">
                 ¿Es correcta esta equivalencia?
-                <code class="bg-blue-100 px-1.5 py-0.5 rounded font-bold">{{ conceptoSeleccionado.proposicion }}</code>
+                <code class="bg-blue-100 px-1.5 py-0.5 rounded font-bold">{{ conceptoSeleccionado.proposicionDisplay }}</code>
               </p>
               <div class="flex gap-3">
                 <button
@@ -414,7 +404,7 @@ function practicarRecomendacion(t: ProgresoTema) {
             </template>
             <template v-else>
               <p class="text-sm text-neutral-500 mb-3">
-                No hay ejercicio interactivo emparejado para esta ley. Practica en la sección de ejercicios.
+                {{ t.emptyLeyes }}
               </p>
               <Button size="sm" @click="irAEjercicios(conceptoSeleccionado.tema)">Ir a Ejercicios</Button>
             </template>
