@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
 import { siteContent } from '@/content'
+import { Layers, Scale, ClipboardList, GraduationCap } from '@lucide/vue'
 
 const c = siteContent.home
 const modulos = c.modulos
@@ -8,6 +9,8 @@ const equipos = c.sobreNosotros.equipos
 const hero = c.hero
 const explora = c.explora
 const sobre = c.sobreNosotros
+
+const statsIcons = [Layers, Scale, ClipboardList, GraduationCap]
 </script>
 
 <template>
@@ -33,9 +36,10 @@ const sobre = c.sobreNosotros
           </RouterLink>
         </div>
         <div class="mt-10 grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
-          <div v-for="s in hero.stats" :key="s.label" class="bg-white/10 rounded-xl p-4">
-            <p class="text-2xl font-bold">{{ s.valor }}</p>
-            <p class="text-xs text-blue-100 mt-1">{{ s.label }}</p>
+          <div v-for="(s, idx) in hero.stats" :key="s.label" class="bg-white/10 rounded-xl p-4 flex flex-col items-center gap-1.5">
+            <component :is="statsIcons[idx]" :size="20" :stroke-width="1.8" class="text-white/90 shrink-0" aria-hidden="true" />
+            <p class="text-2xl font-bold leading-none">{{ s.valor }}</p>
+            <p class="text-xs text-blue-100">{{ s.label }}</p>
           </div>
         </div>
       </div>

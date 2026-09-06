@@ -36,15 +36,15 @@
   "home": {
     "modoLiteral": false,
     "hero": {
-      "badge": "LogiLearn · Lógica Simbólica Global",
-      "titulo": "Aprende Lógica Simbólica de forma visual e interactiva",
-      "descripcion": "Una plataforma colaborativa, gratuita y de código abierto donde cualquier persona construye, practica y domina la lógica proposicional, los cuantificadores y la teoría de conjuntos con motores reales, ejercicios y seguimiento de progreso.",
+      "badge": "Lógica Matemática de forma visual e interactiva",
+      "titulo": "Aprende Lógica Simbólica de forma visual e interactiva y desarrolla el razonamiento lógico con ejercicios, simulaciones y seguimiento de tu progreso.",
+      "descripcion": "Una plataforma colaborativa gratuita, de código abierto, que permite a los usuarios crear, modificar y compartir contenidos de manera conjunta, Fortaleciendo sus competencias en lógica proposicional, inferencias lógicas y teoría de conjuntos mediante recursos interactivos, ejercicios de aplicación y un seguimiento sistemático de tu progreso.",
       "ctaPrimario": {
         "label": "Empezar a aprender",
         "to": "/aprender"
       },
       "ctaSecundario": {
-        "label": "Probar tablas de verdad",
+        "label": "Explorar LogiLearn",
         "to": "/tablas"
       },
       "stats": [
@@ -68,13 +68,13 @@
     },
     "explora": {
       "titulo": "Explora la plataforma",
-      "subtitulo": "Cada módulo es un motor real que evalúa tus fórmulas.",
+      "subtitulo": "Cada módulo incorpora motores de lógica que procesan y verifican tus fórmulas en tiempo real.",
       "textoAbrir": "Abrir"
     },
     "sobreNosotros": {
       "titulo": "Sobre Nosotros",
-      "subtitulo": "Proyecto construido colaborativamente por el aula, para el aula.",
-      "marcoTitulo": "Marco académico",
+      "subtitulo": "Proyecto colaborativo para el aula",
+      "marcoTitulo": "Desarrollado por el docente y los estudiantes del II ciclo de Ingeniería de Sistemas, como una experiencia de aprendizaje para el aula",
       "marco": {
         "universidad": "Nacional Pedro Ruiz Gallo",
         "escuela": "Ingeniería de Sistemas",
@@ -125,7 +125,7 @@
       {
         "id": "tablas",
         "nombre": "Tablas de Verdad",
-        "desc": "Genera tablas de verdad, clasifica tautologías, contradicciones y contingencias."
+        "desc": "Verifica el tipo de proposición: tautologia - contingencia - contradicción"
       },
       {
         "id": "inferencias",
@@ -140,7 +140,7 @@
       {
         "id": "conjuntos",
         "nombre": "Conjuntos",
-        "desc": "Operaciones de teoría de conjuntos y diagramas de Venn interactivos."
+        "desc": "Módulo: Álgebra de conjuntos Aplica leyes, operaciones y diagramas de venn de forma interactiva"
       },
       {
         "id": "aprender",
@@ -159,7 +159,7 @@
     "titulo": "Aprender",
     "subtitulo": "Explora un concepto paso a paso: definición → ejemplo → ejercicio → solución.",
     "etiquetasGrupo": {
-      "conector": "Conectores básicos",
+      "conector": "Conectores lógicos",
       "ley": "Leyes lógicas"
     },
     "pasos": [
@@ -197,21 +197,21 @@
         "id": "c-conjuncion",
         "titulo": "Conjunción",
         "simbolo": "∧",
-        "simboloLiteral": "y",
+        "simboloLiteral": "∧",
         "definicion": "Une dos proposiciones y solo es verdadera cuando ambas lo son. Basta con que una sea falsa para que toda la conjunción sea falsa.",
         "definicionFormal": "p ∧ q ≡ V iff p ≡ V y q ≡ V.",
         "proposicion": "p ∧ q",
-        "proposicionLiteral": "p y q"
+        "proposicionLiteral": "p ∧ q"
       },
       {
         "id": "c-disyuncion",
         "titulo": "Disyunción",
         "simbolo": "∨",
-        "simboloLiteral": "o",
+        "simboloLiteral": "∨",
         "definicion": "Une dos proposiciones y es verdadera si al menos una de ellas lo es. Solo es falsa cuando ambas son falsas.",
         "definicionFormal": "p ∨ q ≡ F iff p ≡ F y q ≡ F.",
         "proposicion": "p ∨ q",
-        "proposicionLiteral": "p o q"
+        "proposicionLiteral": "p ∨ q"
       },
       {
         "id": "c-condicional",
@@ -239,12 +239,12 @@
     "modoLiteral": false,
     "header": {
       "titulo": "Tablas de Verdad",
-      "subtitulo": "Analiza expresiones de lógica proposicional"
+      "subtitulo": "Analiza y evalúa proposiciones mediante tablas de verdad."
     },
     "input": {
-      "label": "Ingresa una proposición lógica",
+      "label": "Ingresa una fórmula lógica.",
       "placeholder": "Ej: P ∧ Q → R",
-      "boton": "Generar tabla",
+      "boton": "Crear tabla de verdad",
       "errorFallback": "No se pudo interpretar la proposición. Revisa la sintaxis."
     },
     "operadores": [
@@ -275,10 +275,10 @@
       }
     ],
     "info": {
-      "variablesTitulo": "Variables",
+      "variablesTitulo": "Variables proposicionales",
       "variablesVacio": "Escribe una proposición para detectar variables.",
-      "operadoresTitulo": "Operadores lógicos",
-      "clasificacionTitulo": "Clasificación",
+      "operadoresTitulo": "Conectores lógicos",
+      "clasificacionTitulo": "Clasificación Lógica",
       "clasificacionPrefijo": "La proposición es una:",
       "verdaderasEn": "Es verdadera (V) en",
       "combinaciones": "combinaciones posibles."
@@ -299,10 +299,10 @@
     },
     "tablaTitulo": "Tabla de verdad",
     "explicacion": {
-      "titulo": "¿Cómo se resolvió?",
-      "verBtn": "Ver explicación paso a paso",
+      "titulo": "¿Cómo se obtuvo el resultado?",
+      "verBtn": "Ver resolución paso a paso",
       "ocultarBtn": "Ocultar explicación",
-      "detalle": "Primero se evalúan las subexpresiones más internas y luego se combinan siguiendo la precedencia: ¬ > ∧ > ∨ > → > ↔. Cada fila de la tabla repite este proceso con una combinación distinta de valores de verdad para las variables activas.",
+      "detalle": "Primero se evalúan las subfórmulas más internas, luego se combinan siguiendo la precedencia",
       "vacio": "La expresión ya es una variable simple, así que su valor se toma directamente.",
       "footer": "Puedes activar o desactivar variables y usar los operadores para construir tu proposición."
     }
@@ -310,15 +310,15 @@
   "cuantificadores": {
     "modoLiteral": false,
     "header": {
-      "titulo": "Cuantificadores Lógicos",
+      "titulo": "Comprende y aplica los cuantificadores (∀) y (∃) en fórmulas de lógica de predicados",
       "subtitulo": "Evalúa cuantificadores ∀ y ∃ sobre dominios finitos",
-      "subtituloLiteral": "Evalúa cuantificadores para todo y existe sobre dominios finitos",
+      "subtituloLiteral": "Analiza y evalúa proposiciones cuantificadas con (∀) y (∃) en dominios finitos.",
       "icono": "∀∃"
     },
     "pestanas": {
-      "cuantificadores": "∀∃ Cuantificadores",
+      "cuantificadores": "∀ ∃ Cuantificadores Lógicos",
       "cuantificadoresLiteral": "Cuantificadores (para todo / existe)",
-      "leyes": "⇔ Distribución y Leyes"
+      "leyes": "Distribución y Leyes"
     },
     "panelCuantificador": {
       "titulo": "Cuantificador Lógico",
@@ -328,14 +328,14 @@
       "existencialLiteral": "Existe"
     },
     "dominio": {
-      "titulo": "Dominio de Discurso D",
+      "titulo": "Dominio de Discurso D ⊂ ℤ",
       "badge": "D ⊂ ℤ",
       "placeholder": "1, 2, 3, 4, 5",
-      "ayuda": "Lista: 1, 2, 3 · Rango: 0 < x < 9 · Solo enteros ℤ",
+      "ayuda": "Lista: 1, 2, 3 · Rango: D = {x ∈ ℤ: 0 < x < 9} · Solo enteros ℤ",
       "errorPrefix": ""
     },
     "predicado": {
-      "titulo": "Predicado P(x)",
+      "titulo": "p(x)",
       "libreLabel": "Libre",
       "placeholder": "x % 2 === 0",
       "ayuda": "Usa x como variable. Operadores: %, ===, !==, &&, ||"
@@ -375,8 +375,8 @@
     "resultado": {
       "verdadero": "VERDADERO (V)",
       "falso": "FALSO (F)",
-      "contraejemplo": "Contraejemplo: x = {x} hace que P({x}) sea Falso.",
-      "testigo": "Testigo: x = {x} satisface P({x}).",
+      "contraejemplo": "Contraejemplo: (x = {x}), pues P({x}) = F.",
+      "testigo": "Testigo: (x = {x}), pues P({x}) = V.",
       "formulaUniversal": "∀x P(x)",
       "formulaExistencial": "∃x P(x)",
       "formulaUniversalLiteral": "para todo x, P(x)",
@@ -413,7 +413,7 @@
     },
     "header": {
       "titulo": "Teoría de Conjuntos y Diagramas de Venn",
-      "subtitulo": "Calculadora Interactiva de Operaciones y Propiedades"
+      "subtitulo": "Explora y visualiza conjuntos de forma interactiva"
     },
     "define": {
       "titulo": "Define tus conjuntos",
@@ -534,7 +534,7 @@
       "advertenciaPotencia": "Advertencia: El conjunto seleccionado tiene {n} elementos. Calcular su potencia requeriría listar 2^{n} = {total} subconjuntos."
     },
     "propiedades": {
-      "titulo": "Propiedades",
+      "titulo": "Propiedades de los conjuntos",
       "items": [
         {
           "key": "subAB",
@@ -560,13 +560,14 @@
     },
     "pertenencia": {
       "titulo": "Verificar pertenencia",
-      "placeholder": "Ingresa un elemento (ej. 3)"
+      "placeholder": "Ingresa un elemento (ej. 3)",
+      "ayuda": "Comprueba si un elemento pertenece al conjunto resultante"
     }
   },
   "inferencias": {
     "modoLiteral": false,
     "badge": "Hijos de Linus",
-    "titulo": "Demostrador de Inferencias Lógicas",
+    "titulo": "Explorador de Inferencias Lógicas",
     "tituloLiteral": "Validador de Inferencias Lógicas",
     "subtitulo": "Ingresa premisas formales, visualiza el árbol sintáctico (AST), traduce a lenguaje natural y valida deducciones paso a paso.",
     "pestanas": {
@@ -626,7 +627,7 @@
     {
       "id": 3,
       "nombre": "Ley Conmutativa",
-      "descripcion": "El orden en el que se combinan dos proposiciones mediante los operadores de conjunción (Y), disyunción (O) o disyunción fuerte no altera el valor de verdad de la proposición final.",
+      "descripcion": "El orden en el que se combinan dos proposiciones mediante los operadores de conjunción (∧), disyunción (∨) o disyunción fuerte no altera el valor de verdad de la proposición final.",
       "descripcionFormal": "p ∧ q ≡ q ∧ p.",
       "formulas": [
         "p ∧ q ≡ q ∧ p",
@@ -637,19 +638,18 @@
     {
       "id": 4,
       "nombre": "Ley Distributiva",
-      "descripcion": "Un operador lógico fuera de un paréntesis se distribuye sobre cada uno de los elementos dentro de él.",
+      "descripcion": "Un operador lógico puede distribuirse sobre otro operador cuando se cumple una equivalencia lógica válida.",
       "descripcionFormal": "p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r).",
       "formulas": [
         "p ∧ (q ∨ r) ≡ (p ∧ q) ∨ (p ∧ r)",
-        "p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)",
-        "p → (q ∧ r) ≡ (p → q) ∧ (p → r)",
-        "p → (q ∨ r) ≡ (p → q) ∨ (p → r)"
-      ]
+        "p ∨ (q ∧ r) ≡ (p ∨ q) ∧ (p ∨ r)"
+      ],
+      "nota": "Nota: p → (q ∧ r) ≡ (p → q) ∧ (p → r) y p → (q ∨ r) ≡ (p → q) ∨ (p → r) no siempre se cumplen como distributiva pura; se observan en leyes lógicas."
     },
     {
       "id": 5,
       "nombre": "Ley de Absorción",
-      "descripcion": "Una proposición combinada mediante conjunción y disyunción con otra proposición repetida se reduce simplemente a esta última.",
+      "descripcion": "Simplifica expresiones en las que una proposición absorbe a otra.",
       "descripcionFormal": "p ∧ (p ∨ q) ≡ p.",
       "formulas": [
         "p ∧ (p ∨ q) ≡ p",
@@ -658,8 +658,8 @@
     },
     {
       "id": 6,
-      "nombre": "Ley de Complemento",
-      "descripcion": "Al combinar una proposición con su negación se obtiene un valor absoluto.",
+      "nombre": "Negación y valores de verdad",
+      "descripcion": "Simplifica proposiciones mediante la negación e identifica tautologías y contradicciones.",
       "descripcionFormal": "p ∧ ¬p ≡ F; p ∨ ¬p ≡ V; ¬¬p ≡ p.",
       "formulas": [
         "¬¬p ≡ p",
@@ -673,7 +673,7 @@
     {
       "id": 7,
       "nombre": "Ley de Identidad",
-      "descripcion": "Al combinar una proposición con un valor de verdad constante, esta conserva su valor original o se absorbe por la constante.",
+      "descripcion": "Al combinar una proposición con los valores de verdad V y F, el resultado puede conservar la proposición original o quedar determinado por la constante lógica.",
       "descripcionFormal": "p ∧ V ≡ p; p ∨ F ≡ p.",
       "formulas": [
         "p ∧ V ≡ p ≡ V ∧ p",
@@ -685,7 +685,7 @@
     {
       "id": 8,
       "nombre": "Ley de Morgan",
-      "descripcion": "La negación de una operación lógica cambia los operadores al distribuirse.",
+      "descripcion": "Al negar una conjunción o una disyunción, se niegan sus proposiciones y se intercambia el operador lógico: ∧ se convierte en ∨ y el ∨ se convierte en ∧",
       "descripcionFormal": "¬(p ∧ q) ≡ ¬p ∨ ¬q.",
       "formulas": [
         "¬(p ∧ q) ≡ ¬p ∨ ¬q",
@@ -695,7 +695,7 @@
     {
       "id": 9,
       "nombre": "Ley de Expansión Booleana",
-      "descripcion": "Puedes añadir una variable cualquiera a una proposición sin alterar su valor original, sumando su versión verdadera y su versión falsa.",
+      "descripcion": "Una proposición puede ampliarse incorporando una variable y su negación sin alterar su valor lógico.",
       "descripcionFormal": "p ≡ p ∧ (q ∨ ¬q).",
       "formulas": [
         "p ≡ p ∧ (q ∨ ¬q)",
@@ -704,8 +704,8 @@
     },
     {
       "id": 10,
-      "nombre": "Ley de Trasposición",
-      "descripcion": "Una implicación condicional equivale a invertir el orden de las proposiciones negándolas ambas.",
+      "nombre": "Ley de Contraposición",
+      "descripcion": "Intercambia y niega antecedente y consecuente",
       "descripcionFormal": "p → q ≡ ¬q → ¬p.",
       "formulas": [
         "p → q ≡ ¬q → ¬p"
@@ -723,7 +723,7 @@
     {
       "id": 12,
       "nombre": "Leyes de Definición",
-      "descripcion": "Reglas para traducir operadores complejos en combinaciones equivalentes de los conectores básicos.",
+      "descripcion": "Permiten expresar operadores lógicos mediante combinaciones equivalentes de los conectores básicos.",
       "descripcionFormal": "p → q ≡ ¬p ∨ q; p ↔ q ≡ (p → q) ∧ (q → p).",
       "formulas": [
         "p → q ≡ ¬p ∨ q",

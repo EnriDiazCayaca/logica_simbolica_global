@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { Info as InfoIcon } from '@lucide/vue'
+import { Info as InfoIcon, Variable, Plug2 } from '@lucide/vue'
 import Card from '@/components/ui/Card.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
@@ -164,7 +164,7 @@ generarTabla()
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- Variables -->
         <Card>
-          <h3 class="text-sm font-bold text-neutral-700 mb-4">{{ t.info.variablesTitulo }}</h3>
+          <h3 class="text-sm font-bold text-neutral-700 mb-4 flex items-center gap-2"><Variable :size="16" class="text-blue-600 shrink-0" aria-hidden="true" />{{ t.info.variablesTitulo }}</h3>
           <div class="space-y-3">
             <ToggleSwitch
               v-for="v in variablesDetectadas"
@@ -180,7 +180,7 @@ generarTabla()
 
         <!-- Operadores -->
         <Card>
-          <h3 class="text-sm font-bold text-neutral-700 mb-4">{{ t.info.operadoresTitulo }}</h3>
+          <h3 class="text-sm font-bold text-neutral-700 mb-4 flex items-center gap-2"><Plug2 :size="16" class="text-blue-600 shrink-0" aria-hidden="true" />{{ t.info.operadoresTitulo }}</h3>
           <div class="grid grid-cols-3 gap-2">
             <button
               v-for="op in OPERADORES"

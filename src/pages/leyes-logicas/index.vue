@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { LEYES_LOGICAS } from '@/data/logicLaws'
 import Card from '@/components/ui/Card.vue'
 import { siteContent } from '@/content'
+import { Search, Scale, Repeat, GitBranch, ArrowLeftRight, GitFork, Magnet, CircleOff, BadgeCheck, Split, Maximize2, ArrowRightLeft, Upload, BookMarked } from '@lucide/vue'
 
 const t = siteContent.leyesPage
 const modoLiteral = t.modoLiteral
@@ -36,6 +37,25 @@ function descDisplay(ley: any): string {
   // descripcionFormal es rigor extra, si existe la mostramos como tooltip? Aquí priorizamos descripcion
   return ley.descripcion as string
 }
+
+const iconMap: Record<number, any> = {
+  1: Repeat,
+  2: GitBranch,
+  3: ArrowLeftRight,
+  4: GitFork,
+  5: Magnet,
+  6: CircleOff,
+  7: BadgeCheck,
+  8: Split,
+  9: Maximize2,
+  10: ArrowRightLeft,
+  11: Upload,
+  12: BookMarked,
+}
+
+function iconForLey(id: number) {
+  return iconMap[id] ?? Scale
+}
 </script>
 
 <template>
@@ -50,7 +70,7 @@ function descDisplay(ley: any): string {
           </p>
         </div>
         <div class="flex items-center gap-2 border border-neutral-300 rounded-lg px-3 py-2 w-full sm:w-auto sm:min-w-[320px]">
-          <span class="text-neutral-400">🔍</span>
+          <Search :size="16" class="text-neutral-400 shrink-0" aria-hidden="true" />
           <input
             v-model="busqueda"
             type="text"
@@ -67,16 +87,22 @@ function descDisplay(ley: any): string {
       <!-- Laws grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         <Card v-for="ley in leyesFiltradas" :key="ley.id">
-          <div class="flex items-center gap-2 mb-3">
+          <div class="flex items-center gap-2.5 mb-3">
+            <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+              <component :is="iconForLey(ley.id)" :size="14" class="text-blue-600" aria-hidden="true" />
+            </div>
             <span class="bg-blue-600 text-white text-xs font-bold rounded-md px-2 py-0.5">
               {{ ley.id }}
             </span>
-            <h3 class="text-sm font-bold text-neutral-900">{{ nombreDisplay(ley) }}</h3>
+            <h3 class="text-sm font-bold text-neutral-900 leading-tight">{{ nombreDisplay(ley) }}</h3>
           </div>
           <p class="text-xs text-neutral-600 leading-relaxed mb-4">{{ descDisplay(ley) }}</p>
           <div class="bg-blue-600 text-white rounded-lg p-3 font-mono text-sm font-semibold space-y-1">
             <p v-for="(formula, idx) in formulasDisplay(ley)" :key="idx" class="m-0">{{ formula }}</p>
           </div>
+          <p v-if="(ley as any).nota" class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-3 leading-relaxed">
+            {{ (ley as any).nota }}
+          </p>
         </Card>
       </div>
     </div>

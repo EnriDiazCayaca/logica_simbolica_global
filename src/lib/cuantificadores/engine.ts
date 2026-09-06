@@ -649,11 +649,11 @@ export function evaluarCuantificador(
 
   const resumen = resultado
     ? tipo === 'forall'
-      ? `Para todo x en D, se cumple que ${nombrePredicado}. La proposición ${simbolo}x P(x) es VERDADERA.`
-      : `Existe al menos un x en D para el cual se cumple ${nombrePredicado}. La proposición ${simbolo}x P(x) es VERDADERA.`
+      ? `Todos los elementos de D satisfacen P(x). La proposición ${simbolo}x P(x) es VERDADERA.`
+      : `Existe al menos un x en D tal que P(x). La proposición ${simbolo}x P(x) es VERDADERA.`
     : tipo === 'forall'
-      ? `No se cumple que para todo x en D, ${nombrePredicado}. La proposición ${simbolo}x P(x) es FALSA.`
-      : `No existe ningún x en D para el cual se cumpla ${nombrePredicado}. La proposición ${simbolo}x P(x) es FALSA.`
+      ? `No todos los elementos de D satisfacen P(x). La proposición ${simbolo}x P(x) es FALSA.`
+      : `Ningún elemento de D satisface P(x). La proposición ${simbolo}x P(x) es FALSA.`
 
   const exprOriginal = `${simbolo}x P(x)`
   const negacion = tipo === 'forall' ? `∃x ¬P(x)` : `∀x ¬P(x)`
