@@ -1,0 +1,1524 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{lmodern}
+\usepackage[top=2.5cm,bottom=2.5cm,left=2.5cm,right=2.5cm,headheight=14pt]{geometry}
+\usepackage{microtype}
+\usepackage[table,xcdraw]{xcolor}
+\definecolor{headerblue}{RGB}{24,43,73}
+\definecolor{accentblue}{RGB}{30,80,150}
+\definecolor{lightbg}{RGB}{248,249,251}
+\definecolor{bordergray}{RGB}{220,224,230}
+\definecolor{darktext}{RGB}{33,37,41}
+\definecolor{codebg}{RGB}{245,247,250}
+\definecolor{commentgreen}{RGB}{40,140,70}
+\definecolor{keywordpurple}{RGB}{120,40,140}
+\definecolor{stringblue}{RGB}{20,90,160}
+\colorlet{bannerblue}{headerblue}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\graphicspath{{assets/hijos/}{assets/linus/}{assets/sinergia/}{assets/modus/}{assets/}{../assets/}{../assets/hijos/}{../assets/linus/}{../assets/sinergia/}{../assets/modus/}}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=accentblue,citecolor=accentblue,urlcolor=accentblue,bookmarksnumbered=true,breaklinks=true}
+\usepackage{booktabs,tabularx,longtable,array,enumitem,caption,float}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\textsc{LogiLearn}}
+\fancyhead[R]{\small\leftmark}
+\fancyfoot[C]{\small\thepage}
+\usepackage{listings}
+\lstdefinelanguage{TypeScript}{keywords={const,let,function,return,import,export,for,if,else,new},keywordstyle=\color{accentblue}\bfseries,comment=[l]{//},commentstyle=\color{gray}\itshape,sensitive=true}
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single,numbers=left,numberstyle=\tiny\color{gray},showstringspaces=false,tabsize=2,extendedchars=true,literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1 {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ñ}{{\~N}}1 {∧}{{$\land$}}1 {∨}{{$\lor$}}1 {¬}{{$\neg$}}1 {→}{{$\to$}}1 {↔}{{$\leftrightarrow$}}1 {∀}{{$\forall$}}1 {∃}{{$\exists$}}1 {≡}{{$\equiv$}}1 {✓}{{$\checkmark$}}1}
+\usepackage{tcolorbox}
+\begin{document}
+\begin{titlepage}
+\centering
+{\Large Universidad Nacional Pedro Ruiz Gallo\par}
+{\large Escuela Profesional de Ingenier\'ia de Sistemas --- MATG1001\par}
+\vspace{0.6cm}
+\includegraphics[width=\textwidth]{hero_cover.png}\par
+\vspace{0.6cm}
+{\Huge \bfseries\color{headerblue} Manual de Uso\par}
+\vspace{0.2cm}
+{\Large LogiLearn --- Gu\'ia paso a paso por equipo\par}
+\vspace{0.4cm}
+{\large Plataforma LogiLearn --- L\'ogica Simb\'olica Global\par}
+{\small Docente: Dr. Mardo Victor Gonzales Herrera --- Septiembre 2026\par}
+\end{titlepage}
+\tableofcontents
+\newpage
+
+\section{Cap\'itulo 1 --- Sinergia: Tablas de Verdad}
+
+\subsection{Acceso al Módulo}
+- En la nube: Ingrese a la URL de GitHub Pages y haga clic en la pestaña \textbf{«Tablas de verdad»}.
+- En local: Ejecute \texttt{npm run dev} y navegue a \texttt{http://localhost:5173/tablas}.
+
+\subsection{Notaciones Aceptadas}
+\begin{table}[H]
+\centering
+\caption{Notaciones aceptadas por el motor lógico de LogiLearn}
+\label{tab:notaciones}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Conectivo} & \textbf{Símbolo Unicode} & \textbf{ASCII} & \textbf{Palabras clave} \\
+\midrule
+Negación \& $\neg$ \& \texttt{\~{}} , \texttt{!} , \texttt{-} \& \texttt{NOT} \\
+Conjunción \& $\land$ \& \texttt{\^{}} , \texttt{\&} , \texttt{.} \& \texttt{AND} \\
+Disyunción \& $\lor$ \& \texttt{|} , \texttt{+} \& \texttt{OR} \\
+Implicación \& $\to$ \& \texttt{->} , \texttt{=>} \& \texttt{IMPLIES} \\
+Bicondicional \& $\leftrightarrow$ \& \texttt{<->} , \texttt{<=>} \& \texttt{IFF} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interpretación de la Tabla y Clasificación}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Columnas de Variables:} Asignaciones $V$ y $F$ para cada proposición simple ($P, Q, R$).
+  \item \textbf{Columnas de Subexpresiones:} Evaluación intermedia de los paréntesis de adentro hacia afuera.
+  \item \textbf{Columna Resultado:} Matriz principal clasificada como \textbf{TAUTOLOGÍA} (todo V), \textbf{CONTRADICCIÓN} (todo F) o \textbf{CONTINGENCIA} (mixta).
+\end{itemize}
+
+\% ==============================================================================
+\% 6. REGISTRO DE EVOLUCIÓN POR SPRINTS
+\% ==============================================================================
+\section{Registro de Evolución por Sprints}
+8. DOCUMENTACIÓN DE LAS PESTAÑAS COMPLEMENTARIAS
+\begin{lstlisting}[language=TypeScript,basicstyle=\ttfamily\scriptsize]
+================================================================================
+\end{lstlisting}
+\subsection{8.1 Pestaña Inicio (HomeView): Punto de entrada, presentación y enlaces de navegación (src/pages/Home.vue).}
+\subsection{8.2 Pestaña Aprender (LearnView): Recorrido guiado en stepper de 4 pasos (Definición, Ejemplo, Ejercicio, Solución), banner de repaso inteligente y botón ''Practicar ahora'' (src/pages/aprender/index.vue).}
+\subsection{8.3 Pestaña Leyes Lógicas (LogicLawsView): Biblioteca interactiva de las 12 leyes lógicas con interfaz LeyLogica y buscador reactivo en tiempo real (src/pages/leyes-logicas/index.vue).}
+\subsection{8.4 Pestaña Ejercicios (ExercisesView / ExerciseRunnerView): Catálogo completo de práctica interactiva con doble filtro combinable por dificultad y tema, sincronización con query param ?tema= y feedback con OptionPill (src/pages/ejercicios/).}
+\subsection{8.5 Pestaña Progreso (ProgressView): Historial y estadísticas del usuario persistidas en localStorage con reactive() de Vue 3, sistema de logros reactivo y panel de progreso por tema (src/pages/progreso/index.vue).}
+\subsection{8.6 Flujo de Integración entre Pestañas (Figura A): Ciclo de aprendizaje cerrado articulado por el store de progreso.}
+
+\begin{lstlisting}[language=TypeScript,basicstyle=\ttfamily\scriptsize]
+================================================================================
+\end{lstlisting}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{01_encabezado_navbar.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{02_modulo_tablas_verdad.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{extracted_img_02.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{extracted_img_03.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{extracted_img_04.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{extracted_img_05.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{extracted_img_06.jpg}
+\caption{Evidencia del m'odulo (Equipo Sinergia)}
+\end{figure}
+\section{Cap\'itulo 2 --- Hijos de Linus: Inferencias}
+\section{Manual de Uso --- Módulo de Validez de Inferencias Lógicas}
+
+\textbf{Equipo:} Hijos de Linus
+\textbf{Versión:} 1.3
+\textbf{Fecha:} Septiembre 2026
+
+\hrulefill
+
+\subsubsection{Tabla de Contenidos}
+
+1. ¿Qué es este módulo? (\url{#1-qué-es-este-módulo})
+2. ¿Para qué sirve? (\url{#2-para-qué-sirve})
+3. ¿Cómo se accede? (\url{#3-cómo-se-accede})
+4. Pantalla principal: descripción general (\url{#4-pantalla-principal-descripción-general})
+5. Pestaña 1 --- Simbología Formal (\url{#5-pestaña-1--simbología-formal})
+6. Teclado Simbólico (\url{#6-teclado-simbólico})
+7. Ejemplos Rápidos (\url{#7-ejemplos-rápidos})
+8. Pestaña 2 --- Lenguaje Natural (\url{#8-pestaña-2--lenguaje-natural})
+9. Pestaña 3 --- Árbol Sintáctico (AST) (\url{#9-pestaña-3--árbol-sintáctico-ast})
+10. Como interpretar el diagrama de Árbol (\url{#10-como-interpretar-el-diagrama-de-árbol})
+11. Resultado de la Inferencia (\url{#11-resultado-de-la-inferencia})
+12. Panel de Trazabilidad (Paso a Paso) (\url{#12-panel-de-trazabilidad-paso-a-paso})
+13. Exportación Académica (Markdown y LaTeX) (\url{#13-exportación-académica-markdown-y-latex})
+14. Historial de Ejercicios (\url{#14-historial-de-ejercicios})
+15. Los 8 Operadores Lógicos: Referencia Completa (\url{#15-los-8-operadores-lógicos-referencia-completa})
+16. Las 11 Reglas de Inferencia (\url{#16-las-11-reglas-de-inferencia})
+17. Preguntas Frecuentes (FAQ) (\url{#17-preguntas-frecuentes-faq})
+18. Glosario de Términos (\url{#18-glosario-de-términos})
+
+\hrulefill
+
+\subsection{1. ¿Qué es este módulo?}
+
+El módulo \textbf{'Validez de Inferencias Lógicas'} es una herramienta interactiva desarrollada por el equipo \textbf{Hijos de Linus} que permite:
+
+\begin{itemize}[leftmargin=*]
+\item Escribir argumentos lógicos (premisas + conclusión) en un formulario.
+\item Verificar si la conclusión se deduce válidamente de las premisas.
+\item Visualizar la estructura interna del argumento como un árbol jerárquico.
+\item Traducir los símbolos formales a lenguaje natural (español).
+\item Obtener una demostración paso a paso con las reglas lógicas aplicadas.
+\item Exportar la demostración en formato académico (Markdown o LaTeX).
+\end{itemize}
+
+En palabras simples: \textbf{es una calculadora de lógica proposicional} que te dice si tu argumento es correcto o no, y te explica por qué paso a paso.
+
+\hrulefill
+
+\subsection{2. ¿Para qué sirve?}
+
+Uso --- Ejemplo
+\textbf{Estudiar lógica proposicional} --- Verificar si un argumento es válido antes de entregar una tarea
+\textbf{Aprender reglas de inferencia} --- Entender qué regla se aplica en cada paso de una demostración
+\textbf{Visualizar la estructura de fórmulas} --- Ver cómo se descompone jerárquicamente una expresión lógica
+\textbf{Traducir símbolos a texto} --- Convertir fórmulas como \texttt{P  Q  R} a oraciones en español
+\textbf{Generar demostraciones formales} --- Exportar un paso a paso en LaTeX para un trabajo académico
+\textbf{Detectar falacias lógicas} --- Saber por qué un argumento inválido falla y cómo corregirlo
+
+\hrulefill
+
+\subsection{3. ¿Cómo se accede?}
+
+\subsubsection{Paso 1: Iniciar el servidor de desarrollo}
+
+Si eres desarrollador, abre una terminal en la carpeta del proyecto y ejecuta:
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+npm install
+npm run dev
+\end{lstlisting}
+
+El servidor arrancará en \texttt{http://localhost:5173}.
+
+\subsubsection{Paso 2: Abrir el navegador}
+
+Abre tu navegador web (Chrome, Firefox, Edge, Safari) y ve a:
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+http://localhost:5173
+\end{lstlisting}
+
+\subsubsection{Paso 3: Navegar al módulo}
+
+Desde la página principal, haz clic en la sección o tarjeta de \textbf{'Inferencias Lógicas'} (o navega directamente a la ruta \texttt{/inferencias}).
+
+\hrulefill
+
+\subsection{4. Pantalla principal: descripción general}
+
+Al abrir el módulo verás la siguiente estructura:
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+  [Volver] [Hijos de Linus]              [Historial (N)] 
+                                                         
+   Validez de Inferencias Logicas                       
+    Ingresa premisas formales, visualiza el arbol...     
+
+                                                         
+  [Simbologia Formal] [Lenguaje Natural] [Arbol AST]     
+                                                         
+       
+                           Resultado de la        |   
+    Contenido de la        Inferencia             |   
+    pestana activa                                |   
+                           Trazabilidad paso a    |   
+                           paso con explicaciones |   
+                           y exportacion          |   
+       |
+                                                         
+\end{lstlisting}
+
+\textbf{Zona izquierda:} Contiene las 3 pestañas para interactuar con el argumento.
+\textbf{Zona derecha:} Muestra el resultado (válida/inválida) y la demostración paso a paso.
+
+\hrulefill
+
+\subsection{5. Pestaña 1 --- Simbología Formal}
+
+Esta es la pestaña principal donde \textbf{escribes tu argumento lógico}.
+
+\subsubsection{5.1 Escribir Premisas}
+
+Las \textbf{premisas} son las afirmaciones de las partes de las cuales quieres deducir algo. Cada premisa va en una línea separada.
+
+\textbf{Ejemplo:} Si quieres expresar 'Si llueve, la calle se moja' y 'Llueve', escribes:
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+P ENTONCES Q
+P
+\end{lstlisting}
+
+Esto significa:
+\begin{itemize}[leftmargin=*]
+\item Línea 1: Si P, entonces Q (P $ \to $ Q)
+\item Línea 2: P es verdadero
+\end{itemize}
+
+> \textbf{Nota:} El campo de premisas muestra números de línea a la izquierda (1, 2, 3...) para facilitar la referencia.
+
+\subsubsection{5.2 Escribir la Conclusión}
+
+La \textbf{conclusión} es lo que quieres demostrar que se deduce de las premisas. Va en un solo campo debajo de las premisas.
+
+\textbf{Ejemplo:} Para concluir que 'Q' (la calle se moja):
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+ Q
+\end{lstlisting}
+
+El símbolo \texttt{} (por lo tanto) aparece automáticamente a la izquierda del campo.
+
+\subsubsection{5.3 Dos formas de escribir}
+
+Puedes escribir de \textbf{dos maneras equivalentes}:
+
+Forma matemática --- Forma con palabras clave
+\texttt{P  Q} --- \texttt{P ENTONCES Q}
+\texttt{P  Q} --- \texttt{P Y Q}
+\texttt{P  Q} --- \texttt{P O Q}
+\texttt{P} --- \texttt{NO P}
+\texttt{P  Q} --- \texttt{P SI\_Y\_SOLO\_SI Q}
+
+El sistema acepta \textbf{ambas formas}. Si escribes símbolos matemáticos ($ \to $, $ \land $, $ \lor $, $ \lnot $, $ \leftrightarrow $, , $ \downarrow $, $ \uparrow $), el sistema los convierte automáticamente al formato interno.
+
+\subsubsection{5.4 Botón 'Demostrar Inferencia'}
+
+Una vez escrito el argumento, haz clic en el botón negro \textbf{'Demostrar Inferencia $ \to $'} en la parte inferior del formulario. El sistema procesará tu argumento y mostrará el resultado en la columna derecha.
+
+\hrulefill
+
+\subsection{6. Teclado Simbólico}
+
+Debajo del formulario de entrada encontrarás un \textbf{teclado virtual} con botones para insertar símbolos. Esto es especialmente útil si no tienes símbolos en tu teclado.
+
+\subsubsection{6.1 Fila superior --- Conectivos lógicos}
+
+Botón --- Símbolo --- Nombre --- Ejemplo de uso
+\texttt{} --- $ \lnot $ --- Negación (NO) --- \texttt{P} = 'No P'
+\texttt{} --- $ \land $ --- Conjunción (Y) --- \texttt{P  Q} = 'P y Q'
+\texttt{} --- $ \lor $ --- Disyunción (O) --- \texttt{P  Q} = 'P o Q'
+\texttt{} --- Disyunción Exclusiva (XOR) --- \texttt{P  Q} = 'P o Q, pero no ambos'
+\texttt{} --- $ \to $ --- Implicación (ENTONCES) --- \texttt{P  Q} = 'Si P entonces Q'
+\texttt{} --- $ \leftrightarrow $ --- Bicondicional (SI Y SOLO SI) --- \texttt{P  Q} = 'P si y solo si Q'
+\texttt{(} --- ( --- Paréntesis de apertura --- Para agrupar
+\texttt{)} --- ) --- Paréntesis de cierre --- Para agrupar
+
+\subsubsection{6.2 Fila inferior --- Variables y acciones}
+
+Botón --- Función
+\texttt{P}, \texttt{Q}, \texttt{R}, \texttt{S} --- Variables proposicionales (grupo 1)
+\texttt{A}, \texttt{B}, \texttt{C}, \texttt{D} --- Variables proposicionales (grupo 2)
+\texttt{Borrar} --- Borra el carácter anterior al cursor
+\texttt{Salto} --- Inserta un salto de línea (solo en premisas)
+
+\subsubsection{6.3 Cómo funciona la inserción}
+
+\begin{itemize}[leftmargin=*]
+\item Haz clic en el campo de \textbf{premisas} o \textbf{conclusión} donde quieras escribir.
+\item El cursor se posicionará en ese campo.
+\item Haz clic en cualquier botón del teclado virtual: el símbolo se insertará en la posición del cursor.
+\item Los conectivos binarios ($ \land $, $ \lor $, , $ \to $, $ \leftrightarrow $) se insertan \textbf{con espacios automáticos} alrededor para mantener la legibilidad.
+\end{itemize}
+
+\hrulefill
+
+\subsection{7. Ejemplos Rápidos}
+
+En la parte superior del formulario encontrarás \textbf{4 ejemplos predefinidos} que puedes cargar con un solo clic:
+
+\subsubsection{Ejemplos válidos (de color verde)}
+
+Nombre --- Premisas --- Conclusión --- Tipo
+\textbf{Modus Ponens} --- P $ \to $ Q, P --- Q --- Válido
+\textbf{Silogismo Hipotético} --- P $ \to $ Q, Q $ \to $ R --- P $ \to $ R --- Válido
+\textbf{Dilema Constructivo} --- P $ \to $ Q, R $ \to $ S, P $ \lor $ R --- Q $ \lor $ S --- Válido
+
+\subsubsection{Ejemplo inválido (de color ámbar)}
+
+Nombre --- Premisas --- Conclusión --- Tipo
+\textbf{Falacia Afirm. Consecuente} --- P $ \to $ Q, Q --- P --- Falacia
+
+\textbf{Para usar un ejemplo:} Haz clic en el botón del ejemplo. Los campos de premisas y conclusión se llenarán automáticamente. Luego haz clic en 'Demostrar Inferencia'.
+
+\hrulefill
+
+\subsection{8. Pestaña 2 --- Lenguaje Natural}
+
+Esta pestaña \textbf{traduce tus fórmulas lógicas a oraciones en español} para facilitar la comprensión.
+
+\subsubsection{8.1 Asignar significado a las variables}
+
+En la parte superior verás tarjetas con cada variable detectada (P, Q, R, S, etc.). Cada una tiene un campo editable donde puedes escribir qué significa esa variable en contexto real.
+
+\textbf{Valores por defecto:}
+
+Variable --- Significado por defecto
+P --- llueve
+Q --- la calle se moja
+R --- el suelo está resbaloso
+S --- hay tráfico
+
+\textbf{Para personalizar:} Haz clic en el campo de texto junto a la variable y escribe el significado que desees. Por ejemplo, podrías cambiar P a 'estudia mucho' y Q a 'aprueba el examen'.
+
+\subsubsection{8.2 Ver la traducción}
+
+Una vez asignados los significados, en la parte inferior aparecerá el \textbf{'Argumento Traducido en Prosa'}:
+
+\textbf{Ejemplo} con las premisas \texttt{P  Q} y \texttt{P}, y conclusión \texttt{Q}:
+
+> \textbf{Premisa 1:} Si llueve, entonces la calle se moja.
+> \textbf{Premisa 2:} Llueve.
+> \textbf{$ \therefore $ Conclusión:} Por lo tanto, la calle se moja.
+
+Esto te permite leer el argumento como una oración normal en español, sin símbolos.
+
+\hrulefill
+
+\subsection{9. Pestaña 3 --- Árbol Sintáctico (AST)}
+
+Esta pestaña muestra la \textbf{estructura jerárquica} de tu argumento como un árbol visual. Es la función principal implementada por \textbf{Hijos de Linus}.
+
+\subsubsection{9.1 ¿Qué es un AST?}
+
+\textbf{AST} significa \textbf{Árbol de Sintaxis Abstracta} (Abstract Syntax Tree). Es una representación visual que muestra cómo se 'descompone' una fórmula lógica en sus partes componentes.
+
+Piensa en ello como un \textbf{árbol genealógico de la fórmula}: la raíz es la operación principal, y las ramas son las sub-fórmulas que componen cada parte.
+
+\subsubsection{9.2 Descripción de los elementos del árbol}
+
+\paragraph{Nodo raíz: 'Demostración'}
+\begin{itemize}[leftmargin=*]
+\item Es el nodo superior oscuro con icono de red.
+\item Representa la deducción completa (todas las premisas + conclusión).
+\item De él salen ramas hacia cada premisa y la conclusión.
+\end{itemize}
+
+\paragraph{Ramas principales}
+\begin{itemize}[leftmargin=*]
+\item Cada rama principal representa una \textbf{proposición individual}:
+\item \texttt{P1}, \texttt{P2}, etc. = Premisas
+\item \texttt{ Conclusion} = La conclusión
+\end{itemize}
+
+\paragraph{Nodos de operador}
+\begin{itemize}[leftmargin=*]
+\item Son los rectángulos coloreados con un símbolo ($ \lnot $, $ \land $, $ \lor $, $ \to $, etc.).
+\item Cada color corresponde a un tipo de operador.
+\item Si un nodo tiene \textbf{dos hijos}, es un operador binario (como $ \land $ o $ \to $).
+\item Si tiene \textbf{un solo hijo}, es un operador unario (como $ \lnot $).
+\end{itemize}
+
+\paragraph{Hojas (variables)}
+\begin{itemize}[leftmargin=*]
+\item Son los nodos grises al final de las ramas.
+\item Representan las variables proposicionales (P, Q, R, etc.).
+\item No tienen hijos: son los 'elementos más pequeños' de la fórmula.
+\end{itemize}
+
+\subsubsection{9.3 Colores de los operadores}
+
+Color --- Operador --- Símbolo --- Ejemplo
+Rojo --- Negación --- $ \lnot $ --- \texttt{P}
+Azul --- Conjunción --- $ \land $ --- \texttt{P  Q}
+Esmeralda --- Disyunción --- $ \lor $ --- \texttt{P  Q}
+Ámbar --- Disyunción Exclusiva --- \texttt{P  Q}
+Índigo --- Implicación --- $ \to $ --- \texttt{P  Q}
+Cian --- Bicondicional --- $ \leftrightarrow $ --- \texttt{P  Q}
+Fucsia --- Nor --- $ \downarrow $ --- \texttt{P  Q}
+Naranja --- Nand --- $ \uparrow $ --- \texttt{P  Q}
+
+\subsubsection{9.4 Leyenda de operadores}
+
+En la parte superior del árbol verás una \textbf{leyenda} con todos los operadores y sus colores. Esto te ayuda a identificar rápidamente qué tipo de conexión representa cada nodo.
+
+\subsubsection{9.5 Guía de interpretación}
+
+Debajo de la leyenda hay un panel azul claro con la \textbf{'Interpretación del árbol'} que explica:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Nodo raíz:} representa la deducción completa.
+\item \textbf{Ramas principales:} premisas individuales (P1, P2...) y conclusión ($ \therefore $).
+\item \textbf{Nodos y hojas:} operadores lógicos como conectores y letras como variables.
+\end{itemize}
+
+\subsubsection{9.6 Estadísticas del árbol}
+
+Debajo de la leyenda verás \textbf{etiquetas con estadísticas} del árbol actual:
+
+Estadística --- Significado
+\textbf{N proposiciones} --- Número total de premisas + conclusión
+\textbf{N nodos} --- Cantidad total de elementos en el árbol
+\textbf{prof. máx N} --- Profundidad máxima (cuántos niveles tiene el árbol)
+\textbf{N variables} --- Cantidad de letras variables (P, Q, R, etc.)
+\textbf{N conectivos} --- Cantidad de operadores lógicos
+
+\hrulefill
+
+\subsection{10. Como interpretar el diagrama de Árbol}
+
+\subsubsection{Ejemplo: \texttt{P  Q}, \texttt{P}  \texttt{Q}}
+
+El árbol se ve así (esquema simplificado):
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+              Demostracion
+            /      |       \
+          P1      P2      Conclusion
+          |       |         |
+                 P         Q
+         / \
+        P   Q
+\end{lstlisting}
+
+\textbf{Explicación:}
+
+1. \textbf{Raíz 'Demostración'} (nodo oscuro arriba): representa todo el argumento.
+2. \textbf{Rama P1} (Premisa 1: \texttt{P  Q}):
+\begin{itemize}[leftmargin=*]
+\item Nodo \texttt{} (índigo): el operador principal es 'ENTONCES'.
+\item Hijos: \texttt{P} (izquierda) y \texttt{Q} (derecha).
+\end{itemize}
+3. \textbf{Rama P2} (Premisa 2: \texttt{P}):
+\begin{itemize}[leftmargin=*]
+\item Nodo \texttt{P} (gris): es una variable directa, sin operador.
+\end{itemize}
+4. \textbf{Rama $ \therefore $ Conclusión} (Conclusión: \texttt{Q}):
+\begin{itemize}[leftmargin=*]
+\item Nodo \texttt{Q} (gris): es una variable directa.
+\end{itemize}
+
+\subsubsection{Reglas de lectura}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{De arriba a abajo:} desde la operación principal hasta las variables base.
+\item \textbf{De izquierda a derecha:} en operadores binarios, el hijo izquierdo es la primera parte y el derecho la segunda.
+\item \textbf{Colores:} ayudan a identificar el tipo de operación rápidamente.
+\item \textbf{Líneas:} conectan cada nodo padre con sus hijos directos.
+\end{itemize}
+
+\hrulefill
+
+\subsection{11. Resultado de la Inferencia}
+
+Después de hacer clic en 'Demostrar Inferencia', en la columna derecha aparecerá un indicador con el resultado. Hay \textbf{4 posibles estados}:
+
+\subsubsection{11.1 Inferencia válida (Demostrada)}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Color:} Verde
+\item \textbf{Icono:}  (check)
+\item \textbf{Significado:} La conclusión se deduce correctamente de las premisas. El argumento es formalmente válido.
+\item \textbf{Acción:} Puedes ver la demostración paso a paso en el panel de Trazabilidad.
+\end{itemize}
+
+\subsubsection{11.2 Inferencia inválida (Refutada)}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Color:} Rojo
+\item \textbf{Icono:}  (cruz)
+\item \textbf{Significado:} El argumento \textbf{no es válido}. Se encontró un contraejemplo que refuta la inferencia.
+\item \textbf{Acción:} El panel de Trazabilidad mostrará el \textbf{diagnóstico del fallo} con:
+\item Una descripción del error lógico.
+\item Una explicación de por qué falla el razonamiento.
+\item Un \textbf{contraejemplo} con valores de verdad (V/F) para cada variable.
+\item Una \textbf{sugerencia de corrección}.
+\end{itemize}
+
+\subsubsection{11.3 Inferencia válida (Método indirecto requerido)}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Color:} Índigo (azul oscuro)
+\item \textbf{Icono:} Brújula
+\item \textbf{Significado:} El argumento es válido, pero no se pudo demostrar por métodos directos (forward chaining). Requiere métodos como \textbf{Reducción al absurdo} o \textbf{Prueba condicional}.
+\item \textbf{Acción:} No hay demostración directa disponible, pero el diagnóstico indica que el argumento es válido.
+\end{itemize}
+
+\subsubsection{11.4 Error de sintaxis o procesamiento}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Color:} Ámbar (amarillo)
+\item \textbf{Icono:}  (triángulo de advertencia)
+\item \textbf{Significado:} Hubo un problema al evaluar la expresión. Puede ser una fórmula mal escrita, paréntesis desbalanceados, o un operador no reconocido.
+\item \textbf{Acción:} Revisa la sintaxis de tus fórmulas. Asegúrate de que los paréntesis estén balanceados y que uses operadores válidos.
+\end{itemize}
+
+\hrulefill
+
+\subsection{12. Panel de Trazabilidad (Paso a Paso)}
+
+Debajo del indicador de resultado se encuentra el \textbf{Panel de Trazabilidad}, que es el corazón de la demostración.
+
+\subsubsection{12.1 Cuando la inferencia es válida}
+
+El panel muestra una \textbf{lista de pasos numerados} que forman la demostración formal. Cada paso contiene:
+
+\paragraph{Estructura de cada paso:}
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+  [Numero de paso]  Regla Aplicada           
+                    [Linea X] [Linea Y]      
+                                             
+   Formula deducida                         
+                                             
+  [Como se deduce?]                        
+\end{lstlisting}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Número de paso:} La línea global en la demostración (premisas + pasos comparten numeración).
+\item \textbf{Regla aplicada:} El nombre de la regla lógica usada (ej. 'Modus Ponendo Ponens').
+\item \textbf{Líneas referenciadas:} Las líneas base de las cuales se deduce este paso.
+\item \textbf{Fórmula deducida:} La expresión resultante de aplicar la regla.
+\item \textbf{Botón '¿Cómo se deduce?':} Al hacer clic, se despliega una explicación detallada.
+\end{itemize}
+
+\paragraph{Contenido del acordeón desplegado:}
+
+Al hacer clic en \textbf{'¿Cómo se deduce?'} de un paso, se muestran 3 secciones:
+
+1. \textbf{Premisas base utilizadas:} Las líneas originales que se usaron para deducir este paso, con su expresión y rol.
+2. \textbf{Regla aplicada:} El nombre completo de la regla, su alias, y una explicación de cómo funciona.
+3. \textbf{Resultado:} La conclusión obtenida de aplicar la regla.
+
+\subsubsection{12.2 Cuando la inferencia es inválida}
+
+En lugar de pasos de demostración, el panel muestra un \textbf{diagnóstico formal} con 4 secciones:
+
+\paragraph{1. Análisis del Problema}
+Descripción del error detectado en el argumento.
+
+\paragraph{2. ¿Por qué falla este razonamiento?}
+Explicación detallada de la falacia o error lógico.
+
+\paragraph{3. Contraejemplo que refuta la validez}
+Un conjunto de valores de verdad (V o F) para cada variable que:
+\begin{itemize}[leftmargin=*]
+\item Hace \textbf{todas las premisas verdaderas}.
+\item Pero la \textbf{conclusión resulta falsa}.
+\end{itemize}
+
+Esto prueba formalmente que el argumento no es válido.
+
+\textbf{Ejemplo de contraejemplo:}
+
+Variable --- Valor
+P --- Falso (F)
+Q --- Verdadero (V)
+
+Con esta asignación, todas las premisas son V pero la conclusión es F $ \to $ el argumento es inválido.
+
+\paragraph{4. Sugerencia de corrección}
+Una propuesta de cómo modificar el argumento para que sea válido.
+
+\hrulefill
+
+\subsection{13. Exportación Académica (Markdown y LaTeX)}
+
+Cuando la inferencia es válida, en la parte superior del panel de Trazabilidad aparece una \textbf{barra de exportación} con 4 botones:
+
+\subsubsection{13.1 Copiar Markdown (Copiar MD)}
+
+Copia al portapapeles la demostración en formato Markdown con símbolos Unicode legibles. Ideal para:
+\begin{itemize}[leftmargin=*]
+\item Pegar en un documento de Google Docs o Word.
+\item Compartir en foros o chats.
+\item Crear notas en Obsidian, Notion, etc.
+\end{itemize}
+
+\subsubsection{13.2 Descargar Markdown (.md)}
+
+Descarga un archivo \texttt{demostracion\_logica.md} con la demostración completa en formato Markdown.
+
+\subsubsection{13.3 Copiar LaTeX (Copiar LaTeX)}
+
+Copia al portapapeles un \textbf{documento LaTeX completo y autocompilable}. Incluye:
+\begin{itemize}[leftmargin=*]
+\item Preámbulo estándar (\texttt{\textbackslash{}documentclass}, \texttt{amsmath}, \texttt{amssymb}, \texttt{babel} en español).
+\item Sección de argumento con premisas numeradas.
+\item Demostración en entorno \texttt{align*} con numeración global.
+\item Símbolos convertidos a comandos LaTeX (ej. \texttt{\textbackslash{}rightarrow}, \texttt{\textbackslash{}land}, \texttt{\textbackslash{}neg}).
+\end{itemize}
+
+\subsubsection{13.4 Descargar LaTeX (.tex)}
+
+Descarga un archivo \texttt{demostracion\_logica.tex} listo para compilar en:
+\begin{itemize}[leftmargin=*]
+\item \textbf{Overleaf} (editor online de LaTeX, la forma más fácil).
+\item \textbf{TeXstudio}, \textbf{TeXShop}, o cualquier compilador local.
+\item Soporta pdfLaTeX, XeLaTeX y LuaLaTeX.
+\end{itemize}
+
+\subsubsection{Formato de la exportación Markdown}
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+### Demostracion Formal de Inferencia Logica
+
+**Premisas:**
+
+1. P  Q
+2. P
+
+**Conclusion:**  Q
+
+**Deduccion formal paso a paso:**
+
+3. Q *[Modus Ponendo Ponens (Linea 1, Linea 2)]*
+\end{lstlisting}
+
+\subsubsection{Formato de la exportación LaTeX}
+
+\begin{lstlisting}[language={},basicstyle=\ttfamily\scriptsize]
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-noshorthands]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+\title{Demostracion Formal de Inferencia Logica}
+
+\begin{document}
+\maketitle
+
+\section*{Argumento}
+\begin{enumerate}
+  \item $P \rightarrow Q$
+  \item $P$
+\end{enumerate}
+
+\section*{Demostracion formal}
+\begin{align*}
+(1) \quad & P \rightarrow Q && \text{Premisa} \\
+(2) \quad & P && \text{Premisa} \\
+\therefore (3) \quad & Q && \text{[Modus Ponendo Ponens (1, 2)]}
+\end{align*}
+
+\end{document}
+\end{lstlisting}
+
+\hrulefill
+
+\subsection{14. Historial de Ejercicios}
+
+En la esquina superior derecha del encabezado hay un botón \textbf{'Historial (N)'} que muestra los últimos 6 ejercicios que has resuelto.
+
+\subsubsection{14.1 Cómo funciona}
+
+\begin{itemize}[leftmargin=*]
+\item Cada vez que haces clic en 'Demostrar Inferencia', el ejercicio se guarda automáticamente.
+\item Se almacenan solo los \textbf{últimos 6} ejercicios (los más recientes reemplazan a los antiguos).
+\item Los ejercicios duplicados se eliminan automáticamente.
+\end{itemize}
+
+\subsubsection{14.2 Cómo restaurar un ejercicio}
+
+Haz clic en la tarjeta del ejercicio en el historial. Los campos de premisas y conclusión se llenarán automáticamente con los valores anteriores, y se procesará la inferencia de nuevo.
+
+\subsubsection{14.3 Cómo limpiar el historial}
+
+Haz clic en \textbf{'Limpiar'} (con icono de papelera) en la parte superior del panel de historial. Esto eliminará todos los ejercicios guardados.
+
+\subsubsection{14.4 Indicadores de color en el historial}
+
+Color de etiqueta --- Significado
+Verde (\texttt{Valida}) --- La inferencia demostrada era válida
+Índigo (\texttt{Valida (Ind.)}) --- Válida pero requiere método indirecto
+Rojo (\texttt{Invalida}) --- La inferencia era inválida
+
+\hrulefill
+
+\subsection{15. Los 8 Operadores Lógicos: Referencia Completa}
+
+\subsubsection{15.1 Negación ($ \lnot $) --- NOT}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \lnot $
+\item \textbf{Palabra clave:} NO
+\item \textbf{Tipo:} Unario (solo afecta a una variable)
+\item \textbf{Significado:} Invierte el valor de verdad. Si P es verdadero, $ \lnot $P es falso.
+\item \textbf{Ejemplo:} \texttt{P} = 'No es el caso de P'
+\end{itemize}
+
+\subsubsection{15.2 Conjunción ($ \land $) --- AND}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \land $
+\item \textbf{Palabra clave:} Y
+\item \textbf{Tipo:} Binario (conecta dos variables)
+\item \textbf{Significado:} Solo es verdadero cuando \textbf{ambas} partes son verdaderas.
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'P y Q'
+\end{itemize}
+
+\subsubsection{15.3 Disyunción ($ \lor $) --- OR}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \lor $
+\item \textbf{Palabra clave:} O
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es verdadero cuando \textbf{al menos una} de las partes es verdadera.
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'P o Q' (o ambas)
+\end{itemize}
+
+\subsubsection{15.4 Disyunción Exclusiva () --- XOR}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:}
+\item \textbf{Palabra clave:} O\_EXCLUSIVA
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es verdadero cuando \textbf{exactamente una} de las partes es verdadera, pero no ambas.
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'P o Q, pero no ambos'
+\end{itemize}
+
+\subsubsection{15.5 Implicación ($ \to $) --- IF...THEN}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \to $
+\item \textbf{Palabra clave:} ENTONCES
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es falso \textbf{solo cuando} la primera parte es verdadera y la segunda es falsa.
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'Si P entonces Q'
+\item \textbf{Nota:} Si P es falso, la implicación es verdadera sin importar Q.
+\end{itemize}
+
+\subsubsection{15.6 Bicondicional ($ \leftrightarrow $) --- IF AND ONLY IF}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \leftrightarrow $
+\item \textbf{Palabra clave:} SI\_Y\_SOLO\_SI
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es verdadero cuando \textbf{ambas partes tienen el mismo valor} (ambas verdaderas o ambas falsas).
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'P si y solo si Q'
+\end{itemize}
+
+\subsubsection{15.7 Nor ($ \downarrow $) --- NOR}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \downarrow $
+\item \textbf{Palabra clave:} NI
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es verdadero \textbf{solo cuando ambas partes son falsas}. Equivale a $ \lnot $(P $ \lor $ Q).
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'Ni P ni Q'
+\end{itemize}
+
+\subsubsection{15.8 Nand ($ \uparrow $) --- NAND}
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Símbolo:} $ \uparrow $
+\item \textbf{Palabra clave:} INCOMPATIBLE
+\item \textbf{Tipo:} Binario
+\item \textbf{Significado:} Es falso \textbf{solo cuando ambas partes son verdaderas}. Equivale a $ \lnot $(P $ \land $ Q).
+\item \textbf{Ejemplo:} \texttt{P  Q} = 'P y Q son incompatibles'
+\end{itemize}
+
+\hrulefill
+
+\subsection{16. Las 11 Reglas de Inferencia}
+
+El motor lógico implementa \textbf{11 reglas de inferencia} que usa automáticamente para construir la demostración:
+
+\subsubsection{16.1 Modus Ponendo Ponens (MPP)}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \to $ Q y P
+\item \textbf{Entonces:} Q
+\item \textbf{En palabras:} Si la implicación es verdadera y el antecedente es verdadero, el consecuente es verdadero.
+\end{itemize}
+
+\subsubsection{16.2 Modus Tollendo Tollens (MTT)}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \to $ Q y $ \lnot $Q
+\item \textbf{Entonces:} $ \lnot $P
+\item \textbf{En palabras:} Si la implicación es verdadera y el consecuente es falso, el antecedente es falso.
+\end{itemize}
+
+\subsubsection{16.3 Silogismo Disyuntivo (SD)}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \lor $ Q y $ \lnot $P
+\item \textbf{Entonces:} Q
+\item \textbf{En palabras:} Si una de dos opciones es verdadera y una es falsa, la otra es verdadera.
+\end{itemize}
+
+\subsubsection{16.4 Silogismo Disyuntivo Exclusivo (SDE)}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P  Q y P
+\item \textbf{Entonces:} $ \lnot $Q
+\item \textbf{En palabras:} Si exactamente una de dos opciones es verdadera y una es verdadera, la otra es falsa.
+\end{itemize}
+
+\subsubsection{16.5 Silogismo Hipotético (SH)}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \to $ Q y Q $ \to $ R
+\item \textbf{Entonces:} P $ \to $ R
+\item \textbf{En palabras:} Si de P se sigue Q, y de Q se sigue R, entonces de P se sigue R.
+\end{itemize}
+
+\subsubsection{16.6 Simplificación}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \land $ Q
+\item \textbf{Entonces:} P (o Q)
+\item \textbf{En palabras:} De una conjunción se puede extraer cualquiera de sus partes.
+\end{itemize}
+
+\subsubsection{16.7 Doble Negación}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} $ \lnot $$ \lnot $P
+\item \textbf{Entonces:} P
+\item \textbf{En palabras:} Negar dos veces un proposition equivale a la proposición original.
+\end{itemize}
+
+\subsubsection{16.8 Conjunción}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P y Q (por separado)
+\item \textbf{Entonces:} P $ \land $ Q
+\item \textbf{En palabras:} Si dos proposiciones son verdaderas, su conjunción también lo es.
+\end{itemize}
+
+\subsubsection{16.9 Dilema Constructivo}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \to $ Q, R $ \to $ S y P $ \lor $ R
+\item \textbf{Entonces:} Q $ \lor $ S
+\item \textbf{En palabras:} Si de P se sigue Q, de R se sigue S, y una de las dos (P o R) es verdadera, entonces una de las dos (Q o S) es verdadera.
+\end{itemize}
+
+\subsubsection{16.10 Eliminación Bicondicional}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \leftrightarrow $ Q y P
+\item \textbf{Entonces:} Q
+\item \textbf{En palabras:} Si P es equivalente a Q y P es verdadero, entonces Q es verdadero.
+\end{itemize}
+
+\subsubsection{16.11 Modus Ponens Bicondicional}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Si:} P $ \leftrightarrow $ Q y Q
+\item \textbf{Entonces:} P
+\item \textbf{En palabras:} Si P es equivalente a Q y Q es verdadero, entonces P es verdadero.
+\end{itemize}
+
+\hrulefill
+
+\subsection{17. Preguntas Frecuentes (FAQ)}
+
+\subsubsection{¿Qué pasa si escribo una fórmula con errores de sintaxis?}
+
+El sistema muestra un \textbf{aviso de advertencia} en la pestaña del Árbol, indicando qué proposiciones contienen errores. Los errores comunes son:
+\begin{itemize}[leftmargin=*]
+\item Paréntesis desbalanceados: \texttt{(P  Q} (falta \texttt{)})
+\item Operadores consecutivos sin operandos: \texttt{P   Q}
+\item Operador al inicio sin operando izquierdo: \texttt{ P Q}
+\end{itemize}
+
+Corrige la fórmula y vuelve a intentar.
+
+\subsubsection{¿Puedo usar minúsculas?}
+
+El sistema es \textbf{insensible a mayúsculas} internamente, pero se recomienda usar mayúsculas para las variables (P, Q, R) para mantener consistencia con la notación lógica estándar.
+
+\subsubsection{¿Qué significado tiene 'Método indirecto requerido'?}
+
+Significa que el argumento es válido, pero el motor de demostración directa (forward chaining) no pudo encontrar una derivación paso a paso. Esto ocurre con argumentos que requieren técnicas como:
+\begin{itemize}[leftmargin=*]
+\item \textbf{Reducción al absurdo:} asumir la negación de la conclusión y llegar a una contradicción.
+\item \textbf{Prueba condicional:} asumir una hipótesis temporal para demostrar una implicación.
+\end{itemize}
+
+El sistema reconoce que el argumento es válido (no hay contraejemplo) pero no puede mostrar la demostración completa.
+
+\subsubsection{¿Puedo usar más de 4 variables?}
+
+Sí. El teclado virtual ofrece 8 variables (P, Q, R, S, A, B, C, D), pero puedes escribir cualquier letra mayúscula como variable directamente en el campo de premisas.
+
+\subsubsection{¿Qué pasa con los operadores $ \downarrow $ (Nor) y $ \uparrow $ (Nand)?}
+
+Aunque están disponibles en el teclado virtual y el árbol los muestra con sus colores correspondientes, el motor de demostración automática no tiene reglas de inferencia dedicadas para estos operadores. Si tu argumento solo usa $ \downarrow $ o $ \uparrow $, puede que el sistema lo clasifique como 'no demostrable directamente' aunque sea válido.
+
+\subsubsection{¿Cómo funciona el zoom del árbol?}
+
+En la parte inferior del árbol hay controles de zoom:
+\begin{itemize}[leftmargin=*]
+\item **** (Zoom Out): Reduce el tamaño del árbol (mínimo 60\%).
+\item \textbf{+} (Zoom In): Aumenta el tamaño del árbol (máximo 160\%).
+\item **** (Restablecer): Vuelve al tamaño normal (100\%).
+\end{itemize}
+
+\subsubsection{¿Cómo ver el árbol en pantalla completa?}
+
+Haz clic en el botón \textbf{'Ver a pantalla completa'} debajo del árbol. Se abrirá un modal con el árbol expandido. Para cerrarlo:
+\begin{itemize}[leftmargin=*]
+\item Haz clic en el botón **** (esquina superior derecha).
+\item Haz clic fuera del panel (en el fondo oscuro).
+\item Presiona la tecla \textbf{Escape} en tu teclado.
+\end{itemize}
+
+\subsubsection{¿Se guarda mi trabajo automáticamente?}
+
+El \textbf{historial} de ejercicios se guarda automáticamente en el navegador (localStorage). Si cierras el navegador y lo vuelves a abrir, los últimos 6 ejercicios seguirán disponibles. Sin embargo, esto es solo en tu navegador; no se sincroniza con otros dispositivos.
+
+\subsubsection{¿Puedo exportar un argumento inválido?}
+
+No. La barra de exportación (Markdown y LaTeX) solo aparece cuando la inferencia es \textbf{válida}. Para un argumento inválido, el panel muestra el diagnóstico y contraejemplo, pero no una demostración exportable.
+
+\hrulefill
+
+\subsection{18. Glosario de Términos}
+
+Término --- Definición simple
+\textbf{Proposición} --- Una oración que puede ser verdadera o falsa (ej. 'Llueve').
+\textbf{Variable proposicional} --- Una letra que representa una proposición (P, Q, R...).
+\textbf{Premisa} --- Una afirmación de la cual se parte para razonar.
+\textbf{Conclusión} --- Lo que se quiere demostrar a partir de las premisas.
+\textbf{Conectivo lógico} --- Un operador que conecta proposiciones ($ \land $, $ \lor $, $ \to $, $ \lnot $...).
+\textbf{Inferencia} --- El proceso de derivar una conclusión a partir de premisas.
+\textbf{Argumento} --- Un conjunto de premisas más una conclusión.
+\textbf{Argumento válido} --- Un argumento donde la conclusión se sigue necesariamente de las premisas.
+\textbf{Argumento inválido} --- Un argumento donde la conclusión NO se sigue de las premisas.
+\textbf{Contraejemplo} --- Una asignación de valores que muestra que el argumento es inválido.
+\textbf{Falacia} --- Un error de razonamiento que parece válido pero no lo es.
+\textbf{AST (Árbol de Sintaxis Abstracta)} --- Representación visual de la estructura jerárquica de una fórmula.
+\textbf{Trazabilidad} --- El registro paso a paso de cómo se derivó la conclusión.
+\textbf{Modus Ponens} --- Regla: de P $ \to $ Q y P, se deduce Q.
+\textbf{Modus Tollens} --- Regla: de P $ \to $ Q y $ \lnot $Q, se deduce $ \lnot $P.
+\textbf{Silogismo} --- Regla que encadena implicaciones o disyunciones.
+\textbf{Demostración formal} --- Una secuencia de pasos lógicos que prueba la validez de un argumento.
+\textbf{Forward chaining} --- Estrategia de demostración que aplica reglas 'hacia adelante' desde las premisas.
+\textbf{LaTeX} --- Sistema de tipografía usado en documentos académicos de matemáticas.
+\textbf{Markdown} --- Formato simple de escritura para documentos de texto.
+
+\hrulefill
+
+\subsection{Créditos}
+
+Este módulo fue diseñado e implementado por el equipo \textbf{Hijos de Linus} cuyos integrantes estan conformados por:
+
+\begin{itemize}[leftmargin=*]
+\item Altamirano Astupiñan Renato
+\item Centurión Llatas Alex
+\item Espinoza Orrego Piero Arom
+\item Mio Caballero Arnold André
+\item Morocho Lumbre Juan
+\end{itemize}
+
+\hrulefill
+
+> \textbf{Nota para desarrolladores:} Este manual está dirigido a usuarios finales. Si necesitas información técnica sobre la arquitectura del código, consulta los archivos \texttt{ANALISIS\_AST.md} e \texttt{INFORME\_MEJORAS.md} en esta misma carpeta.
+
+
+\section{Cap\'itulo 3 --- Modus Innova: Cuantificadores}
+\section{CAPÍTULO IV: MANUAL DE USUARIO DIDÁCTICO PASO A PASO (''MANUAL PARA TODOS'')}
+
+En cumplimiento riguroso con la segunda obligación exigida por el curso
+(''documentar explícitamente de cómo usarlo / manual didáctico para
+todos''), este capítulo presenta la guía oficial de usuario para operar
+el software QuantifiWeb v3.5. Esta guía permite que tanto alumnos de
+primeros ciclos como docentes puedan evaluar cuantificadores y
+demostraciones formales sin conocimiento técnico previo.
+
+\subsection{4.1 Visión General de la Interfaz y Temática Neón}
+
+La interfaz de QuantifiWeb v3.5 adopta un estilo visual moderno 'Dark
+Glassmorphism' con colores neón adaptativos (Azul \#3B82F6, Cyan \#06B6D4,
+Verde \#10B981 y Púrpura \#6366F1).
+
+Detalle de uso adicional para 4.1 Visión General de la Interfaz y
+Temática Neón: Esta sección garantiza que cualquier usuario pueda seguir
+el flujo de operaciones sin cometer errores sintácticos.
+
+En la parte superior se ubica la barra de navegación que permite
+alternar entre las dos herramientas principales: la Pestaña 1 '$ \forall $$ \exists $
+Cuantificadores (D $ \subset $ $\mathbb{Z}$)' y la Pestaña 2 '$ \leftrightarrow $ Distribución \& Leyes ($ \Delta $)'.
+
+Detalle de uso adicional para 4.1 Visión General de la Interfaz y
+Temática Neón: Esta sección garantiza que cualquier usuario pueda seguir
+el flujo de operaciones sin cometer errores sintácticos.
+
+\medskip\hrulefill\medskip
+ MANUAL DE USUARIO: 4.1 Visión General de la Interfaz y Temática Neón
+Instrucciones operativas para 4.1 Visión General de la Interfaz y
+Temática Neón. Guía didáctica para alumnos y profesores.
+\medskip\hrulefill\medskip
+
+\medskip\hrulefill\medskip
+
+\subsection{4.2 Guía Paso a Paso para la Evaluación de Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$)}
+
+Paso 1: Abra la Pestaña 1 '$ \forall $$ \exists $ Cuantificadores (D $ \subset $ $\mathbb{Z}$)'. En el
+desplegable 'Tipo de Cuantificador', seleccione '$ \forall $ Universal' (si desea
+probar que la condición se cumple para absolutamente todos los
+elementos) o '$ \exists $ Existencial' (si busca la existencia de al menos un
+elemento testigo).
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+Paso 2: En la casilla 'Dominio de Discurso D', escriba los números
+enteros separados por comas (ejemplo: 1, 2, 3, 4) o especifique rangos
+enteros (ejemplo: 0 < x < 90). El sistema validará automáticamente que
+no ingrese números decimales. Si ingresa un decimal como 3.5, aparecerá
+una alerta de restricción.
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+Paso 3: En la casilla 'Predicado P(x)', escriba la condición matemática
+a evaluar (ejemplo: x > 3, x \% 2 = 0). Puede usar comparadores (=, ==,
+!=, <>, >, >=, <, <=), operaciones aritmeticas (+, -, *, /, \%, \textasciicircum{}) y
+conectores lógicos (\&\&, ||, $ \land $, $ \lor $, y, o).
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+Paso 4: Presione el botón azul ' Evaluar Cuantificador en D'. La
+pantalla desplegará la tarjeta de resultado en Verde (si es Verdadero) o
+en Rojo (si es Falso), mostrando el elemento testigo x\_w o el
+contraejemplo x\_k.
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+Paso 5: Observe la Tabla de Evaluación por Elemento. Cada fila mostrará
+el valor de x, la sustitución exacta en el predicado y su resultado
+booleano individual.
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+Paso 6: En la parte inferior de la tarjeta, revise el recuadro 'Ley de
+De Morgan Equivalente'. El sistema construirá automáticamente la
+negación analítica $ \lnot $($ \forall $x P(x)) $ \equiv $ $ \exists $x $ \lnot $P(x), invirtiendo analíticamente la
+condición interna.
+
+Detalle de uso adicional para 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$): Esta sección garantiza que cualquier
+usuario pueda seguir el flujo de operaciones sin cometer errores
+sintácticos.
+
+\medskip\hrulefill\medskip
+ MANUAL DE USUARIO: 4.2 Guía Paso a Paso para la Evaluación de
+Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$)
+Instrucciones operativas para 4.2 Guía Paso a Paso para la Evaluación
+de Cuantificadores Lógicos (D $ \subset $ $\mathbb{Z}$). Guía didáctica para alumnos y
+profesores.
+\medskip\hrulefill\medskip
+
+\medskip\hrulefill\medskip
+
+\subsection{4.3 Guía Paso a Paso para Demostraciones Paso a Paso con Disyunción Fuerte ($ \Delta $)}
+
+Paso 1: Diríjase a la Pestaña 2 '$ \leftrightarrow $ Distribución \& Leyes ($ \Delta $)'.
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Paso 2: En la casilla 'Fórmula P', escriba su proposición simbólica
+formal (ejemplo: ($ \forall $x)\textasciitilde{}[(Px $ \lor $ Mx) $ \to $ Rz] o usando el conector de
+Disyunción Fuerte Px $ \Delta $ Qx).
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Paso 3: Utilice el Teclado Virtual de Símbolos en pantalla para insertar
+caracteres especiales ($ \forall $, $ \exists $, \textasciitilde{}, $ \land $, $ \lor $, $ \Delta $, $ \to $, $ \leftrightarrow $, $ \equiv $, P, Q, R, S, M, x, y,
+z). La tecla $ \Delta $ está destacada en color cyan.
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Paso 4: Presione el botón ' Resolver Paso a Paso (Simplificado)'.
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Paso 5: Examine el desarrollo formal generado. El motor aplicará
+secuencialmente las reglas analíticas (Definición de Bicondicional,
+Implicación, De Morgan, Disyunción Fuerte y Distribución).
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Paso 6: Observe el Resaltador Neón Cyan. En cada renglón de la
+demostración, la subexpresión exacta que sufrió una transformación se
+encerrará en una tarjeta con resplandor neón <span
+class='highlight-change'>...</span> para que identifique al instante qué
+cambió.
+
+Detalle de uso adicional para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+\medskip\hrulefill\medskip
+ MANUAL DE USUARIO: 4.3 Guía Paso a Paso para Demostraciones Paso a
+Paso con Disyunción Fuerte ($ \Delta $)
+Instrucciones operativas para 4.3 Guía Paso a Paso para Demostraciones
+Paso a Paso con Disyunción Fuerte ($ \Delta $). Guía didáctica para alumnos y
+profesores.
+\medskip\hrulefill\medskip
+
+\medskip\hrulefill\medskip
+
+\subsection{4.4 Guía de Resolución de Problemas y Mensajes de Error (Troubleshooting)}
+
+Error 1 'El dominio D opera únicamente sobre números enteros ($\mathbb{Z}$)':
+Ocurre cuando se ingresan números con punto decimal (ej. 3.5). Solución:
+Reemplace los decimales por valores enteros discretos.
+
+Detalle de uso adicional para 4.4 Guía de Resolución de Problemas y
+Mensajes de Error (Troubleshooting): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Error 2 'Falta un paréntesis de cierre )': Ocurre cuando los paréntesis
+de la expresión no están balanceados. Solución: Verifique que cada
+paréntesis abierto '(' tenga su correspondiente cierre ')'.
+
+Detalle de uso adicional para 4.4 Guía de Resolución de Problemas y
+Mensajes de Error (Troubleshooting): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Error 3 'División entre cero': Ocurre si la sustitución de un elemento x
+en el predicado produce un divisor nulo (ej. 5 / (x - 2) cuando x = 2).
+Solución: Modifique el dominio para excluir los puntos de
+indeterminación.
+
+Detalle de uso adicional para 4.4 Guía de Resolución de Problemas y
+Mensajes de Error (Troubleshooting): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+Error 4 'No hay más pasos aplicables': Ocurre en el motor de leyes
+cuando la fórmula alcanza su forma simplificada irreducible.
+
+Detalle de uso adicional para 4.4 Guía de Resolución de Problemas y
+Mensajes de Error (Troubleshooting): Esta sección garantiza que
+cualquier usuario pueda seguir el flujo de operaciones sin cometer
+errores sintácticos.
+
+\medskip\hrulefill\medskip
+ MANUAL DE USUARIO: 4.4 Guía de Resolución de Problemas y Mensajes de
+Error (Troubleshooting)
+Instrucciones operativas para 4.4 Guía de Resolución de Problemas y
+Mensajes de Error (Troubleshooting). Guía didáctica para alumnos y
+profesores.
+\medskip\hrulefill\medskip
+
+\medskip\hrulefill\medskip
+
+\subsection{4.5 Preguntas Frecuentes (FAQ)}
+
+P1: ¿Por qué la Ley de Implicación transforma A $ \to $ B en \textasciitilde{}A $ \lor $ B sin
+paréntesis innecesarios? R: El algoritmo refactorizado aísla el
+antecedente A y aplica la negación directa, evitando parentizados
+redundantes \textasciitilde{}((...)) que confundían a los estudiantes.
+
+Detalle de uso adicional para 4.5 Preguntas Frecuentes (FAQ): Esta
+sección garantiza que cualquier usuario pueda seguir el flujo de
+operaciones sin cometer errores sintácticos.
+
+P2: ¿Cómo funciona el simplificador de pasos en demostraciones extensas?
+R: Si la misma regla (ej. Distribución de Cuantificadores) se aplica
+consecutivamente en el mismo nivel, el motor agrupa las transformaciones
+en un solo paso elegante.
+
+Detalle de uso adicional para 4.5 Preguntas Frecuentes (FAQ): Esta
+sección garantiza que cualquier usuario pueda seguir el flujo de
+operaciones sin cometer errores sintácticos.
+
+P3: ¿Qué diferencia a la Disyunción Fuerte ($ \Delta $) de la disyunción normal
+($ \lor $)? R: La disyunción inclusiva $ \lor $ permite que ambas proposiciones sean
+verdaderas. La disyunción fuerte $ \Delta $ exige que sea exactamente una u otra,
+pero NO ambas: A $ \Delta $ B $ \equiv $ (A $ \lor $ B) $ \land $ \textasciitilde{}(A $ \land $ B).
+
+Detalle de uso adicional para 4.5 Preguntas Frecuentes (FAQ): Esta
+sección garantiza que cualquier usuario pueda seguir el flujo de
+operaciones sin cometer errores sintácticos.
+
+\medskip\hrulefill\medskip
+ MANUAL DE USUARIO: 4.5 Preguntas Frecuentes (FAQ)
+Instrucciones operativas para 4.5 Preguntas Frecuentes (FAQ). Guía
+didáctica para alumnos y profesores.
+\medskip\hrulefill\medskip
+
+\medskip\hrulefill\medskip
+
+\section{Cap\'itulo 4 --- Linus: Conjuntos}
+\section{Manual de Usuario}
+
+Este manual explica paso a paso cómo instalar, ejecutar y usar la aplicación. Está escrito de forma clara para usuarios sin experiencia en programación. Sigue cada paso en orden. Si algo falla, ve a la sección 8.7 ``Resolución de problemas''.
+
+\subsection{Requisitos previos}
+Antes de comenzar, instala el siguiente software en tu computadora:
+
+\paragraph{Node.js (versión 18 LTS o superior):}
+Node.js es el entorno de ejecución de JavaScript que necesita la aplicación para funcionar en desarrollo. La versión LTS (Long Term Support) es la más estable.
+\begin{enumerate}[noitemsep]
+    \item Abre tu navegador y ve a: \url{https://nodejs.org/es/}
+    \item Haz clic en el botón verde grande que dice ``LTS''.
+    \item Descarga el instalador (\texttt{.msi} en Windows, \texttt{.pkg} en Mac).
+    \item Ejecuta el instalador y acepta todas las opciones por defecto.
+    \item Cuando termine, cierra y vuelve a abrir tu terminal.
+\end{enumerate}
+
+Cómo verificar la instalación: abre una terminal y escribe:
+\begin{lstlisting}[language=bash]
+node --version # Debe mostrar v18.x.x o superior
+npm --version  # Debe mostrar 9.x.x o superior
+\end{lstlisting}
+
+\paragraph{Git (sistema de control de versiones):}
+Git permite descargar el código del proyecto desde GitHub.
+\begin{enumerate}[noitemsep]
+    \item Ve a: \url{https://git-scm.com/downloads}
+    \item Haz clic en el ícono de tu sistema operativo (Windows/Mac/Linux).
+    \item Descarga y ejecuta el instalador.
+    \item En Windows: acepta todas las opciones por defecto (incluye ``Git Bash'').
+\end{enumerate}
+
+Cómo verificar:
+\begin{lstlisting}[language=bash]
+git --version # Debe mostrar git version 2.x.x
+\end{lstlisting}
+
+\paragraph{Un navegador web moderno:}
+La aplicación funciona en cualquier navegador moderno:
+\begin{itemize}[noitemsep]
+    \item Google Chrome (recomendado) - versión 90 o superior
+    \item Mozilla Firefox - versión 88 o superior
+    \item Microsoft Edge - versión 90 o superior
+    \item Safari - versión 14 o superior (Mac/iOS)
+\end{itemize}
+No es necesario instalar ningún plugin o extensión adicional.
+
+\subsection{Instalación del proyecto paso a paso}
+\paragraph{Paso 1 - Abrir la terminal:}
+La terminal (también llamada consola o línea de comandos) es el programa donde escribimos los comandos de instalación.
+\begin{itemize}[noitemsep]
+    \item En Windows: Presiona la tecla Windows + R, escribe ``cmd'' y presiona Enter; o busca ``PowerShell'' en el menú de inicio y ábrelo.
+    \item En Mac: Abre Finder $>$ Aplicaciones $>$ Utilidades $>$ Terminal; o presiona Cmd + Espacio, escribe ``Terminal'' y presiona Enter.
+    \item En Linux: Presiona Ctrl + Alt + T.
+\end{itemize}
+
+\paragraph{Paso 2 - Descargar el proyecto:}
+En la terminal, escribe exactamente este comando y presiona Enter:
+\begin{lstlisting}[language=bash]
+git clone https://github.com/jordyjosech-prog/logica_simbolica_global.git
+\end{lstlisting}
+Esto descargará todos los archivos del proyecto a una carpeta llamada \texttt{logica\_simbolica\_global} en tu directorio actual. El proceso puede tardar 30-60 segundos dependiendo de tu conexión a internet. Verás aparecer líneas de texto mientras descarga.
+
+\paragraph{Paso 3 - Entrar a la carpeta del proyecto:}
+\begin{lstlisting}[language=bash]
+cd logica_simbolica_global
+\end{lstlisting}
+El comando ``cd'' (change directory) cambia el directorio actual. Después de este comando, todos los comandos siguientes se ejecutarán dentro de la carpeta del proyecto.
+
+\paragraph{Paso 4 - Instalar las dependencias:}
+\begin{lstlisting}[language=bash]
+npm install
+\end{lstlisting}
+Este comando lee el archivo \texttt{package.json} y descarga automáticamente todas las librerías que necesita el proyecto (Vue 3, Vite, TypeScript, Vitest, etc.). La primera vez puede tardar entre 1 y 3 minutos. Verás muchas líneas de texto mientras descarga. Al finalizar, aparecerá una línea similar a: \texttt{''added 423 packages in 45s''}.
+
+Si ves advertencias (warnings) en amarillo, son normales y puedes ignorarlas. Si ves errores en rojo, ve a la sección 8.7.
+
+\paragraph{Paso 5 - Ejecutar la aplicación:}
+\begin{lstlisting}[language=bash]
+npm run dev
+\end{lstlisting}
+Este comando inicia el servidor de desarrollo de Vite. Verás una salida similar a:
+\begin{lstlisting}[language=bash]
+  VITE v5.x.x  ready in XXX ms
+
+  -->  Local:   http://localhost:5173/
+  -->  Network: use --host to expose
+\end{lstlisting}
+Copia la URL \texttt{http://localhost:5173/} (o similar) y pégala en tu navegador. La aplicación se abrirá automáticamente. Deja la terminal abierta mientras usas la aplicación; cerrarla detendrá el servidor.
+
+\textit{CONSEJO: Si ya usas el puerto 5173, Vite elegirá automáticamente el siguiente disponible (5174, 5175, etc.). Fíjate en la URL que muestra la terminal.}
+
+\subsection{Uso de la interfaz}
+Una vez abierta la aplicación en el navegador, verás cuatro secciones principales:
+
+\subsubsection{Sección 1 - Entrada de datos}
+\begin{enumerate}[noitemsep]
+    \item Campo ``Universo'': escribe todos los posibles elementos que existen en tu problema, separados por comas. Ejemplo: \texttt{a, b, c, d, e}.
+    \item Campo ``Conjunto A'': escribe los elementos del primer conjunto. Deben ser del universo. Ejemplo: \texttt{a, b, c}.
+    \item Campo ``Conjunto B'': escribe los elementos del segundo conjunto. Ejemplo: \texttt{b, c, d}.
+\end{enumerate}
+Puedes usar letras, números o palabras como elementos. Ejemplos válidos: \texttt{''1, 2, 3''} o \texttt{''gato, perro, pez''} o \texttt{''x, y, z''}. Los espacios alrededor de las comas se ignoran automáticamente.
+
+\subsubsection{Sección 2 - Selección de operación}
+Desplegable ``Operación'': haz clic para ver las opciones y selecciona la que quieres calcular. Las opciones disponibles son:
+\begin{itemize}[noitemsep]
+    \item Unión: $A \cup B$ (todos los elementos de A y B juntos)
+    \item Intersección: $A \cap B$ (solo los que están en ambos)
+    \item Diferencia A-B: $A \setminus B$ (los de A que no están en B)
+    \item Diferencia B-A: $B \setminus A$ (los de B que no están en A)
+    \item Complemento de A: $U \setminus A$ (los del universo que no están en A)
+    \item Complemento de B: $U \setminus B$ (los del universo que no están en B)
+    \item Potencia: $\mathcal{P}(A)$ o $\mathcal{P}(\text{resultado})$ - todos los subconjuntos posibles
+\end{itemize}
+(Solo si elegiste Potencia) Aparece un segundo desplegable para elegir de qué conjunto calcular la potencia.
+
+\subsubsection{Sección 3 - Diagrama de Venn}
+El diagrama se actualiza automáticamente al cambiar cualquier dato. No necesitas presionar ningún botón. La región coloreada en el diagrama representa exactamente el resultado de la operación:
+\begin{itemize}[noitemsep]
+    \item Unión: ambos círculos coloreados
+    \item Intersección: solo la zona central (solapada) coloreada
+    \item Diferencia A-B: solo la parte izquierda de A (sin la intersección)
+    \item Complemento de A: área fuera del círculo A coloreada
+    \item Potencia: se muestra el número de subconjuntos en lugar del diagrama
+\end{itemize}
+
+\subsubsection{Sección 4 - Resultado}
+Debajo del diagrama aparece el resultado en notación matemática de conjuntos:
+\begin{itemize}[noitemsep]
+    \item \texttt{\{ a, b, c \}} - indica que el resultado contiene los elementos a, b y c.
+    \item \texttt{\{\}} - indica que el resultado es el conjunto vacío (sin elementos).
+\end{itemize}
+Si la operación es Potencia, también aparece el cuadro estadístico con: el valor de $n$ (cantidad de elementos del conjunto base), la fórmula $|\mathcal{P}| = 2^n$ y el número total de subconjuntos.
+
+\subsection{Descripción de operaciones}
+\begin{table}[htbp]
+\centering
+\small
+\caption{Ejemplos prácticos de uso de las operaciones}
+\begin{tabularx}{\textwidth}{p{2.2cm}p{3.2cm}p{2.8cm}p{3.2cm}X}
+\toprule
+\textbf{Operación} & \textbf{Entrada} & \textbf{Selector} & \textbf{Resultado esperado} & \textbf{Nota} \\
+\midrule
+Unión \& A=\{1,2,3\}, B=\{3,4,5\} \& Unión \& \{1, 2, 3, 4, 5\} \& 5 elementos \\
+Intersección \& A=\{a,b,c\}, B=\{b,c,d\} \& Intersección \& \{b, c\} \& 2 elementos comunes \\
+Diferencia A-B \& A=\{x,y,z\}, B=\{y,z\} \& Diferencia A-B \& \{x\} \& Solo lo de A fuera de B \\
+Complemento A \& U=\{1..5\}, A=\{1,2\} \& Complemento de A \& \{3, 4, 5\} \& Fuera de A en U \\
+Potencia \& A=\{a,b\} \& Potencia de A \& \{\},\{a\},\{b\},\{a,b\} \& 4 subconjuntos ($2^2$) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Exportar resultados}
+\begin{itemize}[noitemsep]
+    \item \textbf{Botón ``Copiar resultado'':} copia el texto del resultado al portapapeles. Luego puedes pegarlo (Ctrl+V) en Word, Excel, PowerPoint o cualquier otro programa.
+    \item \textbf{Captura de pantalla:} En Windows presiona Win+Shift+S para capturar el área que elijas. En Mac presiona Cmd+Shift+4.
+    \item \textbf{Impresión:} Presiona Ctrl+P (Windows/Linux) o Cmd+P (Mac) para imprimir la página. Puedes elegir ``Guardar como PDF'' en lugar de imprimir físicamente.
+    \item \textbf{Exportar el diagrama SVG:} haz clic derecho sobre el diagrama y elige ``Guardar imagen como...'' para descargar el SVG.
+\end{itemize}
+
+\subsection{Despliegue en producción}
+\paragraph{Generar el build de producción:}
+\begin{lstlisting}[language=bash]
+npm run build
+\end{lstlisting}
+Este comando genera una versión optimizada de la aplicación en la carpeta \texttt{dist/}. El proceso incluye: minificación del JavaScript, eliminación de código no usado (tree-shaking), optimización de assets y generación del \texttt{index.html} final. La carpeta \texttt{dist/} contiene todo lo necesario para publicar la aplicación. No necesitas incluir el resto del proyecto.
+
+\paragraph{Publicar en GitHub Pages (gratis):}
+\begin{enumerate}[noitemsep]
+    \item Asegúrate de tener el repositorio en GitHub.
+    \item En el repositorio, ve a Settings $>$ Pages.
+    \item En ``Source'', elige ``GitHub Actions''.
+    \item El pipeline \texttt{ci.yml} ya configurado publicará automáticamente al hacer push a main.
+    \item La URL pública será: \url{https://[usuario].github.io/[repositorio]/}
+\end{enumerate}
+
+\paragraph{Publicar en Netlify (alternativa, más fácil):}
+\begin{enumerate}[noitemsep]
+    \item Crea una cuenta en \url{https://netlify.com}
+    \item Arrastra la carpeta \texttt{dist/} al área de deploy de Netlify.
+    \item Netlify genera una URL pública en segundos (p.ej. \url{random-name.netlify.app}).
+\end{enumerate}
+
+\subsection{Resolución de problemas comunes}
+\paragraph{Problema: La aplicación no carga en el navegador.}
+\textbf{Solución:} Verifica que el servidor esté corriendo: en la terminal donde ejecutaste \texttt{''npm run dev''}, no debe haber errores en rojo. Si hay errores, solucionarlos primero. Si la terminal se cerró, vuelve a ejecutar \texttt{npm run dev}.
+
+\paragraph{Problema: npm install falla con errores en rojo.}
+\textbf{Solución:} Verifica que Node.js esté instalado con \texttt{''node --version''}. Si el error menciona ``EACCES'' o ``permission denied'', en Mac/Linux ejecuta con sudo: \texttt{''sudo npm install''}. En Windows, abre la terminal como Administrador (clic derecho en PowerShell $>$ Ejecutar como administrador).
+
+\paragraph{Problema: El resultado no se actualiza al escribir.}
+\textbf{Solución:} Verifica que los elementos estén separados por comas (no por puntos ni espacios solos). Verifica que el servidor de desarrollo siga corriendo. Prueba refrescar la página con Ctrl+F5.
+
+\paragraph{Problema: El diagrama de Venn no muestra colores correctos.}
+\textbf{Solución:} Asegúrate de tener instalada la versión más reciente del proyecto (\texttt{git pull origin main} y \texttt{npm install}). Prueba con un navegador diferente.
+
+\paragraph{Problema: git clone falla con error ``repository not found''.}
+\textbf{Solución:} Verifica que tienes acceso al repositorio. Si es privado, necesitas autenticarte con tu cuenta de GitHub: \texttt{git config --global user.email ''tu@email.com''} y \texttt{git config --global user.name ''Tu Nombre''}.
+
+\paragraph{Problema: ``npm'' no se reconoce como comando.}
+\textbf{Solución:} Node.js no se instaló correctamente o no está en el PATH del sistema. Desinstala Node.js y reinstálalo. En Windows, asegúrate de marcar ``Add to PATH'' durante la instalación.
+
+\textit{IMPORTANTE: Si ninguna solución funciona, abre un Issue en el repositorio de GitHub describiendo el error exacto (copia y pega el texto del mensaje de error) y tu sistema operativo. El equipo responderá en menos de 48 horas.}
+
+\newpage
+
+\% =========================================================================
+\% SECCIÓN 9: PRUEBAS Y VALIDACIÓN
+\% =========================================================================
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{cap_2026-09-10_141523.png}
+\caption{Evidencia de interfaz (Equipo Linus)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{cap_2026-09-10_141540.png}
+\caption{Evidencia de interfaz (Equipo Linus)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{cap_2026-09-10_141604.png}
+\caption{Evidencia de interfaz (Equipo Linus)}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.9\textwidth]{cap_2026-09-10_141618.png}
+\caption{Evidencia de interfaz (Equipo Linus)}
+\end{figure}
+\section{Glosario de términos}
+APÉNDICE A --- GLOSARIO DE TÉRMINOS (Tabla 12)
+\begin{lstlisting}[language=TypeScript,basicstyle=\ttfamily\scriptsize]
+================================================================================
+- AST: Abstract Syntax Tree (Arbol de Sintaxis Abstracta).
+- Token: Unidad lexica minima del proceso de tokenizacion.
+- Parser: Componente que construye el AST verificando la gramatica.
+- Tautologia: Formula verdadera bajo cualquier asignacion.
+- Contradiccion: Formula falsa bajo cualquier asignacion.
+- Contingencia: Formula con valores verdaderos y falsos segun la asignacion.
+- Composition API: Estilo de programacion de Vue 3 con ref, computed y watch.
+- SFC: Single File Component (.vue).
+- Vitest: Framework de pruebas unitarias nativo para Vite.
+- Post-orden: Recorrido de arbol que visita hijos antes que el padre.
+- Implicacion material: P  Q  ¬P  Q. Falso solo cuando P es V y Q es F.
+- Bicondicional: P  Q, verdadero cuando comparten el mismo valor de verdad.
+
+================================================================================
+\end{lstlisting}
+
+\section{Procedencia de los cap\'itulos}
+Cada cap\'itulo proviene \'integramente de las fuentes, sin reescritura: Cap 1 de \texttt{informe\_sinergia.tex} L339--373 y \texttt{informe\_sinergia.txt} \S8; Cap 2 de \texttt{Instrucciones.md} del equipo Hijos de Linus; Cap 3 del \texttt{.txt} de Modus Innova Cap IV L848--1104; Cap 4 de \texttt{informe\_Linus.tex} L942--1150; Glosario del Ap\'endice A de Sinergia.
+
+\end{document}
