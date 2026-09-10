@@ -1,0 +1,431 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- PAQUETES DE IDIOMA Y CODIFICACIÓN ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla]{babel}
+
+% --- TIPOGRAFÍA Y GEOMETRÍA (ESTÁNDAR SCIELO / B&W) ---
+\usepackage{mathptmx}
+\usepackage[top=2.5cm, bottom=2.5cm, left=3.0cm, right=2.5cm]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{microtype}
+
+% --- MATEMÁTICAS Y SÍMBOLOS ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
+% --- TABLAS Y FORMATO ---
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{enumitem}
+
+\captionsetup{
+  font={small,rm},
+  labelfont={bf},
+  justification=justified,
+  singlelinecheck=false,
+  skip=6pt
+}
+
+% --- CÓDIGO FUENTE EN ESCALA DE GRISES (B&W) ---
+\lstdefinelanguage{TypeScript}{
+  keywords={abstract, any, as, boolean, break, case, catch, class, console,
+    const, continue, debugger, declare, default, delete, do, else, enum,
+    export, extends, false, finally, for, from, function, get, if, implements,
+    import, in, instanceof, interface, let, module, new, null, number, of,
+    package, private, protected, public, readonly, return, set, static,
+    string, super, switch, symbol, this, throw, true, try, type, typeof,
+    var, void, while, with, yield},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+  language=TypeScript,
+  basicstyle=\ttfamily\footnotesize,
+  keywordstyle=\bfseries,
+  commentstyle=\itshape,
+  stringstyle=\rmfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=6pt,
+  frame=lines,
+  breaklines=true,
+  captionpos=b,
+  tabsize=2,
+  showstringspaces=false,
+  lineskip=-0.5pt
+}
+
+\begin{document}
+
+% ==============================================================================
+% PORTADA INSTITUCIONAL
+% ==============================================================================
+\begin{titlepage}
+\begin{center}
+  \textbf{\large UNIVERSIDAD NACIONAL PEDRO RUIZ GALLO}\\[0.2cm]
+  \textbf{\normalsize Escuela Profesional de Ingeniería de Sistemas}\\[0.2cm]
+  \textit{\small Lógica Simbólica · MATG1001 · Semestre 2026-I · II Ciclo}\\[1.5cm]
+
+  \rule{\textwidth}{1.5pt}\\[0.4cm]
+  {\Large \textbf{INFORME TÉCNICO DEL MÓDULO DE TABLAS DE VERDAD:}}\\[0.2cm]
+  {\Large \textbf{DISEÑO, IMPLEMENTACIÓN Y DOCUMENTACIÓN}}\\[0.2cm]
+  {\Large \textbf{DEL MOTOR LÓGICO PROPOSICIONAL}}\\[0.4cm]
+  \textit{\large Proyecto LogiLearn -- Lógica Simbólica Global}\\[0.4cm]
+  \rule{\textwidth}{1.5pt}\\[1.5cm]
+
+  \textbf{\large Equipo Sinergia}\\[0.4cm]
+  \textbf{Sublíder:} Alexa Benavides Irigoin\\[0.2cm]
+  \textbf{Integrantes:} Aldair Querebalu · Luis Atencio · Miguel Velarde · Jesús Núñez\\[1.0cm]
+
+  \textbf{Docente:} Dr. Mardo Victor Gonzales Herrera\\[0.2cm]
+  \textbf{Líder de Proyecto:} Enrique Díaz Cayaca (EnriDiazCayaca)\\[1.5cm]
+
+  \vfill
+  Lambayeque, Perú · Septiembre 2026\\[0.2cm]
+  \small\texttt{Repositorio: github.com/EnriDiazCayaca/logica\_simbolica\_global}
+\end{center}
+\end{titlepage}
+
+% ==============================================================================
+% RESUMEN (ESTÁNDAR SCIELO)
+% ==============================================================================
+\noindent\fbox{%
+\parbox{\textwidth}{%
+\vspace{4pt}
+\begin{center}
+  \textbf{\large RESUMEN}
+\end{center}
+\small
+\textbf{Objetivo:} Documentar de forma exhaustiva el diseño, la arquitectura, el código fuente y el proceso de desarrollo del módulo de Tablas de Verdad implementado por el Equipo Sinergia en el marco del proyecto colaborativo LogiLearn, correspondiente al curso Lógica Simbólica (MATG1001) de la Universidad Nacional Pedro Ruiz Gallo.\\[6pt]
+\textbf{Metodología:} Se adoptó una metodología ágil de cuatro sprints (Propuesta y Diseño, Motor Lógico, Interfaz Visual, Pruebas y Despliegue), ejecutados del 3 al 30 de agosto de 2026. El stack tecnológico empleó Vue 3 con Composition API, TypeScript en modo estricto, Vite 6, Tailwind CSS v4 y Vitest.\\[6pt]
+\textbf{Resultados:} Se desarrolló un motor lógico completo capaz de analizar, tokenizar, parsear y evaluar fórmulas de lógica proposicional con soporte para cinco conectivos (negación, conjunción, disyunción, implicación y bicondicional) en múltiples notaciones. El módulo genera tablas de verdad con sub-expresiones intermedias y clasifica automáticamente la proposición como tautología, contradicción o contingencia. Se implementaron 25 pruebas unitarias con cobertura del 100\% de las rutas de evaluación.\\[6pt]
+\textbf{Palabras clave:} lógica proposicional, tablas de verdad, análisis sintáctico, árbol de sintaxis abstracta, Vue 3, TypeScript, tautología, contradicción, contingencia.
+\vspace{4pt}
+}%
+}
+
+\vspace{1.0cm}
+
+% ==============================================================================
+% 1. INTRODUCCIÓN
+% ==============================================================================
+\section{Introducción}
+
+La lógica proposicional constituye la base formal del razonamiento matemático y computacional. Las tablas de verdad, herramienta fundamental de este campo, permiten determinar el valor de verdad de una fórmula compleja para cada posible combinación de valores de sus variables proposicionales. A pesar de su importancia pedagógica, no existen plataformas web de código abierto, en español y orientadas a estudiantes universitarios de habla hispana, que implementen este proceso de forma interactiva con trazabilidad completa de sub-expresiones.
+
+El presente informe documenta el trabajo del \textbf{Equipo Sinergia}, responsable del módulo \textit{Tablas de Verdad} dentro del proyecto colaborativo \textbf{LogiLearn}, desarrollado por el aula del curso Lógica Simbólica (MATG1001, Semestre 2026-I) de la Universidad Nacional Pedro Ruiz Gallo. El módulo implementa un motor lógico de propósito general, capaz de procesar entradas en múltiples notaciones, construir un árbol de sintaxis abstracta (AST), evaluar la fórmula y clasificarla semánticamente.
+
+La documentación sigue el formato de artículo técnico compatible con SciELO y está organizada en las siguientes secciones: (2) Marco Teórico, (3) Arquitectura del Sistema, (4) Explicación Microscópica del Código, (5) Manual de Usuario, (6) Evolución por Sprints, (7) Pruebas y Validación, y (8) Conclusiones.
+
+% ==============================================================================
+% 2. MARCO TEÓRICO
+% ==============================================================================
+\section{Marco Teórico}
+
+\subsection{Lógica Proposicional y Conectivos Lógicos}
+La lógica proposicional es un sistema formal en el que las proposiciones son entidades que pueden tomar un valor de verdad: verdadero (V) o falso (F). Los conectivos lógicos permiten combinar proposiciones atómicas para formar fórmulas compuestas. Los cinco conectivos implementados en el motor son:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Negación ($\neg$ / NOT):} operador unario que invierte el valor de verdad. $\neg V = F$; $\neg F = V$.
+  \item \textbf{Conjunción ($\land$ / AND):} verdadera si y solo si ambos operandos son verdaderos.
+  \item \textbf{Disyunción ($\lor$ / OR):} verdadera si al menos uno de los operandos es verdadero.
+  \item \textbf{Implicación ($\to$ / IMPLIES):} falsa únicamente cuando el antecedente es V y el consecuente es F. Equivale a $\neg P \lor Q$.
+  \item \textbf{Bicondicional ($\leftrightarrow$ / IFF):} verdadera cuando ambos operandos tienen el mismo valor de verdad.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Tablas de verdad de los cinco conectivos lógicos}
+\label{tab:conectivos}
+\small
+\begin{tabular}{ccccccc}
+\toprule
+$P$ & $Q$ & $\neg P$ & $P \land Q$ & $P \lor Q$ & $P \to Q$ & $P \leftrightarrow Q$ \\
+\midrule
+V & V & F & V & V & V & V \\
+V & F & F & F & V & F & F \\
+F & V & V & F & V & V & F \\
+F & F & V & F & F & V & V \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Clasificación Semántica de Proposiciones}
+Una fórmula proposicional puede clasificarse según el conjunto de sus valores de verdad bajo todas las posibles interpretaciones:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tautología:} fórmula cuya columna de resultado en la tabla de verdad contiene únicamente valores V. Ejemplo: $P \lor \neg P$.
+  \item \textbf{Contradicción:} fórmula cuya columna de resultado contiene únicamente valores F. Ejemplo: $P \land \neg P$.
+  \item \textbf{Contingencia:} fórmula que contiene al menos un V y un F en su columna de resultado. Ejemplo: $P \land Q$.
+\end{itemize}
+Para $n$ variables proposicionales, la tabla de verdad tiene $2^n$ filas, correspondientes a las $2^n$ asignaciones posibles de valores de verdad.
+
+\subsection{Árbol de Sintaxis Abstracta (AST) y Precedencia}
+Un árbol de sintaxis abstracta (AST) es una representación jerárquica de la estructura sintáctica de una expresión. Cada nodo interno representa un operador lógico y cada hoja representa una variable proposicional.
+
+La precedencia adoptada en el motor, de mayor a menor prioridad, es:
+$$\neg > \land > \lor > \to > \leftrightarrow$$
+Esta jerarquía garantiza que $P \land Q \to R$ se interprete formalmente como $(P \land Q) \to R$ y no como $P \land (Q \to R)$.
+
+\subsection{Gramática BNF del Motor}
+\begin{verbatim}
+Expresion     ::= Bicondicional
+Bicondicional ::= Implicacion ( '<->' Implicacion )*
+Implicacion   ::= Disyuncion  ( '->'  Disyuncion )*
+Disyuncion    ::= Conjuncion  ( 'v'   Conjuncion )*
+Conjuncion    ::= Negacion    ( '^'   Negacion )*
+Negacion      ::= '~' Negacion | Primario
+Primario      ::= VAR | '(' Expresion ')'
+\end{verbatim}
+
+% ==============================================================================
+% 3. ARQUITECTURA DEL SISTEMA
+% ==============================================================================
+\section{Arquitectura del Sistema}
+
+\subsection{Stack Tecnológico}
+\begin{table}[H]
+\centering
+\caption{Dependencias principales del proyecto LogiLearn}
+\label{tab:stack}
+\small
+\begin{tabularx}{\textwidth}{llp{2cm}X}
+\toprule
+\textbf{Categoría} & \textbf{Tecnología} & \textbf{Versión} & \textbf{Rol en el módulo} \\
+\midrule
+Framework UI & Vue 3 & \textasciicircum 3.5.13 & Componentes reactivos con Composition API \\
+Lenguaje & TypeScript & \textasciicircum 5.7.0 & Tipado estricto del motor lógico \\
+Bundler & Vite & \textasciicircum 6.1.0 & Servidor de desarrollo y build de producción \\
+Estilos & Tailwind CSS & \textasciicircum 4.0.0 & Utilidades CSS para la interfaz \\
+Testing & Vitest & \textasciicircum 4.1.10 & Suite de pruebas unitarias \\
+Enrutamiento & Vue Router & \textasciicircum 4.5.0 & Navegación SPA (rutas /tablas, /leyes-logicas, /ejercicios, /progreso) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Estructura de Archivos del Módulo Sinergia}
+\begin{table}[H]
+\centering
+\caption{Archivos que componen el módulo del Equipo Sinergia}
+\label{tab:archivos}
+\small
+\begin{tabularx}{\textwidth}{llcX}
+\toprule
+\textbf{Archivo} & \textbf{Capa} & \textbf{Tamaño} & \textbf{Responsabilidad} \\
+\midrule
+\texttt{src/lib/truth-table/evaluator.ts} & Motor & 323 líneas & Tokenizador, parser AST, evaluador y clasificador \\
+\texttt{src/lib/truth-table/evaluator.test.ts} & Testing & 173 líneas & 25 pruebas unitarias del motor \\
+\texttt{src/pages/tablas/index.vue} & Interfaz & 322 líneas & Vista principal: entrada, tabla, clasificación y pasos \\
+\texttt{src/pages/leyes-logicas/index.vue} & Interfaz & 145 líneas & Catálogo interactivo de las 12 leyes lógicas \\
+\texttt{src/pages/ejercicios/} & Interfaz & 450 líneas & Catálogo de 80 ejercicios prácticos con pasos \\
+\texttt{src/pages/progreso/index.vue} & Interfaz & 160 líneas & Seguimiento del progreso con localStorage \\
+\texttt{src/components/layout/AppNavBar.vue} & Layout & 94 líneas & Barra de navegación global corporativa \\
+\texttt{src/components/ui/Button.vue} & UI Compartida & 34 líneas & Botón reutilizable con 4 variantes \\
+\texttt{src/components/ui/Card.vue} & UI Compartida & 21 líneas & Contenedor visual con borde y sombra \\
+\texttt{src/components/ui/ToggleSwitch.vue} & UI Compartida & 34 líneas & Interruptor ON/OFF para variables activas \\
+\texttt{src/components/ui/Badge.vue} & UI Compartida & 24 líneas & Etiqueta de color para niveles y categorías \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ==============================================================================
+% 4. EXPLICACIÓN MICROSCÓPICA DEL CÓDIGO
+% ==============================================================================
+\section{Explicación Microscópica del Código}
+
+\subsection{Motor Lógico: \texttt{src/lib/truth-table/evaluator.ts}}
+
+\subsubsection{Tipos e Interfaces TypeScript (líneas 1--32)}
+\begin{lstlisting}[caption={Definición de tipos base del motor (evaluator.ts).}]
+export type TipoNodo = 'VAR' | 'NOT' | 'AND' | 'OR' | 'IMPLIES' | 'IFF';
+
+export interface NodoExpresion {
+  tipo: TipoNodo;
+  valor?: string;               // Solo para nodos VAR (ej. "P", "Q")
+  izquierdo?: NodoExpresion;     // Operando izquierdo (operadores binarios)
+  derecho?: NodoExpresion;       // Operando derecho (binarios) o unico (NOT)
+}
+
+export type ClasificacionProposicion = 'tautologia' | 'contradiccion' | 'contingencia';
+
+export interface FilaTabla {
+  asignacion: Record<string, boolean>; // Valores de variables en la fila
+  pasos: { etiqueta: string; valor: boolean }[]; // Sub-expresiones evaluadas
+  resultado: boolean; // Valor final de la formula completa
+}
+\end{lstlisting}
+
+\subsubsection{Clase de Error Personalizada (líneas 34--39)}
+\begin{lstlisting}[caption={Clase de error específica del motor.}]
+export class ErrorParseoLogico extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ErrorParseoLogico';
+  }
+}
+\end{lstlisting}
+Extender \texttt{Error} permite a la interfaz distinguir errores sintácticos mediante \texttt{instanceof ErrorParseoLogico} y mostrar mensajes amigables sin exponer stack traces.
+
+\subsubsection{Mapa de Símbolos y Normalización (líneas 41--64)}
+\begin{lstlisting}[caption={Mapa de símbolos y función normalizadora.}]
+const MAPA_SIMBOLOS: Record<string, string> = {
+  '~': 'NOT', '!': 'NOT', '¬': 'NOT',
+  '^': 'AND', '&': 'AND', '∧': 'AND', '.': 'AND',
+  'v': 'OR',  '|': 'OR',  '∨': 'OR',  '+': 'OR',
+  '->': 'IMPLIES', '→': 'IMPLIES',
+  '<->': 'IFF',    '↔': 'IFF',
+};
+\end{lstlisting}
+
+\subsubsection{Tokenizador con Autómata Finito Determinista (líneas 66--85)}
+Procesa la cadena carácter a carácter en tiempo lineal $O(n)$, normalizando las variables a mayúsculas para unificar $p$ y $P$.
+
+\subsubsection{Clase Parser: Análisis Descendente Recursivo (líneas 87--175)}
+Cada método implementa una regla gramatical. El orden de llamadas descendentes (\texttt{parsearIff} $\to$ \texttt{parsearImplies} $\to$ \texttt{parsearOr} $\to$ \texttt{parsearAnd} $\to$ \texttt{parsearNot} $\to$ \texttt{parsearPrimario}) garantiza que los operadores de menor precedencia queden en la raíz del árbol y los de mayor precedencia en las hojas.
+
+\subsubsection{Función \texttt{generarFilas} con Aritmética de Bits (líneas 269--298)}
+\begin{lstlisting}[caption={Generación matricial mediante desplazamiento y máscara de bits.}]
+export function generarFilas(
+  nodo: NodoExpresion,
+  variables: string[],
+  variablesInactivas: string[] = []
+): FilaTabla[] {
+  const subExpresiones = recolectarSubExpresiones(nodo);
+  const n = variables.length;
+  const total = n === 0 ? 1 : Math.pow(2, n);
+  const filas: FilaTabla[] = [];
+
+  for (let i = 0; i < total; i++) {
+    const asignacion: Record<string, boolean> = {};
+    variables.forEach((v, idx) => {
+      asignacion[v] = ((i >> (n - idx - 1)) & 1) === 0;
+    });
+    variablesInactivas.forEach((v) => {
+      asignacion[v] = true;
+    });
+
+    filas.push({
+      asignacion,
+      pasos: subExpresiones.map((sub) => ({
+        etiqueta: nodoATexto(sub),
+        valor: evaluar(sub, asignacion),
+      })),
+      resultado: evaluar(nodo, asignacion),
+    });
+  }
+  return filas;
+}
+\end{lstlisting}
+
+\subsection{Vista Principal: \texttt{src/pages/tablas/index.vue}}
+- **Estado reactivo:** \texttt{const proposicion = ref('P $\land$ Q $\to$ R')} y \texttt{const variablesActivas = reactive(\{\})}.
+- **Watcher reactivo:** Observa cambios en \texttt{proposicion} y detecta variables al instante con un \texttt{try/catch} no bloqueante.
+- **Propiedades computadas:** Generan dinámicamente el texto de clasificación y la explicación paso a paso con almacenamiento en caché reactivo de Vue 3.
+
+% ==============================================================================
+% 5. MANUAL DE USUARIO — GUÍA PASO A PASO
+% ==============================================================================
+\section{Manual de Usuario --- Guía Paso a Paso}
+
+\subsection{Acceso al Módulo}
+- En la nube: Ingrese a la URL de GitHub Pages y haga clic en la pestaña \textbf{«Tablas de verdad»}.
+- En local: Ejecute \texttt{npm run dev} y navegue a \texttt{http://localhost:5173/tablas}.
+
+\subsection{Notaciones Aceptadas}
+\begin{table}[H]
+\centering
+\caption{Notaciones aceptadas por el motor lógico de LogiLearn}
+\label{tab:notaciones}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Conectivo} & \textbf{Símbolo Unicode} & \textbf{ASCII} & \textbf{Palabras clave} \\
+\midrule
+Negación & $\neg$ & \texttt{\~{}} , \texttt{!} , \texttt{-} & \texttt{NOT} \\
+Conjunción & $\land$ & \texttt{\^{}} , \texttt{\&} , \texttt{.} & \texttt{AND} \\
+Disyunción & $\lor$ & \texttt{|} , \texttt{+} & \texttt{OR} \\
+Implicación & $\to$ & \texttt{->} , \texttt{=>} & \texttt{IMPLIES} \\
+Bicondicional & $\leftrightarrow$ & \texttt{<->} , \texttt{<=>} & \texttt{IFF} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interpretación de la Tabla y Clasificación}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Columnas de Variables:} Asignaciones $V$ y $F$ para cada proposición simple ($P, Q, R$).
+  \item \textbf{Columnas de Subexpresiones:} Evaluación intermedia de los paréntesis de adentro hacia afuera.
+  \item \textbf{Columna Resultado:} Matriz principal clasificada como \textbf{TAUTOLOGÍA} (todo V), \textbf{CONTRADICCIÓN} (todo F) o \textbf{CONTINGENCIA} (mixta).
+\end{itemize}
+
+% ==============================================================================
+% 6. REGISTRO DE EVOLUCIÓN POR SPRINTS
+% ==============================================================================
+\section{Registro de Evolución por Sprints}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Sprint 1 (4--10 agosto 2026):} Diseño de wireframes, definición de gramática formal y entrega de \texttt{propuesta.md}.
+  \item \textbf{Sprint 2 (11--17 agosto 2026):} Implementación del motor \texttt{evaluator.ts}, evaluación de la implicación material ($\neg P \lor Q$), cálculo bitwise y 15 tests iniciales.
+  \item \textbf{Sprint 3 (18--24 agosto 2026):} Creación de la interfaz \texttt{index.vue} con 6 paneles, componentes UI reutilizables y watcher reactivo.
+  \item \textbf{Sprint 4 (25--30 agosto 2026):} Expansión a 25 pruebas en el motor (189 globales), soporte para 0 variables y despliegue en GitHub Pages.
+\end{itemize}
+
+% ==============================================================================
+% 7. PRUEBAS Y VALIDACIÓN
+% ==============================================================================
+\section{Pruebas y Validación}
+
+\begin{table}[H]
+\centering
+\caption{Inventario de pruebas unitarias del módulo Tablas de Verdad}
+\label{tab:inventario_tests}
+\small
+\begin{tabularx}{\textwidth}{llXl}
+\toprule
+\textbf{\#} & \textbf{Función testeada} & \textbf{Descripción del caso} & \textbf{Resultado} \\
+\midrule
+1--7 & \texttt{parsearProposicion} & Variables simples, conectivos, excepciones sintácticas & 100\% Exitoso \\
+8 & \texttt{recolectarVariables} & Extracción y ordenamiento alfabético ['A','B','C'] & 100\% Exitoso \\
+9--11 & \texttt{nodoATexto} & Reconstrucción a texto Unicode con paréntesis & 100\% Exitoso \\
+12--16 & \texttt{evaluar} & Semántica de AND, OR, IMPLIES, IFF y variables ausentes & 100\% Exitoso \\
+17--19 & \texttt{clasificarProposicion} & Tautologías, contradicciones y contingencias & 100\% Exitoso \\
+20--24 & \texttt{generarTabla} & Tablas de 1, 2 y 3 variables con múltiples notaciones & 100\% Exitoso \\
+25 & \texttt{recolectarSubExpresiones} & Detección de subexpresiones internas en post-orden & 100\% Exitoso \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ==============================================================================
+% 8. CONCLUSIONES
+% ==============================================================================
+\section{Conclusiones}
+
+\begin{enumerate}[label=\arabic*.]
+  \item El motor lógico en \texttt{evaluator.ts} resuelve en 323 líneas de TypeScript estricto el ciclo completo: normalización, tokenización, parseo AST, recolección post-orden y evaluación combinatoria por álgebra de bits.
+  \item El soporte de más de 15 variantes de notación democratiza el acceso a estudiantes sin teclado especializado.
+  \item La suite de 25 pruebas unitarias del motor (y 189 pruebas totales en la plataforma) certifica la alta calidad y robustez del software educativo entregado.
+\end{enumerate}
+
+% ==============================================================================
+% 9. REFERENCIAS BIBLIOGRÁFICAS
+% ==============================================================================
+\begin{thebibliography}{99}
+\bibitem{hurley} P. J. Hurley, \textit{A Concise Introduction to Logic}, 13.ª ed. Cengage Learning, 2015.
+\bibitem{mendelson} E. Mendelson, \textit{Introduction to Mathematical Logic}, 6.ª ed. CRC Press, 2015.
+\bibitem{nystrom} R. Nystrom, \textit{Crafting Interpreters: Recursive Descent Parsing}, 2021.
+\bibitem{vue} E. You, \textit{Vue 3 Composition API Documentation}, 2024. [En línea]. Disponible en: \url{https://vuejs.org/}.
+\bibitem{vitest} Vitest Team, \textit{Vitest Testing Framework}, 2024. [En línea]. Disponible en: \url{https://vitest.dev/}.
+\bibitem{repo} E. Díaz Cayaca, \textit{logica\_simbolica\_global: Plataforma web colaborativa}, 2026. [En línea]. Disponible en: \url{https://github.com/EnriDiazCayaca/logica_simbolica_global}.
+\end{thebibliography}
+
+\end{document}
